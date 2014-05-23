@@ -11,10 +11,12 @@ set showtabline=2
 set shortmess+=I
 
 "code folding settings
-set foldmethod=indent
-set foldnestmax=5
-set nofoldenable
-set foldlevel=1
+if exists('foldmethod')
+	set foldmethod=indent
+	set foldnestmax=5
+	set nofoldenable
+	set foldlevel=1
+endif
 
 "make tabs intuitive for command mode
 nmap <S-Tab> <<
