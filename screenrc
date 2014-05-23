@@ -1,0 +1,31 @@
+# Turn off that annoying start up message
+startup_message off
+
+# Turn the even more annoying whole-screen-flash-on-tab-complete "feature"
+vbell off
+
+# Remaps control+a to the tick/tilda key
+escape ``
+
+# more scrollbacks!
+defscrollback 10000
+
+bind c screen 1
+bind ^c screen 1
+screen -t bash
+screen -t dev
+screen -t run
+select 0
+
+bind 'l' windowlist
+bind 'a' title
+bind 'x' remove
+bind 'X' lockscreen
+bind 's' split
+bind 'S' xoff
+bind 'n' focus down
+bind 't' focus up
+
+# Window list at the bottom. hostname, centered tabs and redmarked active windows:
+hardstatus alwayslastline
+hardstatus string '%{= kG}[ %{G}%H %{g}][%= %{= kw}%?%-Lw%?%{r}(%{W}%n*%f%t%?(%u)%?%{r})%{w}%?%+Lw%?%?%= %{g}][%{B} %m/%d %{W}%c %{g}]'
