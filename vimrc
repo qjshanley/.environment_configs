@@ -1,5 +1,7 @@
 "general settings
-set relativenumber "not available on some servers
+if exists('+relativenumber')
+        set relativenumber
+endif
 set pastetoggle=<F2>
 set smartindent
 set tabstop=4
