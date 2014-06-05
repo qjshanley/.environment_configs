@@ -10,9 +10,6 @@ escape ``
 # more scrollbacks!
 defscrollback 10000
 
-# easy scrolling
-termcapinfo xterm*|rxvt|gnome-terminal|konsole ti@:te@
-
 bind c screen 1
 bind ^c screen 1
 screen -t bash
