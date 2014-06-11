@@ -1,3 +1,7 @@
+Host plog1
+	HostName prod-syslog01.vpc
+	User quin
+
 Host demo
 	HostName demo.vpc
 	User quin
