@@ -14,3 +14,10 @@ function objectIdFromTimestamp(ts) {
 
         return constructedObjectId
 }
+
+function printRepLag() {
+	status = rs.status(); 
+	status.members.forEach( function(obj) { 
+		print(obj.name + " (" + obj.state + ") -- " + (status.date - obj.optimeDate)/1000) 
+	});
+}
