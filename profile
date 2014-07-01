@@ -21,5 +21,5 @@ if [ -d "$HOME/bin" ] ; then
     PATH="$HOME/bin:$PATH"
 fi
 
-# custom profile stuff
+# commands to execute after login
 google-drive-ocamlfuse ~/gdrive
