@@ -79,7 +79,7 @@ Host mr3
     User quin
 
 Host dev
-    HostName dev2.shoutlet.com
+    HostName dev-web01.vpc
     User quin
 
 Host devm
