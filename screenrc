@@ -10,12 +10,12 @@ escape ``
 # more scrollbacks!
 defscrollback 10000
 
-bind c screen 1
-bind ^c screen 1
-screen -t bash
-screen -t dev
-screen -t run
-select 0
+#bind c screen 1
+#bind ^c screen 1
+#screen -t bash
+#screen -t dev
+#screen -t run
+#select 0
 
 bind 'l' windowlist
 bind 'a' title
