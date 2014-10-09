@@ -6,6 +6,7 @@ alias moops='echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});
 alias moopid='echo "rs.slaveOk(); db.currentOp();" | mongo --port 27018 | grep -e "$opid" -A 30 -B 1'
 alias moopns='echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$ns\", \"count\": {\$sum: 1} } })" | mongo --port 27018 $ns'
 alias moprof='echo "print(\"Level\t| SlowMS\t| DB\"); print(\"-------------------------------------------------\"); db.adminCommand(\"listDatabases\").databases.forEach( function (mdb) { db = db.getSiblingDB(mdb.name); print(db.getProfilingStatus().was + \"\t| \" + db.getProfilingStatus().slowms + \"   \t| \" + db); } );" | mongo --port 27018 --quiet'
+alias molag='echo "print(new Date()); var status = rs.status(); status.members.forEach( function(obj) { print(obj.name + \" (\" + obj.state + \") -- \" + (status.date - obj.optimeDate)/1000) } );" | mongo --port 27018'
 
 # User specific aliases and functions
 # Make a symbolic link in your hame directiory:
