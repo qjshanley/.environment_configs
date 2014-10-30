@@ -10,6 +10,8 @@ escape ``
 # more scrollbacks!
 defscrollback 10000
 
+#Turns out, I'm not a fan of adding tabs by default
+#Define initial startup tabs
 #<start tabs>
 #bind c screen 1
 #bind ^c screen 1
@@ -19,14 +21,15 @@ defscrollback 10000
 #select 0
 #</start tabs>
 
-bind 'l' windowlist
 bind 'a' title
+bind 'H' hardcopy -h
+bind 'l' windowlist
+bind 'n' focus down
+bind 's' split
+bind 'S' log
+bind 't' focus up
 bind 'x' remove
 bind 'X' lockscreen
-bind 's' split
-bind 'S' xoff
-bind 'n' focus down
-bind 't' focus up
 
 # Window list at the bottom. hostname, centered tabs and redmarked active windows:
 hardstatus alwayslastline
