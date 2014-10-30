@@ -9,11 +9,6 @@ alias moprof='echo "print(\"Level\t| SlowMS\t| DB\"); print(\"------------------
 alias molag='echo "print(new Date()); var status = rs.status(); status.members.forEach( function(obj) { print(obj.name + \" (\" + obj.state + \") -- \" + (status.date - obj.optimeDate)/1000) } );" | mongo --port 27018'
 
 # User specific aliases and functions
-# Make a symbolic link in your hame directiory:
-
-# ln -s ~/.environment_configs/.bash_aliases ~/.bash_aliases 
-
-
 # Copy the code below into your .bashrc in your home directory.
 #***REMOVE THE COMMENTS***
 #if [ -f ~/.bash_aliases ]; then
