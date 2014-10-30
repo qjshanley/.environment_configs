@@ -1,6 +1,6 @@
 "general settings
 if exists('+relativenumber')
-        set relativenumber
+	set relativenumber
 endif
 set pastetoggle=<F2>
 set smartindent
@@ -33,3 +33,34 @@ nnoremap H :tabprev<CR>
 nnoremap s :%s/    /\t/gc<CR>
 nnoremap <F8> :let @/ = ""<CR>
 nnoremap <F3> :Explore<CR>
+nnoremap <F5> :buffers<CR>:buffer<Space>
+
+"key mappings for multi-window navigation
+nnoremap <Up> <c-w>k
+nnoremap <Down> <c-w>j
+nnoremap <Left> <c-w>h
+nnoremap <Right> <c-w>l
+
+"mapping CTRL-Arrow keys
+map [1;5A <C-Up>
+map [1;5B <C-Down>
+map [1;5D <C-Left>
+map [1;5C <C-Right>
+
+"mapping SHIFT-Arrow keys
+map [1;2A <S-Up>
+map [1;2B <S-Down>
+map [1;2D <S-Left>
+map [1;2C <S-Right>
+
+"mapping CTRL-SHIFT-Arrow keys
+map [1;6A <C-S-Up>
+map [1;6B <C-S-Down>
+map [1;6D <C-S-Left>
+map [1;6C <C-S-Right>
+
+"key mappings to resize windows
+nnoremap <silent> <C-Up> :resize +1<CR>
+nnoremap <silent> <C-Down> :resize -1<CR>
+nnoremap <silent> <C-Left> :vertical resize -2<CR>
+nnoremap <silent> <C-Right> :vertical resize +2<CR>
