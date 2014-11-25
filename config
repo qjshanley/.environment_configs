@@ -1,3 +1,15 @@
+Host environment.github.com
+	HostName github.com
+	User git
+	PreferredAuthentications publickey
+	IdentityFile ~/.ssh/id_rsa_github_environment
+
+Host playground.github.com
+	HostName github.com
+	User git
+	PreferredAuthentications publickey
+	IdentityFile ~/.ssh/id_rsa_github_playground
+
 Host pes01
 	HostName prod-elastic01.vpc
 	User quin
