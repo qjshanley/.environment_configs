@@ -1,3 +1,9 @@
+Host dba.github.com
+	HostName github.com
+	User git
+	PreferredAuthentications publickey
+	IdentityFile ~/.ssh/id_rsa_github_dba
+
 Host environment.github.com
 	HostName github.com
 	User git
