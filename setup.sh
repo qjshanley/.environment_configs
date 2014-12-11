@@ -4,3 +4,4 @@ ln -sft ~/. ~/.environment_configs/.profile
 ln -sft ~/. ~/.environment_configs/.screenrc
 ln -sft ~/. ~/.environment_configs/.vimrc
 ln -sft ~/.ssh/. ~/.environment_configs/config
+chmod 644 ~/.environment_configs/config
