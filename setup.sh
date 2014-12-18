@@ -8,5 +8,5 @@ chmod 644 ~/.environment_configs/config
 
 if ! grep -Fxq "if [ -f ~/.bash_aliases ]; then" ~/.bashrc
 then
-    printf "\nif [ -f ~/.bash_aliases ]; then\n\t. ~/.bash_aliases\nfi\n" >>~/.bashrc
+    printf "# User specific aliases and functions\nif [ -f ~/.bash_aliases ]; then\n\t. ~/.bash_aliases\nfi\n" >>~/.bashrc
 fi
