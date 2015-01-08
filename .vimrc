@@ -2,6 +2,11 @@
 if exists('+relativenumber')
 	set relativenumber
 endif
+
+if exists('+number')
+	set number
+endif
+
 set pastetoggle=<F2>
 set smartindent
 set tabstop=4
