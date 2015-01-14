@@ -38,7 +38,7 @@ nnoremap H :tabprev<CR>
 nnoremap s :%s/    /\t/gc<CR>
 nnoremap <F8> :let @/ = ""<CR>
 nnoremap <F3> :Explore<CR>
-nnoremap <F5> :buffers<CR>:buffer<Space>
+nnoremap <F4> :buffers<CR>:buffer<Space>
 
 "key mappings for multi-window navigation
 nnoremap <Up> <c-w>k

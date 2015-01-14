@@ -22,14 +22,15 @@ defscrollback 10000
 #</start tabs>
 
 bind 'a' title
-bind 'H' hardcopy -h
 bind 'l' windowlist
-bind 'n' focus down
+bind 'n' focus next
 bind 's' split
 bind 'S' log
-bind 't' focus up
+bind 't' focus prev
 bind 'x' remove
 bind 'X' lockscreen
+bindkey -d -k k1	escape ``	# bound to F11
+bindkey -d -k k5	escape ^O^O	# bound to F12
 
 # Window list at the bottom. hostname, centered tabs and redmarked active windows:
 hardstatus alwayslastline
