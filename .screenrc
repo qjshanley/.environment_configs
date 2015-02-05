@@ -10,17 +10,6 @@ escape ``
 # more scrollbacks!
 defscrollback 10000
 
-#Turns out, I'm not a fan of adding tabs by default
-#Define initial startup tabs
-#<start tabs>
-#bind c screen 1
-#bind ^c screen 1
-#screen -t bash
-#screen -t dev
-#screen -t run
-#select 0
-#</start tabs>
-
 bind 'a' title
 bind 'l' windowlist
 bind 'n' focus next
@@ -29,8 +18,8 @@ bind 'S' log
 bind 't' focus prev
 bind 'x' remove
 bind 'X' lockscreen
-bindkey -d -k k1	escape ``	# bound to F11
-bindkey -d -k k5	escape ^O^O	# bound to F12
+bindkey -k k5	escape ``	# bound to F5
+bindkey -k k6	escape ^O^O	# bound to F6
 
 # Window list at the bottom. hostname, centered tabs and redmarked active windows:
 hardstatus alwayslastline
