@@ -23,9 +23,6 @@ if exists('foldmethod')
 	set foldlevel=1
 endif
 
-"make tabs intuitive for command mode
-nmap <S-Tab> <<
-nmap <Tab> >>
 "make tabs intuitive for insert mode
 imap <S-Tab> <Esc><<i
 
