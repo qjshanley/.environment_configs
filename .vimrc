@@ -7,6 +7,7 @@ if exists('+number')
 	set number
 endif
 
+set syntax=on
 set pastetoggle=<F2>
 set smartindent
 set tabstop=4
