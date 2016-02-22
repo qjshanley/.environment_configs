@@ -21,3 +21,25 @@ function printRepLag() {
 		print(obj.name + " (" + obj.state + ") -- " + (status.date - obj.optimeDate)/1000) 
 	});
 }
+
+function popularContests(date, limit) {
+	if (typeof(date) == 'string') {
+		var mid = objectIdFromTimestamp(date);
+	}
+
+	db.entry.aggregate(
+		{"$match":{"_id":{"$gte":mid}}}, 
+		{"$group":{"_id":{"client_id":"$client_id", "contest_id":"$contest_id"}, "count":{"$sum":1}}}, 
+		{"$sort":{"count":-1}}, 
+		{"$limit":limit}).result.forEach(
+			function(d) { 
+				var c = db.config.findOne(
+					{"_id":ObjectId(d._id.contest_id)}, 
+					{"config.submission.twitter_hashtag":1, "config.submission.instagram_hashtag":1}); 
+				print("###################################################################"); 
+				printjson(d); 
+				printjson(c); 
+				print("###################################################################"); 
+			}
+		);
+}
