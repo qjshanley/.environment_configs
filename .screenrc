@@ -18,9 +18,11 @@ bind 'S' log
 bind 't' focus up
 bind 'x' remove
 bind 'X' lockscreen
-bindkey -k k5	escape ``	# bound to F5
-bindkey -k k6	escape ^O^O	# bound to F6
+#turn off the tick binding from (bound to F5)
+bindkey -k k5 escape ^O^O
+#turn on the tick binding again (bound to F6)
+bindkey -k k6 escape ``
 
-# Window list at the bottom. hostname, centered tabs and redmarked active windows:
+# Window list at the bottom. hostname, left-aligned tabs and redmarked active windows:
 hardstatus alwayslastline
 hardstatus string '%{= ky}[ %{g}%H %{y}][ %{= kw}%?%-w%?%{R}%n*%t%?(%u)%?%{w}%?%+w%?%?%= %{y}][%{g} %l %{y}][%{B} %m/%d %{W}%c %{y}]'
