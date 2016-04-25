@@ -1,4 +1,5 @@
 # User specific aliases and functions
+alias vi='vim'
 alias lh='ls -lh'
 alias lha='ls -lha'
 alias moop='echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo --port 27018'
