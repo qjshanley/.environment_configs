@@ -14,6 +14,7 @@ set shiftwidth=4
 set hlsearch
 set showtabline=2
 set shortmess+=I
+set backspace=indent,eol,start
 
 "code folding settings
 if exists('+foldmethod')
