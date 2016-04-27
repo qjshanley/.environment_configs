@@ -20,7 +20,7 @@ if exists('+foldmethod')
 	set foldmethod=indent
 	set foldlevel=1
 	set foldlevelstart=0
-	set foldnestmax=2
+	set foldnestmax=10
 	nnoremap f za
 	nnoremap < zm
 	nnoremap > zr
