@@ -10,7 +10,7 @@ alias moops='moops'
 function moops { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo $1 $2 | grep -e "opid" -e "secs"; }
 
 alias moopid='moopid'
-function moopid { echo "rs.slaveOk(); db.currentOp();" | mongo $1 $2 | grep -e "$3" -A 30 -B 1; }
+function moopid { echo "rs.slaveOk(); db.currentOp();" | mongo $1 $2 | grep -e "$3" -A $4 -B 1; }
 
 alias moopns='moopns'
 function moopns { echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$ns\", \"count\": {\$sum: 1} } })" | mongo $1 $2 $3; }
