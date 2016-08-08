@@ -2,17 +2,24 @@
 alias vi='vim'
 alias lh='ls -lh'
 alias lha='ls -lha'
-alias moop='echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo --port 27018'
-alias moops='echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo --port 27018 | grep -e "opid" -e "secs"'
-alias moopid='echo "rs.slaveOk(); db.currentOp();" | mongo --port 27018 | grep -e "$opid" -A 30 -B 1'
-alias moopns='echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$ns\", \"count\": {\$sum: 1} } })" | mongo --port 27018 $ns'
-alias moprof='echo "print(\"Level\t| SlowMS\t| DB\"); print(\"-------------------------------------------------\"); db.adminCommand(\"listDatabases\").databases.forEach( function (mdb) { db = db.getSiblingDB(mdb.name); print(db.getProfilingStatus().was + \"\t| \" + db.getProfilingStatus().slowms + \"   \t| \" + db); } );" | mongo --port 27018 --quiet'
 
-alias test='tst'
-function tst { echo "This is just a test $1"; }
+alias moop='moop'
+function moop { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo $1 $2; }
+
+alias moops='moops'
+function moops { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo $1 $2 | grep -e "opid" -e "secs"; }
+
+alias moopid='moopid'
+function moopid { echo "rs.slaveOk(); db.currentOp();" | mongo $1 $2 | grep -e "$3" -A 30 -B 1; }
+
+alias moopns='moopns'
+function moopns { echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$ns\", \"count\": {\$sum: 1} } })" | mongo $1 $2 $3; }
+
+alias moprof='moprof'
+function moprof { echo "print(\"Level\t| SlowMS\t| DB\"); print(\"-------------------------------------------------\"); db.adminCommand(\"listDatabases\").databases.forEach( function (mdb) { db = db.getSiblingDB(mdb.name); print(db.getProfilingStatus().was + \"\t| \" + db.getProfilingStatus().slowms + \"   \t| \" + db); } );" | mongo $1 $2 $3; }
 
 alias molag='molag'
-function molag { 'echo "print(new Date()); var status = rs.status(); status.members.forEach( function(obj) { print(obj.name + \" (\" + obj.state + \") -- \" + (status.date - obj.optimeDate)/1000) } );" | mongo --port $1'; }
+function molag { echo "print(new Date()); var status = rs.status(); status.members.forEach( function(obj) { print(obj.name + \" (\" + obj.state + \") -- \" + (status.date - obj.optimeDate)/1000) } );" | mongo --port $1; }
 
 alias cql='cql'
 function cql { ~/.cassandra/dsc-cassandra-2.1.13/bin/cqlsh "$1"; }
