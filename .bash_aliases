@@ -13,7 +13,7 @@ alias moopid='moopid'
 function moopid { echo "rs.slaveOk(); db.currentOp();" | mongo $1 $2 | grep -e "$3" -A $4 -B 1; }
 
 alias moopns='moopns'
-function moopns { echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$ns\", \"count\": {\$sum: 1} } })" | mongo $1 $2 $3; }
+function moopns { echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$3\", \"count\": {\$sum: 1} } })" | mongo $1 $2 $3; }
 
 alias moprof='moprof'
 function moprof { echo "print(\"Level\t| SlowMS\t| DB\"); print(\"-------------------------------------------------\"); db.adminCommand(\"listDatabases\").databases.forEach( function (mdb) { db = db.getSiblingDB(mdb.name); print(db.getProfilingStatus().was + \"\t| \" + db.getProfilingStatus().slowms + \"   \t| \" + db); } );" | mongo $1 $2 $3; }
