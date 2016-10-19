@@ -10,7 +10,23 @@ alias moops='moops'
 function moops { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo $1 $2 | grep -e "opid" -e "secs"; }
 
 alias moopid='moopid'
-function moopid { echo "rs.slaveOk(); db.currentOp(true).inprog.forEach(function(operation) { msg = \"OPID: \" + operation[\"opid\"] + \" - MILLIS: \"; if(\"secs_running\" in operation) { msg += operation[\"secs_running\"] }; print(msg); printjsononeline(operation); } )" | mongo $1 $2; }
+function moopid { 
+	js="rs.slaveOk(); 
+		inprog = db.currentOp(true).inprog
+		
+		for(var i = 0; i < inprog.length; i++) {
+			printjson(inprog[i])
+		}
+	"
+	echo $js
+}
+
+	
+	
+	
+	
+	
+#	.forEach(function(operation) { msg = \"OPID: \" + operation[\"opid\"] + \" - MILLIS: \"; if(\"secs_running\" in operation) { msg += operation[\"secs_running\"] }; print(msg); printjsononeline(operation); } )" | mongo $1 $2; }
 #function moopid { echo "rs.slaveOk(); db.currentOp();" | mongo $1 $2 | grep -e "$3" -A $4 -B 1; }
 #db.currentOp(true).inprog.forEach(function(o) { if(o["opid"] == 9){ printjson(o) } } )
 
