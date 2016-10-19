@@ -15,10 +15,12 @@ function moopid {
 		inprog = db.currentOp(true).inprog;
 		
 		for(var i = 0; i < inprog.length; i++) {
-			printjson(inprog[i]);
+			if(inprog[i]['opid'] == $3) {
+				printjson(inprog[i]);
+			}
 		}
 	"
-	echo $js | mongo $1 $2
+	echo $js | mongo --quiet $1 $2 $3
 }
 
 	
