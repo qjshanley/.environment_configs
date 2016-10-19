@@ -7,7 +7,23 @@ alias moop='moop'
 function moop { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo $1 $2; }
 
 alias moops='moops'
-function moops { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo $1 $2 | grep -e "opid" -e "secs"; }
+function moops { 
+	js="rs.slaveOk(); 
+		inprog = db.currentOp(true).inprog;
+		print(' secs - opid');
+		for(var i = 0; i < inprog.length; i++) {
+			msg = ' ';
+			if('secs_running' in inprog[i]) {
+				msg += inprog[i]['secs_running'] + ' - ';
+			} else {
+				msg += 'NA - ';
+			}
+			msg += inprog[i]['opid'];
+			print(msg);
+		}
+	"
+	echo $js | mongo --quiet $1 $2 $3
+}
 
 alias moopid='moopid'
 function moopid { 
@@ -22,15 +38,6 @@ function moopid {
 	"
 	echo $js | mongo --quiet $1 $2 $3
 }
-
-	
-	
-	
-	
-	
-#	.forEach(function(operation) { msg = \"OPID: \" + operation[\"opid\"] + \" - MILLIS: \"; if(\"secs_running\" in operation) { msg += operation[\"secs_running\"] }; print(msg); printjsononeline(operation); } )" | mongo $1 $2; }
-#function moopid { echo "rs.slaveOk(); db.currentOp();" | mongo $1 $2 | grep -e "$3" -A $4 -B 1; }
-#db.currentOp(true).inprog.forEach(function(o) { if(o["opid"] == 9){ printjson(o) } } )
 
 alias moopns='moopns'
 function moopns { echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$3\", \"count\": {\$sum: 1} } })" | mongo $1 $2 $3; }
