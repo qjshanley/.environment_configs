@@ -18,7 +18,7 @@ function moopid {
 			printjson(inprog[i])
 		}
 	"
-	echo $js
+	echo $js | mongo $1 $2
 }
 
 	
