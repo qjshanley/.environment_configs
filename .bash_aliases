@@ -12,10 +12,10 @@ function moops { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true
 alias moopid='moopid'
 function moopid { 
 	js="rs.slaveOk(); 
-		inprog = db.currentOp(true).inprog
+		inprog = db.currentOp(true).inprog;
 		
 		for(var i = 0; i < inprog.length; i++) {
-			printjson(inprog[i])
+			printjson(inprog[i]);
 		}
 	"
 	echo $js | mongo $1 $2
