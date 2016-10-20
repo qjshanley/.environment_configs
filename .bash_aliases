@@ -3,14 +3,18 @@ alias vi='vim'
 alias lh='ls -lh'
 alias lha='ls -lha'
 
+#USAGE: moop --port #####
+#Complete list of all operation including idle and system operations
 alias moop='moop'
-function moop { echo "rs.slaveOk(); db.currentOp({"secs_running":{\$exists:true}});" | mongo $1 $2; }
+function moop { echo "rs.slaveOk(true); db.currentOp();" | mongo $1 $2; }
 
+#USAGE: moops --port #####
+#Sorted list of running operations by TIME - OPID
 alias moops='moops'
 function moops { 
+	echo ' secs - opid'
 	js="rs.slaveOk(); 
-		inprog = db.currentOp(true).inprog;
-		print(' secs - opid');
+		inprog = db.currentOp().inprog;
 		for(var i = 0; i < inprog.length; i++) {
 			msg = ' ';
 			if('secs_running' in inprog[i]) {
@@ -22,9 +26,11 @@ function moops {
 			print(msg);
 		}
 	"
-	echo $js | mongo --quiet $1 $2 $3
+	echo $js | mongo --quiet $1 $2 | sort -n
 }
 
+#USAGE: moopid --port #####  #####
+#Print the operation where the OPID match the last value passed in
 alias moopid='moopid'
 function moopid { 
 	js="rs.slaveOk(); 
@@ -39,12 +45,8 @@ function moopid {
 	echo $js | mongo --quiet $1 $2 $3
 }
 
-alias moopns='moopns'
-function moopns { echo "rs.slaveOk(); db.system.profile.aggregate({\$group: {\"_id\": \"\$3\", \"count\": {\$sum: 1} } })" | mongo $1 $2 $3; }
-
-alias moprof='moprof'
-function moprof { echo "print(\"Level\t| SlowMS\t| DB\"); print(\"-------------------------------------------------\"); db.adminCommand(\"listDatabases\").databases.forEach( function (mdb) { db = db.getSiblingDB(mdb.name); print(db.getProfilingStatus().was + \"\t| \" + db.getProfilingStatus().slowms + \"   \t| \" + db); } );" | mongo $1 $2 $3; }
-
+#USAGE: molag --port #####
+#Print the replication lag for the cluster.
 alias molag='molag'
 function molag { echo "print(new Date()); var status = rs.status(); status.members.forEach( function(obj) { print(obj.name + \" (\" + obj.state + \") -- \" + (status.date - obj.optimeDate)/1000) } );" | mongo $1 $2; }
 
