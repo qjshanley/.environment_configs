@@ -6,7 +6,7 @@ alias lha='ls -lha'
 #USAGE: moop --port #####
 #Complete list of all operation including idle and system operations
 alias moop='moop'
-function moop { echo "rs.slaveOk(true); db.currentOp();" | mongo $1 $2; }
+function moop { echo "rs.slaveOk(true); db.currentOp();" | mongo --quiet $1 $2; }
 
 #USAGE: moops --port #####
 #Sorted list of running operations by TIME - OPID
@@ -48,7 +48,7 @@ function moopid {
 #USAGE: molag --port #####
 #Print the replication lag for the cluster.
 alias molag='molag'
-function molag { echo "print(new Date()); var status = rs.status(); status.members.forEach( function(obj) { print(obj.name + \" (\" + obj.state + \") -- \" + (status.date - obj.optimeDate)/1000) } );" | mongo $1 $2; }
+function molag { echo "print(new Date()); var status = rs.status(); status.members.forEach( function(obj) { print(obj.name + \" (\" + obj.state + \") -- \" + (status.date - obj.optimeDate)/1000) } );" | mongo --quiet $1 $2; }
 
 alias cql='cql'
 function cql { ~/.cassandra/dsc-cassandra-2.1.13/bin/cqlsh "$1"; }
