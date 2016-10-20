@@ -12,17 +12,16 @@ function moop { echo "rs.slaveOk(true); db.currentOp();" | mongo --quiet $1 $2; 
 #Sorted list of running operations by TIME - OPID
 alias moops='moops'
 function moops { 
-	echo ' secs - opid'
 	js="rs.slaveOk(); 
 		inprog = db.currentOp().inprog;
 		for(var i = 0; i < inprog.length; i++) {
 			msg = ' ';
 			if('secs_running' in inprog[i]) {
-				msg += inprog[i]['secs_running'] + ' - ';
+				msg += inprog[i]['secs_running'] + ' SECS -- ';
 			} else {
-				msg += 'NA - ';
+				msg += 'NA SECS -- ';
 			}
-			msg += inprog[i]['opid'];
+			msg += inprog[i]['opid'] + ' OPID';
 			print(msg);
 		}
 	"
