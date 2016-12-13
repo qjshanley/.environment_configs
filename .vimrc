@@ -8,12 +8,15 @@ if exists('+number')
 endif
 
 syntax on
-set tabstop=4
-set softtabstop=0
+set smartindent
+set tabstop=2
+set softtabstop=2
+set hlsearch
+set showtabline=2
 set expandtab 
 set shiftwidth=2 
 set smarttab
-set hlsearch
+set autoindent
 set shortmess+=I
 set backspace=indent,eol,start
 
