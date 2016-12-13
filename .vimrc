@@ -1,30 +1,31 @@
 "general settings
 if exists('+relativenumber')
-	set relativenumber
+  set relativenumber
 endif
 
 if exists('+number')
-	set number
+  set number
 endif
 
 syntax on
-set smartindent
 set tabstop=4
-set shiftwidth=4
+set softtabstop=0
+set expandtab 
+set shiftwidth=2 
+set smarttab
 set hlsearch
-set showtabline=2
 set shortmess+=I
 set backspace=indent,eol,start
 
 "code folding settings
 if exists('+foldmethod')
-	set foldmethod=indent
-	set foldlevel=1
-	set foldlevelstart=0
-	set foldnestmax=10
-	nnoremap f za
-	nnoremap < zm
-	nnoremap > zr
+  set foldmethod=indent
+  set foldlevel=1
+  set foldlevelstart=0
+  set foldnestmax=10
+  nnoremap f za
+  nnoremap < zm
+  nnoremap > zr
 endif
 
 "make tabs intuitive for insert mode
