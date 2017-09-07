@@ -39,7 +39,7 @@ vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
 "key mappings
-map! zz <esc>
+map! zz <Esc>
 nnoremap ; :
 nnoremap T :tabnew<CR>
 nnoremap L :tabnext<CR>
@@ -75,7 +75,7 @@ map [1;6D <C-S-Left>
 map [1;6C <C-S-Right>
 
 "key mappings to resize windows
-nnoremap <silent> <F9> :vertical resize -4<CR>
-nnoremap <silent> <F10> :vertical resize +4<CR>
-nnoremap <silent> <F11> :resize -2<CR>
-nnoremap <silent> <F12> :resize +2<CR>
+nnoremap <C-Left>   :vertical resize  -4<CR>
+nnoremap <C-Right>  :vertical resize  +4<CR>
+nnoremap <C-Down>   :resize           -2<CR>
+nnoremap <C-Up>     :resize           +2<CR>
