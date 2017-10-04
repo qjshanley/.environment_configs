@@ -4,6 +4,7 @@ environment_configs
 Configs for vim, ssh, screen, etc.
 
 ### Add this to /etc/bash.bashrc to allow all users to keep a full history ###
+```
 HISTDIR="${HOME}/.history"
 mkdir -p $HISTDIR
 HISTTIMEFORMAT='%F %T '
@@ -18,3 +19,4 @@ shopt -s histappend
 shopt -s cmdhist
 # save multi-line commands to the history with embedded newlines
 shopt -s lithist
+```
