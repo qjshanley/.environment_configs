@@ -5,7 +5,7 @@ Configs for vim, ssh, screen, etc.
 
 ### Add this to /etc/bash.bashrc to allow all users to keep a full history ###
 ```
-HISTDIR="${HOME}/.history"
+HISTDIR="${HOME}/.bash_history"
 mkdir -p $HISTDIR
 HISTTIMEFORMAT='%F %T '
 HISTFILE="${HISTDIR}/history-$(date +%Y%m%d)"
