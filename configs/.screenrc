@@ -14,7 +14,6 @@ bind 'a' title
 bind 'l' windowlist
 bind 'n' focus down
 bind 's' split
-bind 'S' log
 bind 't' focus up
 bind 'x' remove
 bind 'X' lockscreen
@@ -22,6 +21,11 @@ bind 'X' lockscreen
 bindkey -k k5 escape ^O^O
 #turn on the tick binding again (bound to F6)
 bindkey -k k6 escape ``
+
+# `S puts Screen into resize mode. Resize regions using ARROW-Up and ARROW-Down keys.
+bind 'S' eval 'command -c rsz' # enter resize mode
+bind -c rsz -k ku eval 'resize -v +5' 'command -c rsz'
+bind -c rsz -k kd eval 'resize -v -5' 'command -c rsz'
 
 # Window list at the bottom. hostname, left-aligned tabs and redmarked active windows:
 hardstatus alwayslastline
