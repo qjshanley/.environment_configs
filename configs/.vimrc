@@ -44,6 +44,8 @@ nnoremap ; :
 nnoremap T :tabnew<CR>
 nnoremap L :tabnext<CR>
 nnoremap H :tabprev<CR>
+nnoremap <C-S-L> :tabm +1<CR>
+nnoremap <C-S-H> :tabm -1<CR>
 nnoremap s :%s/    /\t/gc<CR>
 set pastetoggle=<F2>
 nnoremap <F3> :Explore<CR>
