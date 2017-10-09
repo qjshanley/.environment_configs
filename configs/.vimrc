@@ -8,6 +8,7 @@ if exists('+number')
 endif
 
 syntax on
+set laststatus=2
 set smartindent
 set tabstop=2
 set softtabstop=2
