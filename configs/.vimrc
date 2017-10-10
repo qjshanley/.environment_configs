@@ -21,6 +21,13 @@ set autoindent
 set shortmess+=I
 set backspace=indent,eol,start
 
+let mapleader = ','
+
+" git commands
+map <Leader>gs :! git status<CR>
+map <Leader>gd :! git diff %<CR>
+map <Leader>ga :! git add %<CR>
+
 "code folding settings
 if exists('+foldmethod')
   set foldmethod=indent
