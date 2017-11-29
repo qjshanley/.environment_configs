@@ -22,6 +22,7 @@ shopt -s lithist
 ```
 
 ### Keyboard Layout
+```
 //
 // Brazilian Dvorak layout                                 2005-04-18
 // "Teclado Simplificado Brasileiro" ou "Dvorak Brasileiro"
@@ -101,3 +102,4 @@ xkb_symbols "dvorak" {
 // Configures the use of the AltGr key
     include "level3(ralt_switch)"
 };
+```
