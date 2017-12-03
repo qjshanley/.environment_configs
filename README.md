@@ -35,10 +35,10 @@ shopt -s lithist
 partial alphanumeric_keys
 xkb_symbols "dvorak" {
 
-    name[Group1]="Portuguese (Brazil, Dvorak)";
+    name[Group1]="Portuguese (Brazil, Dvorak)";
 
 // Numeric row
-    key <TLDE> { [   dead_grave,      dead_tilde,           dead_acute,  dead_circumflex ] };
+    key <TLDE> { [   dead_acute,      dead_tilde,           dead_grave,  dead_circumflex ] };
     key <AE01> { [            1,          exclam ] };
     key <AE02> { [            2,              at ] };
     key <AE03> { [            3,      numbersign ] };
