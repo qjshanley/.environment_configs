@@ -13,7 +13,7 @@ defscrollback 10000
 bind 'a' title
 bind 'l' windowlist
 bind 'n' focus down
-bind 'S' split
+bind 's' split
 bind 't' focus up
 bind 'x' remove
 bind 'X' lockscreen
@@ -22,10 +22,10 @@ bindkey -k k5 escape ^O^O
 #turn on the tick binding again (bound to F6)
 bindkey -k k6 escape ``
 
-# `S puts Screen into resize mode. Resize regions using ARROW-Up and ARROW-Down keys.
-bind 's' eval 'command -c rsz' # enter resize mode
-bind -c rsz -k ku eval 'resize -v +5' 'command -c rsz'
-bind -c rsz -k kd eval 'resize -v -5' 'command -c rsz'
+# Resize regions using SHIFT ARROW-Left and SHIFT ARROW-Right keys. Reset sizes with SHIFT ARROW-Down.
+bindkey ^[[1;2B resize =
+bindkey ^[[1;2C resize +5
+bindkey ^[[1;2D resize -5
 
 # Window list at the bottom. hostname, left-aligned tabs and redmarked active windows:
 hardstatus alwayslastline
