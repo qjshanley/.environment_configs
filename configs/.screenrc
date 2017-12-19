@@ -11,7 +11,6 @@ escape ``
 defscrollback 10000
 
 bind 'a' title
-bind 'h' hardcopy -h
 bind 'l' windowlist
 bind 'n' focus down
 bind 's' split
@@ -24,6 +23,7 @@ bindkey -k k5 escape ^O^O
 bindkey -k k6 escape ``
 
 # Resize regions using SHIFT ARROW-Left and SHIFT ARROW-Right keys. Reset sizes with SHIFT ARROW-Down.
+bindkey ^[[1;2A resize +50
 bindkey ^[[1;2B resize =
 bindkey ^[[1;2C resize +5
 bindkey ^[[1;2D resize -5

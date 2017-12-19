@@ -66,26 +66,15 @@ nnoremap <Down> <c-w>j
 nnoremap <Left> <c-w>h
 nnoremap <Right> <c-w>l
 
-"mapping CTRL-Arrow keys
-map [1;5A <C-Up>
-map [1;5B <C-Down>
-map [1;5D <C-Left>
-map [1;5C <C-Right>
-
-"mapping SHIFT-Arrow keys
-map [1;2A <S-Up>
-map [1;2B <S-Down>
-map [1;2D <S-Left>
-map [1;2C <S-Right>
-
 "mapping CTRL-SHIFT-Arrow keys
 map [1;6A <C-S-Up>
 map [1;6B <C-S-Down>
 map [1;6D <C-S-Left>
 map [1;6C <C-S-Right>
 
-"key mappings to resize windows
-nnoremap <C-Left>   :vertical resize  -4<CR>
-nnoremap <C-Right>  :vertical resize  +4<CR>
-nnoremap <C-Down>   :resize           -2<CR>
-nnoremap <C-Up>     :resize           +2<CR>
+"mapping ALT-SHIFT-Arrow keys
+map [1;9A :resize +2<CR>
+map [1;9B :resize -2<CR>
+map [1;9C :vertical resize +4<CR>
+map [1;9D :vertical resize -4<CR>
+
