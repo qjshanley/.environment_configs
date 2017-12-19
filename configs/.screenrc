@@ -11,6 +11,7 @@ escape ``
 defscrollback 10000
 
 bind 'a' title
+bind 'h' hardcopy -h
 bind 'l' windowlist
 bind 'n' focus down
 bind 's' split
