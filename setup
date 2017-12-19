@@ -4,9 +4,9 @@
 set -e
 
 cd "$HOME"
-for config in $(ls -A "$HOME"/.environment/configs/.)
+for config in $(ls -A "$HOME"/code/qub3r/environment/configs/.)
 do
-  ln -sf "$HOME"/.environment/configs/"$config"
+  ln -sf "$HOME"/code/qub3r/environment/configs/"$config"
 done
 
 touch "$HOME"/.bashrc
