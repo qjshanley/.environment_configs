@@ -10,11 +10,26 @@ escape ``
 # more scrollbacks!
 defscrollback 10000
 
+# always fit after selecting a window
+bind '0' eval 'select 0' 'fit'
+bind '1' eval 'select 1' 'fit'
+bind '2' eval 'select 2' 'fit'
+bind '3' eval 'select 3' 'fit'
+bind '4' eval 'select 4' 'fit'
+bind '5' eval 'select 5' 'fit'
+bind '6' eval 'select 6' 'fit'
+bind '7' eval 'select 7' 'fit'
+bind '8' eval 'select 8' 'fit'
+bind '9' eval 'select 9' 'fit'
+
 bind 'a' title
+bind 'f' fit
+bind 'F' flow
 bind 'l' windowlist
-bind 'n' focus down
+bind 'n' focus next
 bind 's' split
-bind 't' focus up
+bind 'S' split -v
+bind 't' focus prev
 bind 'x' remove
 bind 'X' lockscreen
 #turn off the tick binding from (bound to F5)
@@ -22,11 +37,23 @@ bindkey -k k5 escape ^O^O
 #turn on the tick binding again (bound to F6)
 bindkey -k k6 escape ``
 
-# Resize regions using SHIFT ARROW-Left and SHIFT ARROW-Right keys. Reset sizes with SHIFT ARROW-Down.
-bindkey ^[[1;2A resize +50
-bindkey ^[[1;2B resize =
-bindkey ^[[1;2C resize +5
-bindkey ^[[1;2D resize -5
+# Focus regions using SHIFT ARROW.
+bindkey ^[[1;2A resize -v +5
+bindkey ^[[1;2B resize -v -5
+bindkey ^[[1;2C resize -h +10
+bindkey ^[[1;2D resize -h -10
+
+# Resize regions using OPTION/ALT ARROW.
+bindkey ^[[1;9A focus up
+bindkey ^[[1;9B focus down
+bindkey ^[[1;9C focus right
+bindkey ^[[1;9D focus left
+
+# Resize regions using SHIFT OPTION/ALT ARROW.
+bindkey ^[[1;10A resize -v max
+bindkey ^[[1;10B resize -v =
+bindkey ^[[1;10C resize -h max
+bindkey ^[[1;10D resize -h =
 
 # Window list at the bottom. hostname, left-aligned tabs and redmarked active windows:
 hardstatus alwayslastline
