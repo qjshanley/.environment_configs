@@ -22,14 +22,13 @@ bind '7' eval 'select 7' 'fit'
 bind '8' eval 'select 8' 'fit'
 bind '9' eval 'select 9' 'fit'
 
-bind 'a' title
 bind 'f' fit
 bind 'F' flow
 bind 'l' windowlist
 bind 'n' focus next
 bind 's' split
 bind 'S' split -v
-bind 't' focus prev
+bind 't' title
 bind 'x' remove
 bind 'X' lockscreen
 #turn off the tick binding from (bound to F5)
