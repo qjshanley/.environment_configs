@@ -43,11 +43,11 @@ bindkey ^[[1;2B resize -v -5
 bindkey ^[[1;2C resize -h +10
 bindkey ^[[1;2D resize -h -10
 
-# Resize regions using OPTION/ALT ARROW.
-bindkey ^[[1;9A focus up
-bindkey ^[[1;9B focus down
-bindkey ^[[1;9C focus right
-bindkey ^[[1;9D focus left
+# Resize regions using CMD ARROW. (Whatever is left of spacebar).
+bindkey ^[[1;7A focus up
+bindkey ^[[1;7B focus down
+bindkey ^[[1;7C focus right
+bindkey ^[[1;7D focus left
 
 # Resize regions using SHIFT OPTION/ALT ARROW.
 bindkey ^[[1;10A resize -v max
