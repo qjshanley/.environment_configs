@@ -4,8 +4,9 @@ startup_message off
 # Turn the even more annoying whole-screen-flash-on-tab-complete "feature"
 vbell off
 
-# Remaps control+a to the tick/tilda key
-escape ^[^[
+# Remaps control+a to the ESC key
+#escape ^[^[
+# currently using iterm to pass hexcode 0x1 (Ctrl + a) when the ESC key is pressed
 
 # more scrollbacks!
 defscrollback 10000
@@ -29,13 +30,13 @@ bind 'S' split -v
 bind 'x' remove
 bind 'X' lockscreen
 
-# Focus regions using SHIFT ARROW.
+# Resize regions using SHIFT ARROW.
 bindkey ^[[1;2A resize -v +5
 bindkey ^[[1;2B resize -v -5
 bindkey ^[[1;2C resize -h +10
 bindkey ^[[1;2D resize -h -10
 
-# Resize regions using CMD ARROW. (Whatever is left of spacebar).
+# Focus regions using CMD ARROW.
 bindkey ^[[1;5A focus up
 bindkey ^[[1;5B focus down
 bindkey ^[[1;5C focus right
