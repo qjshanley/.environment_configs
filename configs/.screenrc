@@ -5,7 +5,7 @@ startup_message off
 vbell off
 
 # Remaps control+a to the tick/tilda key
-escape ``
+escape ^[^[
 
 # more scrollbacks!
 defscrollback 10000
@@ -24,17 +24,13 @@ bind '9' eval 'select 9' 'fit'
 
 bind 'f' fit
 bind 'F' flow
-bind 'l' windowlist
+bind ' ' windowlist
 bind 'n' focus next
 bind 's' split
 bind 'S' split -v
-bind 't' title
+bind 't' focus prev
 bind 'x' remove
 bind 'X' lockscreen
-#turn off the tick binding from (bound to F5)
-bindkey -k k5 escape ^O^O
-#turn on the tick binding again (bound to F6)
-bindkey -k k6 escape ``
 
 # Focus regions using SHIFT ARROW.
 bindkey ^[[1;2A resize -v +5
@@ -43,10 +39,10 @@ bindkey ^[[1;2C resize -h +10
 bindkey ^[[1;2D resize -h -10
 
 # Resize regions using CMD ARROW. (Whatever is left of spacebar).
-bindkey ^[[1;7A focus up
-bindkey ^[[1;7B focus down
-bindkey ^[[1;7C focus right
-bindkey ^[[1;7D focus left
+bindkey ^[[1;5A focus up
+bindkey ^[[1;5B focus down
+bindkey ^[[1;5C focus right
+bindkey ^[[1;5D focus left
 
 # Resize regions using SHIFT OPTION/ALT ARROW.
 bindkey ^[[1;10A resize -v max
