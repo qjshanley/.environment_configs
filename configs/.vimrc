@@ -23,6 +23,10 @@ set backspace=indent,eol,start
 
 let mapleader = ','
 
+" turn number on and off
+map <Leader>no :set nonumber <bar> :set norelativenumber<CR>
+map <Leader>nO :set number <bar> :set relativenumber<CR>
+
 " git commands
 map <Leader>gs :! git status<CR>
 map <Leader>gd :! git diff %<CR>
