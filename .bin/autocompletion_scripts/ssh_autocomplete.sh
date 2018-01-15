@@ -15,8 +15,10 @@ _ssh_autocomplete()
   prev="${COMP_WORDS[COMP_CWORD-1]}"
   opts="$(_hosts)"
   COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
+  [ -z "$COMPREPLY" ] && opts="$(ls -A)" && COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
   return 0
 }
 
+complete -F _ssh_autocomplete shh
 complete -F _ssh_autocomplete ssh
-complete -F _ssh_autocomplete shen
+complete -F _ssh_autocomplete scp
