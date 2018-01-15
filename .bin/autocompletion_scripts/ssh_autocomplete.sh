@@ -19,3 +19,4 @@ _ssh_autocomplete()
 }
 
 complete -F _ssh_autocomplete ssh
+complete -F _ssh_autocomplete shen
