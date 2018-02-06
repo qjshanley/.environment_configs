@@ -4,10 +4,6 @@ startup_message off
 # Turn the even more annoying whole-screen-flash-on-tab-complete "feature"
 vbell off
 
-# Remaps control+a to the ESC key
-escape ^[^[
-# can also use iterm to pass hexcode 0x1 (Ctrl + a) when the ESC key is pressed
-
 # more scrollbacks!
 defscrollback 10000
 
@@ -48,5 +44,6 @@ bindkey ^[[1;10C resize -h max
 bindkey ^[[1;10D resize -h =
 
 # Window list at the bottom. hostname, left-aligned tabs and redmarked active windows:
+backtick 0 30 30 hostname
 hardstatus alwayslastline
-hardstatus string '%{= ky}[ %{g}%H %{y}][ %{= kw}%?%-w%?%{R}%n*%t%?(%u)%?%{w}%?%+w%?%?%= %{y}][%{g} %l %{y}][%{B} %m/%d %{W}%c %{y}]'
+hardstatus string '%{= ky}[ %{g}%` %{y}][ %{= kw}%?%-w%?%{R}%n*%t%?(%u)%?%{w}%?%+w%?%?%= %{y}][%{g} %l %{y}][%{B} %m/%d %{W}%c %{y}]'
