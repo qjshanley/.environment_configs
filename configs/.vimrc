@@ -55,7 +55,6 @@ vnoremap <Tab> >gv
 vnoremap <S-Tab> <gv
 
 "key mappings
-nnoremap ; :
 nnoremap T :tabnew<CR>
 nnoremap L :tabnext<CR>
 nnoremap H :tabprev<CR>
