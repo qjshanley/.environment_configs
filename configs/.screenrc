@@ -31,17 +31,17 @@ bindkey ^[[1;2B resize -v -5
 bindkey ^[[1;2C resize -h +10
 bindkey ^[[1;2D resize -h -10
 
-# Focus regions using CMD ARROW.
-bindkey ^[[1;5A focus up
-bindkey ^[[1;5B focus down
-bindkey ^[[1;5C focus right
-bindkey ^[[1;5D focus left
-
 # Resize regions using SHIFT OPTION/ALT ARROW.
 bindkey ^[[1;10A resize -v max
 bindkey ^[[1;10B resize -v =
 bindkey ^[[1;10C resize -h max
 bindkey ^[[1;10D resize -h =
+
+# Focus regions using CMD ARROW.
+# bindkey ^[[1;5A focus up
+# bindkey ^[[1;5B focus down
+# bindkey ^[[1;5C focus right
+# bindkey ^[[1;5D focus left
 
 # Window list at the bottom. hostname, left-aligned tabs and redmarked active windows:
 backtick 0 30 30 hostname
