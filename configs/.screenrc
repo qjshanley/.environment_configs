@@ -19,7 +19,6 @@ bind '7' eval 'select 7' 'fit'
 bind '8' eval 'select 8' 'fit'
 bind '9' eval 'select 9' 'fit'
 
-bind 'C' copy
 bind 'f' fit
 bind 'F' flow
 bind 's' split

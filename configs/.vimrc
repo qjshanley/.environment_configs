@@ -7,19 +7,15 @@ if exists('+number')
   set number
 endif
 
-syntax on
-set laststatus=2
-set smartindent
-set tabstop=2
-set softtabstop=2
-set hlsearch
-set showtabline=2
-set expandtab 
-set shiftwidth=2 
-set smarttab
-set autoindent
-set shortmess+=I
-set backspace=indent,eol,start
+syntax on                       " enable syntax highlighting
+filetype plugin indent on       " latest smart tab setting
+set tabstop=2                   " show existing tab
+set shiftwidth=2                " when indenting with '>', use spaces
+set expandtab                   " On pressing tab, insert spaces
+set laststatus=2                " always display the status on the bottom-1 line
+set hlsearch                    " when searching, highlight all
+set shortmess+=I                " don't display the intro message
+set backspace=indent,eol,start  " enable regular backspacing
 
 let mapleader = ','
 
