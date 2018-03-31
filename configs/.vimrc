@@ -30,7 +30,7 @@ map <Leader>ga :! git add %<CR>
 
 " open commands
 map <Leader>ob :buffers<CR>:buffer<Space>
-map <Leader>oe :Explore<CR>
+map <Leader>oe :Vexplore<CR>
 
 "code folding settings
 if exists('+foldmethod')
@@ -78,3 +78,8 @@ map [1;9B :resize -2<CR>
 map [1;9C :vertical resize +4<CR>
 map [1;9D :vertical resize -4<CR>
 
+" netrw settings
+let g:netrw_banner = 0
+let g:netrw_liststyle = 3
+let g:netrw_browse_split = 4
+let g:netrw_winsize = 30
