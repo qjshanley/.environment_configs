@@ -39,20 +39,6 @@ Ctrl Right | [1;5C
 Ctrl Shift Right | [1;6C
 Alt/Opt Right | [1;9C
 
-
-### Install GNU Bash v4.4.18 [Website](https://www.gnu.org/software/bash/) | [Mirror](http://ftpmirror.gnu.org/bash/) | [Download](http://ftpmirror.gnu.org/bash/bash-4.4.18.tar.gz) | [Manual](https://www.gnu.org/software/bash/manual/bash.html)
-```
-BASH_VERSION="4.4.18" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/bash/bash-${BASH_VERSION}.tar.gz
-tar xzvf bash-${BASH_VERSION}.tar.gz
-cd bash-${BASH_VERSION}
-./configure && sudo make install
-cd /tmp/ && rm -rf bash-${BASH_VERSION}*
-```
-```
-System Preferences -> Users & Groups -> Unlock -> Right Click Account -> Advanced Options -> Login Shell: /usr/local/bin/bash
-```
-
 ### Install Vim [Website](https://www.vim.org/) | [Download](https://www.vim.org/download.php) | [Manual](http://vimdoc.sourceforge.net/htmldoc/help.html)
 ```
 mkdir -p ~/code/github && cd ~/code/github
@@ -60,14 +46,47 @@ git clone https://github.com/vim/vim.git
 cd vim/src && make && sudo make install
 ```
 
+### Install GNU Bash v4.4.18 [Website](https://www.gnu.org/software/bash/) | [Mirror](http://ftpmirror.gnu.org/bash/) | [Download](http://ftpmirror.gnu.org/bash/bash-4.4.18.tar.gz) | [Manual](https://www.gnu.org/software/bash/manual/bash.html)
+```
+SOFTWARE="bash" && VERSION="4.4.18" && cd /tmp/
+curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
+tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
+cd ${SOFTWARE}-${VERSION}
+./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}*
+```
+```
+System Preferences -> Users & Groups -> Unlock -> Right Click Account -> Advanced Options -> Login Shell: /usr/local/bin/bash
+```
+
 ### Install GNU Screen v4.6.2 [Website](https://www.gnu.org/software/screen/) | [Mirror](http://ftpmirror.gnu.org/screen/) | [Download](http://ftpmirror.gnu.org/screen/screen-4.6.2.tar.gz) | [Manual](https://www.gnu.org/software/screen/manual/screen.html)
 ```
-SCREEN_VERSION="4.6.2" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/screen/screen-${SCREEN_VERSION}.tar.gz
-tar xzvf screen-${SCREEN_VERSION}.tar.gz
-cd screen-${SCREEN_VERSION}
-./configure && make && sudo cp screen /usr/local/bin/screen
-cd /tmp/ && rm -rf screen-${SCREEN_VERSION}*
+SOFTWARE="screen" && VERSION="4.6.2" && cd /tmp/
+curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
+tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
+cd ${SOFTWARE}-${VERSION}
+./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}*
+```
+
+### Install GNU Autoconf v2.69 [Website](https://www.gnu.org/software/autoconf/) | [Mirror](http://ftpmirror.gnu.org/autoconf/) | [Download](http://ftpmirror.gnu.org/autoconf/autoconf-2.69.tar.gz) | [Manual](https://www.gnu.org/software/autoconf/manual/autoconf.html)
+```
+SOFTWARE="autoconf" && VERSION="2.69" && cd /tmp/
+curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
+tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
+cd ${SOFTWARE}-${VERSION}
+./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}*
+```
+
+### Install GNU Automake v1.16 [Website](https://www.gnu.org/software/automake/) | [Mirror](http://ftpmirror.gnu.org/automake/) | [Download](http://ftpmirror.gnu.org/automake/automake-1.16.tar.gz) | [Manual](https://www.gnu.org/software/automake/manual/automake.html)
+```
+SOFTWARE="automake" && VERSION="1.16" && cd /tmp/
+curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
+tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
+cd ${SOFTWARE}-${VERSION}
+./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}*
 ```
 
 ### Install karibener [Website](https://pqrs.org/osx/karabiner/) | [Manual](https://pqrs.org/osx/karabiner/document.html)
