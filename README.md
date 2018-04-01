@@ -19,8 +19,7 @@ System Preferences -> General -> Default Web Browser: Google Chrome
 
 ### Install GNU Bash v4.4.18 [Website](https://www.gnu.org/software/bash/) | [Mirror](http://ftpmirror.gnu.org/bash/) | [Download](http://ftpmirror.gnu.org/bash/bash-4.4.18.tar.gz) | [Manual](https://www.gnu.org/software/bash/manual/bash.html)
 ```
-cd /tmp/
-BASH_VERSION="4.4.18"
+BASH_VERSION="4.4.18" && cd /tmp/
 curl -O -J -L http://ftpmirror.gnu.org/bash/bash-${BASH_VERSION}.tar.gz
 tar xzvf bash-${BASH_VERSION}.tar.gz
 cd bash-${BASH_VERSION}
@@ -40,8 +39,7 @@ cd vim/src && make && sudo make install
 
 ### Install GNU Screen v4.6.2 [Website](https://www.gnu.org/software/screen/) | [Mirror](http://ftpmirror.gnu.org/screen/) | [Download](http://ftpmirror.gnu.org/screen/screen-4.6.2.tar.gz) | [Manual](https://www.gnu.org/software/screen/manual/screen.html)
 ```
-cd /tmp/
-SCREEN_VERSION="4.6.2"
+SCREEN_VERSION="4.6.2" && cd /tmp/
 curl -O -J -L http://ftpmirror.gnu.org/screen/screen-${SCREEN_VERSION}.tar.gz
 tar xzvf screen-${SCREEN_VERSION}.tar.gz
 cd screen-${SCREEN_VERSION}
