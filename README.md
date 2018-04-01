@@ -45,7 +45,7 @@ SOFTWARE="bash" && VERSION="4.4.18" && cd /tmp/
 curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
-./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+./configure --prefix=/usr/local && make && sudo make install
 cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 ```
@@ -58,7 +58,7 @@ SOFTWARE="screen" && VERSION="4.6.2" && cd /tmp/
 curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
-./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+./configure --prefix=/usr/local && make && sudo make install
 cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 
@@ -68,7 +68,7 @@ SOFTWARE="autoconf" && VERSION="2.69" && cd /tmp/
 curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
-./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+./configure --prefix=/usr/local && make && sudo make install
 cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 
@@ -78,15 +78,24 @@ SOFTWARE="automake" && VERSION="1.16" && cd /tmp/
 curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
-./configure && make && ( sudo make install || sudo cp ${SOFTWARE} /usr/local/bin/${SOFTWARE} )
+./configure --prefix=/usr/local && make && sudo make install
 cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
+```
+
+### Install universal-ctags [Website](https://ctags.io/) | [Download](https://github.com/universal-ctags/ctags) | [Manual](http://docs.ctags.io/en/latest/)
+```
+mkdir -p ~/code/github && cd ~/code/github
+git clone https://github.com/universal-ctags/ctags.git
+cd ctags && ./autogen.sh
+./configure --prefix=/usr/local && make && sudo make install
 ```
 
 ### Install Vim [Website](https://www.vim.org/) | [Download](https://www.vim.org/download.php) | [Manual](http://vimdoc.sourceforge.net/htmldoc/help.html)
 ```
 mkdir -p ~/code/github && cd ~/code/github
 git clone https://github.com/vim/vim.git
-cd vim/src && make && sudo make install
+cd vim/src
+./configure --prefix=/usr/local && make && sudo make install
 ```
 
 ### Install karibener [Website](https://pqrs.org/osx/karabiner/) | [Manual](https://pqrs.org/osx/karabiner/document.html)
