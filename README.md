@@ -88,7 +88,7 @@ SOFTWARE="pkg-config" && VERSION="0.29.2" && cd /tmp/
 curl -O -J -L https://pkg-config.freedesktop.org/releases/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local && make && sudo make install
+./configure --prefix=/usr/local --with-internal-glib && make && sudo make install
 cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 
