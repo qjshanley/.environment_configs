@@ -24,11 +24,11 @@ bind 'F' flow
 bind 's' split
 bind 'S' split -v
 
-# Resize regions using SHIFT ARROW.
-bindkey ^[[1;2A resize -v +5
-bindkey ^[[1;2B resize -v -5
-bindkey ^[[1;2C resize -h +10
-bindkey ^[[1;2D resize -h -10
+# Resize regions using OPTION/ALT ARROW.
+bindkey ^[[1;9A resize -v +5
+bindkey ^[[1;9B resize -v -5
+bindkey ^[[1;9C resize -h +10
+bindkey ^[[1;9D resize -h -10
 
 # Resize regions using SHIFT OPTION/ALT ARROW.
 bindkey ^[[1;10A resize -v max
