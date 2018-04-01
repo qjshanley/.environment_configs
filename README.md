@@ -70,7 +70,6 @@ cd screen-${SCREEN_VERSION}
 cd /tmp/ && rm -rf screen-${SCREEN_VERSION}*
 ```
 
-## Keyboard Modifications
 ### Install karibener [Website](https://pqrs.org/osx/karabiner/) | [Manual](https://pqrs.org/osx/karabiner/document.html)
 Setup key mappings in Karabiner-Elements Preferences
 
@@ -89,6 +88,12 @@ Uncheck autocorrections and smart quotes
 Replace | With
 ------- | ----
 `&&shrug` | `¯\_(ツ)_/¯`
+
+### System Sound
+Disable the annoying alert beep thing.
+```
+System Preferences -> Sound -> Sound Effects -> Alert volume: off
+```
 
 # Useful Links
 GNU Manuals https://www.gnu.org/manual/
