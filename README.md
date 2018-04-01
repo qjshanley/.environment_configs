@@ -46,7 +46,6 @@ curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
 ./configure --prefix=/usr/local && make && sudo make install
-cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 ```
 System Preferences -> Users & Groups -> Unlock -> Right Click Account -> Advanced Options -> Login Shell: /usr/local/bin/bash
@@ -59,7 +58,6 @@ curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
 ./configure --prefix=/usr/local && make && sudo make install
-cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 
 ### Install GNU Autoconf v2.69 [Website](https://www.gnu.org/software/autoconf/) | [Mirror](http://ftpmirror.gnu.org/autoconf/) | [Download](http://ftpmirror.gnu.org/autoconf/autoconf-2.69.tar.gz) | [Manual](https://www.gnu.org/software/autoconf/manual/autoconf.html)
@@ -69,7 +67,6 @@ curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
 ./configure --prefix=/usr/local && make && sudo make install
-cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 
 ### Install GNU Automake v1.16 [Website](https://www.gnu.org/software/automake/) | [Mirror](http://ftpmirror.gnu.org/automake/) | [Download](http://ftpmirror.gnu.org/automake/automake-1.16.tar.gz) | [Manual](https://www.gnu.org/software/automake/manual/automake.html)
@@ -79,7 +76,6 @@ curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
 ./configure --prefix=/usr/local && make && sudo make install
-cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 
 ### Install pkg-config v0.29.2 [Website](https://pkg-config.freedesktop.org/) | [Releases](https://pkg-config.freedesktop.org/releases/) | [Download](https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz)
@@ -89,7 +85,6 @@ curl -O -J -L https://pkg-config.freedesktop.org/releases/${SOFTWARE}-${VERSION}
 tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
 cd ${SOFTWARE}-${VERSION}
 ./configure --prefix=/usr/local --with-internal-glib && make && sudo make install
-cd /tmp/ && rm -rf ${SOFTWARE}-${VERSION}* && cd
 ```
 
 ### Install universal-ctags [Website](https://ctags.io/) | [Download](https://github.com/universal-ctags/ctags) | [Manual](http://docs.ctags.io/en/latest/)
