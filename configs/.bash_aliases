@@ -1,7 +1,7 @@
 # User specific aliases and functions
 alias vi='vim'
-alias lh='ls -lh | less'
-alias lha='ls -lha | less'
+alias lh='ls -lh'
+alias lha='ls -lha'
 
 shh() { 
   if [ "$1" == "-c" ]; then
