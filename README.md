@@ -103,6 +103,28 @@ cd vim/src
 ./configure --prefix=/usr/local && make && sudo make install
 ```
 
+### Install Go v1.10
+```
+# To build a Go installation with cgo support, which permits Go programs to import C libraries, a C compiler such as gcc or clang must be installed first. Do this using whatever installation method is standard on the system.
+#To build without cgo, set the environment variable CGO_ENABLED=0 before running all.bash or make.bash.
+
+# setup
+GOROOT_BOOTSTRAP_VERSION="1.4" && GOROOT_BOOTSTRAP_DIR=/tmp/go
+# download
+sudo rm -rf $GOROOT_BOOTSTRAP_DIR && sudo git clone https://github.com/golang/go.git $GOROOT_BOOTSTRAP_DIR
+# compile
+cd ${GOROOT_BOOTSTRAP_DIR}/src && sudo git checkout release-branch.go${BOOTSTRAP_VERSION} && sudo ./make.bash
+
+# setup
+GOROOT_VERSION="1.10" && GOROOT_DIR=~/usr/local/go
+# download
+sudo rm -rf $GOROOT_DIR && git clone https://github.com/golang/go.git $GOROOT_DIR && cd ${GOROOT_DIR}/src
+# compile
+git checkout release-branch.go${GO_VERSION} && sudo GOROOT=/usr/local/bin GOROOT_BOOTSTRAP=$GOROOT_BOOTSTRAP_DIR ./all.bash
+# clean up
+sudo rm -rf $GOROOT_BOOTSTRAP_DIR
+```
+
 ### Install karibener [Website](https://pqrs.org/osx/karabiner/) | [Manual](https://pqrs.org/osx/karabiner/document.html)
 Setup key mappings in Karabiner-Elements Preferences
 
