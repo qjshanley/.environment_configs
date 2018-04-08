@@ -105,8 +105,14 @@ cd vim/src
 
 ### Install Go v1.10
 ```
+### tarball
+SOFTWARE="go" && VERSION="1.10.1" && ARCH="darwin-amd64"
+cd /tmp && curl -O -J -L https://dl.google.com/${SOFTWARE}/${SOFTWARE}${VERSION}.${ARCH}.tar.gz
+sudo tar -C /usr/local -xzf ${SOFTWARE}${VERSION}.${ARCH}.tar.gz
+
+### manual install
 # To build a Go installation with cgo support, which permits Go programs to import C libraries, a C compiler such as gcc or clang must be installed first. Do this using whatever installation method is standard on the system.
-#To build without cgo, set the environment variable CGO_ENABLED=0 before running all.bash or make.bash.
+# To build without cgo, set the environment variable CGO_ENABLED=0 before running all.bash or make.bash.
 
 # setup
 GOROOT_BOOTSTRAP_VERSION="1.4" && GOROOT_BOOTSTRAP_DIR=/tmp/go
