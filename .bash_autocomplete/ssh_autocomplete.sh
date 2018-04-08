@@ -1,10 +1,7 @@
 #! /usr/bin/env bash
 
 _hosts() {
-  local known_hosts
-  ssh_configs=$(grep '^Host' ~/.ssh/config ~/.ssh/config.d/* | grep -v '[?*]' | cut -d ' ' -f 2-)
-  known_hosts=$(cut -d ' ' -f 1 ~/.ssh/known_hosts)
-  echo $ssh_configs $known_hosts | tr ' ' '\n' | grep '^[a-z|A-Z]'
+  [ -f ~/.ssh/known_hosts ] && grep '^[a-z|A-Z]' ~/.ssh/known_hosts | awk '{print $1}'
 }
 
 _ssh_autocomplete() 
@@ -19,6 +16,5 @@ _ssh_autocomplete()
   return 0
 }
 
-complete -F _ssh_autocomplete shh
 complete -F _ssh_autocomplete ssh
 complete -F _ssh_autocomplete scp

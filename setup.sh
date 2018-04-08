@@ -14,6 +14,6 @@ if [ -d "${ENV_DIR}/configs" ]; then
     ln -sf "${ENV_DIR}/configs/${config}" ~/.
   done
 
-  # user executables
-  ln -sf "${ENV_DIR}/.bin" ~/.
+  # bash autocomplete
+  ln -sf "${ENV_DIR}/.bash_autocomplete" ~/.
 fi
