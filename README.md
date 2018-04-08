@@ -108,7 +108,7 @@ cd vim/src
 ### tarball
 SOFTWARE="go" && VERSION="1.10.1" && ARCH="darwin-amd64"
 cd /tmp && curl -O -J -L https://dl.google.com/${SOFTWARE}/${SOFTWARE}${VERSION}.${ARCH}.tar.gz
-sudo tar -C /usr/local -xzf ${SOFTWARE}${VERSION}.${ARCH}.tar.gz
+sudo rm -rf /usr/local/go && sudo tar -C /usr/local -xzf ${SOFTWARE}${VERSION}.${ARCH}.tar.gz
 
 ### manual install
 # To build a Go installation with cgo support, which permits Go programs to import C libraries, a C compiler such as gcc or clang must be installed first. Do this using whatever installation method is standard on the system.
@@ -117,16 +117,20 @@ sudo tar -C /usr/local -xzf ${SOFTWARE}${VERSION}.${ARCH}.tar.gz
 # setup
 GOROOT_BOOTSTRAP_VERSION="1.4" && GOROOT_BOOTSTRAP_DIR=/tmp/go
 # download
-sudo rm -rf $GOROOT_BOOTSTRAP_DIR && sudo git clone https://github.com/golang/go.git $GOROOT_BOOTSTRAP_DIR
+sudo rm -rf $GOROOT_BOOTSTRAP_DIR
+sudo git clone https://github.com/golang/go.git $GOROOT_BOOTSTRAP_DIR
 # compile
-cd ${GOROOT_BOOTSTRAP_DIR}/src && sudo git checkout release-branch.go${BOOTSTRAP_VERSION} && sudo ./make.bash
+cd ${GOROOT_BOOTSTRAP_DIR}/src
+sudo git checkout release-branch.go${GOROOT_BOOTSTRAP_VERSION} && sudo ./make.bash
 
 # setup
 GOROOT_VERSION="1.10" && GOROOT_DIR=~/usr/local/go
 # download
-sudo rm -rf $GOROOT_DIR && git clone https://github.com/golang/go.git $GOROOT_DIR && cd ${GOROOT_DIR}/src
+sudo rm -rf $GOROOT_DIR
+sudo git clone https://github.com/golang/go.git $GOROOT_DIR
 # compile
-git checkout release-branch.go${GO_VERSION} && sudo GOROOT=/usr/local/bin GOROOT_BOOTSTRAP=$GOROOT_BOOTSTRAP_DIR ./all.bash
+cd ${GOROOT_DIR}/src
+sudo git checkout release-branch.go${GOROOT_VERSION} && sudo GOROOT_BOOTSTRAP=${GOROOT_BOOTSTRAP_DIR} ./all.bash
 # clean up
 sudo rm -rf $GOROOT_BOOTSTRAP_DIR
 ```
