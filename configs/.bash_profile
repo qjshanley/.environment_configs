@@ -4,8 +4,13 @@
 
 # set environment variables
 [ -d /usr/local/bin ] && [ -z "$(echo $PATH | grep /usr/local/bin)"  ] && export PATH=${PATH}:/usr/local/bin
-[ -d /usr/local/go/bin ] && [ -z "$(echo $PATH | grep /usr/local/go/bin)" ] && export PATH=${PATH}:/usr/local/go/bin
 [ -f /usr/local/bin/bash ] && export SHELL=/usr/local/bin/bash
+
+# Golang
+[ -d /usr/local/go/bin ] && [ -z "$(echo $PATH | grep /usr/local/go/bin)" ] && export PATH=${PATH}:/usr/local/go/bin
+export GOROOT=/usr/local/go
+export GOPATH=~/code/go
+export GOBIN=~/code/go/bin
 
 # aliases and functions
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
