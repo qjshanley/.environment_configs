@@ -10,13 +10,17 @@ function datica() {
   esac
 }
 
-function shh() { 
-  if [ "$1" == "-c" ]; then
-    # copy dot files
-    shift 1
-    scp ~/.vimrc ~/.screenrc ~/.bash_aliases "$1":~/.
+function ssh() { 
+  if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
+    [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
+    if [ -z "$(grep $1 ~/.ssh/known_hosts)" ] ; then
+      dot_files="~/.bash_aliases ~/.screenrc ~/.vimrc"
+      eval "scp ${dot_files} ${1}:~/."
+    fi
+    $(which ssh) -t "$1" screen -D -R
+  else
+    $(which ssh) $@
   fi
-  ssh -t "$1" screen -D -R
 }
 
 function oom_check() {
