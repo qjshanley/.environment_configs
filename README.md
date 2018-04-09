@@ -135,6 +135,11 @@ sudo git checkout release-branch.go${GOROOT_VERSION} && sudo GOROOT_BOOTSTRAP=${
 sudo rm -rf $GOROOT_BOOTSTRAP_DIR
 ```
 
+### iTerm2 Settings
+Create Profile: SSH URL Schemes
+Command -> Command: `/usr/local/bin/bash -c "source ~/.bash_profile ; ssh '$$HOST$$'"`
+URL Schemes -> Schemes handled: ssh
+
 ### Install karibener [Website](https://pqrs.org/osx/karabiner/) | [Manual](https://pqrs.org/osx/karabiner/document.html)
 Setup key mappings in Karabiner-Elements Preferences
 
