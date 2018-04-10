@@ -12,7 +12,6 @@ done
 # Golang
 export GOROOT=/usr/local/go
 export GOPATH=~/code/go
-export GOBIN=~/code/go/bin
 
 # aliases and functions
 [ -f ~/.bash_aliases ] && source ~/.bash_aliases
