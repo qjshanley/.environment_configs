@@ -5,21 +5,24 @@ alias lha='ls -lha'
 
 function datica() {
   case $1 in
-    qub3r)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
-    *)      $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
+      qub3r)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
+       test)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
+    staging)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
+       prod)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
+          *)             $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
   esac
 }
 
 function ssh() { 
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-    if [ -z "$(grep $1 ~/.ssh/known_hosts)" ] ; then
+    if [ -z "$(grep "$1" ~/.ssh/known_hosts)" ] ; then
       dot_files="~/.bash_aliases ~/.screenrc ~/.vimrc"
-      eval "scp ${dot_files} ${1}:~/."
+      eval "scp $dot_files ${1}:~/."
     fi
-    $(which ssh) -t "$1" screen -D -R
+    eval "$(which ssh) -t $1 screen -D -R"
   else
-    $(which ssh) $@
+    eval "$(which ssh) $@"
   fi
 }
 

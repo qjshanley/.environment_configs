@@ -3,11 +3,13 @@
 # Read once by the login shell
 
 # set environment variables
-[ -d /usr/local/bin ] && [ -z "$(echo $PATH | grep /usr/local/bin)"  ] && export PATH=${PATH}:/usr/local/bin
+bins="/usr/local/bin ${HOME}/.bin /usr/local/go/bin"
+for bin in $bins ; do
+  [ -d $bin ] && [ -z "$(echo $PATH | grep $bin)" ] && export PATH=${PATH}:${bin}
+done
 [ -f /usr/local/bin/bash ] && export SHELL=/usr/local/bin/bash
 
 # Golang
-[ -d /usr/local/go/bin ] && [ -z "$(echo $PATH | grep /usr/local/go/bin)" ] && export PATH=${PATH}:/usr/local/go/bin
 export GOROOT=/usr/local/go
 export GOPATH=~/code/go
 export GOBIN=~/code/go/bin
