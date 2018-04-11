@@ -17,26 +17,28 @@ System Preferences -> General -> Default Web Browser: Google Chrome
 
 ### Install iTerm2 [Website](www.iterm2.com) | [Download](https://www.iterm2.com/downloads.html) | [Manual](https://www.iterm2.com/documentation.html)
 ```
-iTerm2 -> Preferences -> Profiles -> Keys
+iTerm2 -> Preferences -> Keys
 ```
 
 Key Combination | Action
 --------------- | ------
+Cmd Delete | Hex Code 0x17
+Cmd Shift Delete | Hex Code 0x15
+Cmd Up | Scoll One Line Up
+Cmd Down | Scoll One Line Down
+Cmd Left | Send Esc b
+Cmd Right | Send Esc f
+Cmd Shift Up | Scoll One Page Up
+Cmd Shift Down | Scoll One Page Down
+Cmd Shift Left | Hex Code 0x01
+Cmd Shift Right | Hex Code 0x05
 Shift Up | [1;2A
-Ctrl Up | [1;5A
-Ctrl Shift Up | [1;6A
-Alt/Opt Up | [1;9A
 Shift Down | [1;2B
-Ctrl Down | [1;5B
-Ctrl Shift Down | [1;6B
-Alt/Opt Down | [1;9B
 Shift Left | [1;2D
-Ctrl Left | [1;5D
-Ctrl Shift Left | [1;6D
-Alt/Opt Left | [1;9D
 Shift Right | [1;2C
-Ctrl Right | [1;5C
-Ctrl Shift Right | [1;6C
+Alt/Opt Up | [1;9A
+Alt/Opt Down | [1;9B
+Alt/Opt Left | [1;9D
 Alt/Opt Right | [1;9C
 
 ### Install GNU Bash v4.4.18 [Website](https://www.gnu.org/software/bash/) | [Mirror](http://ftpmirror.gnu.org/bash/) | [Download](http://ftpmirror.gnu.org/bash/bash-4.4.18.tar.gz) | [Manual](https://www.gnu.org/software/bash/manual/bash.html)
