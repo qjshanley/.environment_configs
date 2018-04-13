@@ -3,7 +3,7 @@
 # Read once by the login shell
 
 # set environment variables
-bins="/usr/local/bin ${HOME}/.bin /usr/local/go/bin"
+bins="/usr/local/bin ${HOME}/.bin /usr/local/go/bin ${HOME}/code/go/bin"
 for bin in $bins ; do
   [ -d $bin ] && [ -z "$(echo $PATH | grep $bin)" ] && export PATH=${PATH}:${bin}
 done
