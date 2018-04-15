@@ -17,6 +17,9 @@ set laststatus=2                " always display the status on the bottom-1 line
 set hlsearch                    " when searching, highlight all
 set shortmess+=I                " don't display the intro message
 set backspace=indent,eol,start  " enable regular backspacing
+set timeoutlen=1000 
+set ttimeoutlen=10
+
 
 let mapleader = ','
 
@@ -57,34 +60,75 @@ nnoremap L :tabnext<CR>
 nnoremap H :tabprev<CR>
 nnoremap <C-S-L> :tabm +1<CR>
 nnoremap <C-S-H> :tabm -1<CR>
-nnoremap s :%s/    /\t/gc<CR>
+"nnoremap s :%s/    /\t/gc<CR>
 set pastetoggle=<F2>
 nnoremap <F8> :let @/ = ""<CR>
 
-" key mappings for multi-window navigation
-nnoremap <Up> <c-w>k
-nnoremap <Down> <c-w>j
-nnoremap <Left> <c-w>h
-nnoremap <Right> <c-w>l
+set winheight=5
+set winwidth=30
+set winminheight=0
 
-" mapping CTRL-SHIFT-Arrow keys
-map [1;6A <C-S-Up>
-map [1;6B <C-S-Down>
-map [1;6C <C-S-Right>
-map [1;6D <C-S-Left>
+" Arrow key mappings for multi-window navigation
+nnoremap <UP>     <C-W>k
+nnoremap <DOWN>   <C-W>j
+nnoremap <LEFT>   <C-W>h
+nnoremap <RIGHT>  <C-W>l
 
-" mapping ALT-SHIFT-Arrow keys
-map <S-Up> :resize +2<CR>
-map <S-Down> :resize -2<CR>
-map <S-Right> :vertical resize +4<CR>
-map <S-Left> :vertical resize -4<CR>
+" SHIFT-Arrow key mappings to resize windows
+map <S-UP>    :resize           +2<CR>
+map <S-DOWN>  :resize           -2<CR>
+map <S-RIGHT> :vertical resize  +4<CR>
+map <S-LEFT>  :vertical resize  -4<CR>
 
-" netrw settings
-let g:netrw_banner = 0
-let g:netrw_liststyle = 3
-let g:netrw_browse_split = 4
-let g:netrw_winsize = 13
+" ALT/OPT-Arrow key mappings for full window resize
+map <ESC>[1;9A :resize<CR>
+map <ESC>[1;9B :resize<CR>
+map <ESC>[1;9C :vertical resize<CR>
+map <ESC>[1;9D :vertical resize<CR>
+
+" ALT/OPT-o/O key mappings for full window resize
+map ø :resize <BAR> :vertical resize<CR>
+map Ø :wincmd = <BAR> :execute winnr() . " windo echo "
+
+" SHIFT-ALT/OPT-Arrow key mappings for full window resize
+map <ESC>[1;10A :wincmd K <BAR> :call KeepNetRWLeft()<CR>
+map <ESC>[1;10B :wincmd J <BAR> :call KeepNetRWLeft()<CR>
+map <ESC>[1;10C :wincmd L <BAR> :call KeepNetRWLeft()<CR>
+map <ESC>[1;10D :wincmd H <BAR> :call KeepNetRWLeft()<CR>
+
+function SetupNetRW()
+  " netrw settings
+  let g:netrw_banner = 0
+  let g:netrw_liststyle = 3
+  let g:netrw_browse_split = 4
+  Vexplore
+  vertical resize 0
+  2 windo echo
+endfunction
+
+function MinimizeOnLeave()
+  if @% == 'NetrwTreeListing'
+    vertical resize 0
+  endif
+
+  if winheight('%') < 8
+    resize 0
+  endif
+  
+  if winwidth('%') < 35
+    vertical resize 0
+  endif
+endfunction
+
+function KeepNetRWLeft()
+  let goToWin = winnr('$')
+  windo if @% == "NetrwTreeListing" | if winnr() != 1 | let goToWin = 2 | end | wincmd H | end
+  execute goToWin . " windo echo"
+endfunction
+
 augroup ProjectDrawer
   autocmd!
-  autocmd VimEnter * :Vexplore
+  autocmd VimEnter * call SetupNetRW()
+  autocmd WinEnter NetrwTreeListing execute line('.')
+  autocmd WinLeave * call MinimizeOnLeave()
 augroup END
