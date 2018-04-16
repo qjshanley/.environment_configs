@@ -75,29 +75,28 @@ nnoremap <LEFT>   <C-W>h
 nnoremap <RIGHT>  <C-W>l
 
 " SHIFT-Arrow key mappings to resize windows
-map <S-UP>    :resize           +2<CR>
-map <S-DOWN>  :resize           -2<CR>
-map <S-RIGHT> :vertical resize  +4<CR>
-map <S-LEFT>  :vertical resize  -4<CR>
+map <ESC>[1;0A :resize           +2<CR>
+map <ESC>[1;0B :resize           -2<CR>
+map <ESC>[1;0C :vertical resize  +4<CR>
+map <ESC>[1;0D :vertical resize  -4<CR>
 
 " ALT/OPT-Arrow key mappings for full window resize
-map <ESC>[1;9A :resize<CR>
-map <ESC>[1;9B :resize<CR>
-map <ESC>[1;9C :vertical resize<CR>
-map <ESC>[1;9D :vertical resize<CR>
+map <ESC>[1;2a :wincmd K <BAR> :call KeepNetRWLeft()<CR>
+map <ESC>[1;2b :wincmd J <BAR> :call KeepNetRWLeft()<CR>
+map <ESC>[1;2c :wincmd L <BAR> :call KeepNetRWLeft()<CR>
+map <ESC>[1;2d :wincmd H <BAR> :call KeepNetRWLeft()<CR>
 
 " ALT/OPT-o/O key mappings for full window resize
 map ø :resize <BAR> :vertical resize<CR>
-map Ø :wincmd = <BAR> :execute winnr() . " windo echo "
+map Ø :wincmd = <BAR> :execute "0," . winnr() . " windo echo "<CR>
 
 " SHIFT-ALT/OPT-Arrow key mappings for full window resize
-map <ESC>[1;10A :wincmd K <BAR> :call KeepNetRWLeft()<CR>
-map <ESC>[1;10B :wincmd J <BAR> :call KeepNetRWLeft()<CR>
-map <ESC>[1;10C :wincmd L <BAR> :call KeepNetRWLeft()<CR>
-map <ESC>[1;10D :wincmd H <BAR> :call KeepNetRWLeft()<CR>
+map <ESC>[1;2A :resize<CR>
+map <ESC>[1;2B :resize<CR>
+map <ESC>[1;2C :vertical resize<CR>
+map <ESC>[1;2D :vertical resize<CR>
 
 function SetupNetRW()
-  " netrw settings
   let g:netrw_banner = 0
   let g:netrw_liststyle = 3
   let g:netrw_browse_split = 4
@@ -123,7 +122,7 @@ endfunction
 function KeepNetRWLeft()
   let goToWin = winnr('$')
   windo if @% == "NetrwTreeListing" | if winnr() != 1 | let goToWin = 2 | end | wincmd H | end
-  execute goToWin . " windo echo"
+  execute "0," . goToWin . " windo echo"
 endfunction
 
 augroup ProjectDrawer

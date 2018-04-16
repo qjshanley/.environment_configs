@@ -30,23 +30,29 @@ bind 'F' flow
 bind 's' split
 bind 'S' split -v
 
-# Resize regions using OPTION/ALT ARROW.
-bindkey ^[[1;9A resize -v +5
-bindkey ^[[1;9B resize -v -5
-bindkey ^[[1;9C resize -h +10
-bindkey ^[[1;9D resize -h -10
+# Escape character logic
+# all start with ^[ or <ESC> followed by [1;
+# ctrl/opt/cmd are binary increasing from spacebar ctrl+cmd = 5
+# Shift uppercases the letter
+# Function changes the letter up 4 in the alphabet: abcd/efgh
 
-# Resize regions using SHIFT OPTION/ALT ARROW.
-bindkey ^[[1;10A resize -v max
-bindkey ^[[1;10B resize -v =
-bindkey ^[[1;10C resize -h max
-bindkey ^[[1;10D resize -h =
+# Focus regions using FN Arrow
+bindkey ^[[1;0e focus up
+bindkey ^[[1;0f focus down
+bindkey ^[[1;0g focus next
+bindkey ^[[1;0h focus prev
 
-# Focus regions using CMD ARROW.
-# bindkey ^[[1;5A focus up
-# bindkey ^[[1;5B focus down
-# bindkey ^[[1;5C focus right
-# bindkey ^[[1;5D focus left
+# Resize regions using FN SHIFT ARROW.
+bindkey ^[[1;0E resize -v +5
+bindkey ^[[1;0F resize -v -5
+bindkey ^[[1;0G resize -h +10
+bindkey ^[[1;0H resize -h -10
+
+# Resize regions using FN SHIFT OPTION/ALT ARROW.
+bindkey ^[[1;2E resize -v max
+bindkey ^[[1;2F resize -v =
+bindkey ^[[1;2G resize -h max
+bindkey ^[[1;2H resize -h =
 
 # Window list at the bottom. hostname, left-aligned tabs and redmarked active windows:
 backtick 0 30 30 hostname
