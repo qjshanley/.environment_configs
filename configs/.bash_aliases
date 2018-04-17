@@ -1,5 +1,5 @@
 # User specific aliases and functions
-alias vi='vim'
+alias vi='vim -o'
 alias lh='ls -lh'
 alias lha='ls -lha'
 
