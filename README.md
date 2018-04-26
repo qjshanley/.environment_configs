@@ -64,7 +64,7 @@ cd ${SOFTWARE}-${VERSION}
 
 ### Install GNU sed v4.5 [Website](https://www.gnu.org/software/sed/) | [Mirror](http://ftpmirror.gnu.org/sed/) | [Download](http://ftpmirror.gnu.org/sed/sed-4.5.tar.xz) | [Manual](https://www.gnu.org/software/sed/manual/sed.html)
 ```
-SOFTWARE="sed" && VERSION="4.5" && EXTENSION="tar.gz" cd /tmp/
+SOFTWARE="sed" && VERSION="4.5" && EXTENSION="tar.xz" && cd /tmp/
 curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.${EXTENSION}
 tar xzvf ${SOFTWARE}-${VERSION}.${EXTENSION}
 cd ${SOFTWARE}-${VERSION}
