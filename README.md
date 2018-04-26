@@ -62,6 +62,15 @@ cd ${SOFTWARE}-${VERSION}
 ./configure --prefix=/usr/local && make && sudo make install
 ```
 
+### Install GNU sed v4.5 [Website](https://www.gnu.org/software/sed/) | [Mirror](http://ftpmirror.gnu.org/sed/) | [Download](http://ftpmirror.gnu.org/sed/sed-4.5.tar.xz) | [Manual](https://www.gnu.org/software/sed/manual/sed.html)
+```
+SOFTWARE="sed" && VERSION="4.5" && EXTENSION="tar.gz" cd /tmp/
+curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.${EXTENSION}
+tar xzvf ${SOFTWARE}-${VERSION}.${EXTENSION}
+cd ${SOFTWARE}-${VERSION}
+./configure --prefix=/usr/local && make && sudo make install
+```
+
 ### Install GNU Autoconf v2.69 [Website](https://www.gnu.org/software/autoconf/) | [Mirror](http://ftpmirror.gnu.org/autoconf/) | [Download](http://ftpmirror.gnu.org/autoconf/autoconf-2.69.tar.gz) | [Manual](https://www.gnu.org/software/autoconf/manual/autoconf.html)
 ```
 SOFTWARE="autoconf" && VERSION="2.69" && cd /tmp/
