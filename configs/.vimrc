@@ -24,15 +24,8 @@ set winminheight=0
 set winminwidth=1
 
 " Formats the statusline
-set statusline=%f                               " file name
-set statusline+=[%{strlen(&fenc)?&fenc:'none'}, " file encoding
-set statusline+=%{&ff}]                         " file format
-set statusline+=%y                              " filetype
-set statusline+=%h                              " help file flag
-set statusline+=%m                              " modified flag
-set statusline+=%r                              " read only flag
-set statusline+=\ %=                            " align left
-set laststatus=2                                " always display the status on the bottom-1 line
+set laststatus=2
+set statusline=%f\ %=%m%r\ [%p%%]\ [line:%03l/%03L,col:%03v]
 
 let mapleader = ','
 
