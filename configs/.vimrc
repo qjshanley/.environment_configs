@@ -13,7 +13,6 @@ filetype plugin indent on       " latest smart tab setting
 set tabstop=2                   " show existing tab
 set shiftwidth=2                " when indenting with '>', use spaces
 set expandtab                   " On pressing tab, insert spaces
-set laststatus=2                " always display the status on the bottom-1 line
 set hlsearch                    " when searching, highlight all
 set shortmess+=I                " don't display the intro message
 set backspace=indent,eol,start  " enable regular backspacing
@@ -23,6 +22,17 @@ set winheight=1
 set winwidth=1
 set winminheight=0
 set winminwidth=1
+
+" Formats the statusline
+set statusline=%f                               " file name
+set statusline+=[%{strlen(&fenc)?&fenc:'none'}, " file encoding
+set statusline+=%{&ff}]                         " file format
+set statusline+=%y                              " filetype
+set statusline+=%h                              " help file flag
+set statusline+=%m                              " modified flag
+set statusline+=%r                              " read only flag
+set statusline+=\ %=                            " align left
+set laststatus=2                                " always display the status on the bottom-1 line
 
 let mapleader = ','
 
@@ -163,4 +173,26 @@ augroup ProjectDrawer
   autocmd VimEnter * call SetupDrawer()
   autocmd WinEnter NetrwTreeListing call OpenDrawer()
   autocmd WinLeave NetrwTreeListing call CloseDrawer()
+augroup END
+
+function SetupWindowStyle()
+  " default the statusline to green when entering Vim
+  hi statusline guibg=DarkGrey ctermfg=8 guifg=White ctermbg=15
+endfunction
+
+function! InsertStatuslineColor(mode)
+  if a:mode == 'i'
+    hi statusline guibg=Cyan ctermfg=6 guifg=Black ctermbg=0
+  elseif a:mode == 'r'
+    hi statusline guibg=Purple ctermfg=5 guifg=Black ctermbg=0
+  else
+    hi statusline guibg=DarkRed ctermfg=1 guifg=Black ctermbg=0
+  endif
+endfunction
+
+augroup WindowStylizing
+  autocmd!
+  autocmd VimEnter * call SetupWindowStyle()
+  autocmd InsertEnter * call InsertStatuslineColor(v:insertmode)
+  autocmd InsertLeave * hi statusline guibg=DarkGrey ctermfg=8 guifg=White ctermbg=15
 augroup END
