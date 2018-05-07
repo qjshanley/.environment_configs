@@ -21,6 +21,16 @@ declare -A GNU_SOFTWARE_LIST=(
   [3,"VERSION"]="4.5"
   [3,"EXTENSION"]="tar.xz"
   [3,"URL"]="$DEFAULT_URL_PATTERN"
+
+  [4,"SOFTWARE"]="autoconf"
+  [4,"VERSION"]="2.69"
+  [4,"EXTENSION"]="tar.gz"
+  [4,"URL"]="$DEFAULT_URL_PATTERN"
+
+  [5,"SOFTWARE"]="automake"
+  [5,"VERSION"]="1.16"
+  [5,"EXTENSION"]="tar.xz"
+  [5,"URL"]="$DEFAULT_URL_PATTERN"
 )
 
 i=0
