@@ -12,7 +12,7 @@ syntax on                       " enable syntax highlighting
 filetype plugin indent on       " latest smart tab setting
 set tabstop=2                   " show existing tab
 set shiftwidth=2                " when indenting with '>', use spaces
-set expandtab                   " On pressing tab, insert spaces
+"set expandtab                   " On pressing tab, insert spaces
 set hlsearch                    " when searching, highlight all
 set shortmess+=I                " don't display the intro message
 set backspace=indent,eol,start  " enable regular backspacing

@@ -13,13 +13,15 @@ function datica() {
   esac
 }
 
+function dat() {
+	bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@
+}
+
 function ssh() { 
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-    if [ -z "$(grep "$1" ~/.ssh/known_hosts)" ] ; then
-      dot_files="~/.bash_aliases ~/.screenrc ~/.vimrc"
-      eval "scp $dot_files ${1}:~/."
-    fi
+		dot_files="~/.bash_aliases ~/.screenrc ~/.vimrc"
+		eval " rsync -L $dot_files ${1}:~/."
     eval "$(which ssh) -t $1 screen -D -R"
   else
     eval "$(which ssh) $@"
