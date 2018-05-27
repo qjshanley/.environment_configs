@@ -41,14 +41,7 @@ Alt/Opt Down | [1;9B
 Alt/Opt Left | [1;9D
 Alt/Opt Right | [1;9C
 
-### Install GNU Bash v4.4.18 [Website](https://www.gnu.org/software/bash/) | [Mirror](http://ftpmirror.gnu.org/bash/) | [Download](http://ftpmirror.gnu.org/bash/bash-4.4.18.tar.gz) | [Manual](https://www.gnu.org/software/bash/manual/bash.html)
-```
-SOFTWARE="bash" && VERSION="4.4.18" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
-tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local && make && sudo make install
-```
+### GNU Bash v4.4.18
 ```
 System Preferences -> Users & Groups -> Unlock -> Right Click Account -> Advanced Options -> Login Shell: /usr/local/bin/bash
 ```
