@@ -41,7 +41,7 @@ Alt/Opt Down | [1;9B
 Alt/Opt Left | [1;9D
 Alt/Opt Right | [1;9C
 
-### GNU Bash v4.4.18
+### GNU Bash
 ```
 System Preferences -> Users & Groups -> Unlock -> Right Click Account -> Advanced Options -> Login Shell: /usr/local/bin/bash
 ```
