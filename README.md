@@ -46,15 +46,6 @@ Alt/Opt Right | [1;9C
 System Preferences -> Users & Groups -> Unlock -> Right Click Account -> Advanced Options -> Login Shell: /usr/local/bin/bash
 ```
 
-### Install pkg-config v0.29.2 [Website](https://pkg-config.freedesktop.org/) | [Releases](https://pkg-config.freedesktop.org/releases/) | [Download](https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz)
-```
-SOFTWARE="pkg-config" && VERSION="0.29.2" && cd /tmp/
-curl -O -J -L https://pkg-config.freedesktop.org/releases/${SOFTWARE}-${VERSION}.tar.gz
-tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local --with-internal-glib && make && sudo make install
-```
-
 ### Install universal-ctags [Website](https://ctags.io/) | [Download](https://github.com/universal-ctags/ctags) | [Manual](http://docs.ctags.io/en/latest/)
 ```
 mkdir -p ~/code/github && cd ~/code/github
