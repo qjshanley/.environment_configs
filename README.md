@@ -41,61 +41,9 @@ Alt/Opt Down | [1;9B
 Alt/Opt Left | [1;9D
 Alt/Opt Right | [1;9C
 
-### Install GNU Bash v4.4.18 [Website](https://www.gnu.org/software/bash/) | [Mirror](http://ftpmirror.gnu.org/bash/) | [Download](http://ftpmirror.gnu.org/bash/bash-4.4.18.tar.gz) | [Manual](https://www.gnu.org/software/bash/manual/bash.html)
-```
-SOFTWARE="bash" && VERSION="4.4.18" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
-tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local && make && sudo make install
-```
+### GNU Bash
 ```
 System Preferences -> Users & Groups -> Unlock -> Right Click Account -> Advanced Options -> Login Shell: /usr/local/bin/bash
-```
-
-### Install GNU Screen v4.6.2 [Website](https://www.gnu.org/software/screen/) | [Mirror](http://ftpmirror.gnu.org/screen/) | [Download](http://ftpmirror.gnu.org/screen/screen-4.6.2.tar.gz) | [Manual](https://www.gnu.org/software/screen/manual/screen.html)
-```
-SOFTWARE="screen" && VERSION="4.6.2" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
-tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local && make && sudo make install
-```
-
-### Install GNU sed v4.5 [Website](https://www.gnu.org/software/sed/) | [Mirror](http://ftpmirror.gnu.org/sed/) | [Download](http://ftpmirror.gnu.org/sed/sed-4.5.tar.xz) | [Manual](https://www.gnu.org/software/sed/manual/sed.html)
-```
-SOFTWARE="sed" && VERSION="4.5" && EXTENSION="tar.xz" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.${EXTENSION}
-tar xzvf ${SOFTWARE}-${VERSION}.${EXTENSION}
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local && make && sudo make install
-```
-
-### Install GNU Autoconf v2.69 [Website](https://www.gnu.org/software/autoconf/) | [Mirror](http://ftpmirror.gnu.org/autoconf/) | [Download](http://ftpmirror.gnu.org/autoconf/autoconf-2.69.tar.gz) | [Manual](https://www.gnu.org/software/autoconf/manual/autoconf.html)
-```
-SOFTWARE="autoconf" && VERSION="2.69" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
-tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local && make && sudo make install
-```
-
-### Install GNU Automake v1.16 [Website](https://www.gnu.org/software/automake/) | [Mirror](http://ftpmirror.gnu.org/automake/) | [Download](http://ftpmirror.gnu.org/automake/automake-1.16.tar.gz) | [Manual](https://www.gnu.org/software/automake/manual/automake.html)
-```
-SOFTWARE="automake" && VERSION="1.16" && cd /tmp/
-curl -O -J -L http://ftpmirror.gnu.org/${SOFTWARE}/${SOFTWARE}-${VERSION}.tar.gz
-tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local && make && sudo make install
-```
-
-### Install pkg-config v0.29.2 [Website](https://pkg-config.freedesktop.org/) | [Releases](https://pkg-config.freedesktop.org/releases/) | [Download](https://pkg-config.freedesktop.org/releases/pkg-config-0.29.2.tar.gz)
-```
-SOFTWARE="pkg-config" && VERSION="0.29.2" && cd /tmp/
-curl -O -J -L https://pkg-config.freedesktop.org/releases/${SOFTWARE}-${VERSION}.tar.gz
-tar xzvf ${SOFTWARE}-${VERSION}.tar.gz
-cd ${SOFTWARE}-${VERSION}
-./configure --prefix=/usr/local --with-internal-glib && make && sudo make install
 ```
 
 ### Install universal-ctags [Website](https://ctags.io/) | [Download](https://github.com/universal-ctags/ctags) | [Manual](http://docs.ctags.io/en/latest/)
