@@ -2,6 +2,11 @@
 alias vi='vim'
 alias lh='ls -lh'
 alias lha='ls -lha'
+alias pod-api='$(which ssh) -t mgmt02.pod02.catalyzeapps.com "sudo docker exec -it -u postgres postgresql bash -c \"export PSQL_EDITOR=\$(which vim) ; psql pod-api\" "'
+
+function li() {
+	printf -- "%*s\n" "$(tput cols)" " " | tr ' ' '-'
+}
 
 function datica() {
   case $1 in
@@ -30,5 +35,9 @@ function ssh() {
 
 function oom_check() {
   printf "Container ID: " && read CID
-  CPU_SET="$(sudo docker inspect $CID | grep "Id" | awk -F'"' '{print $4}')" && dmesg -t | grep "$CPU_SET"
+  CPU_SET="$(sudo docker inspect $CID | grep "Id" | awk -F'"' '{print $4}')" && dmesg -T | grep "$CPU_SET"
+}
+
+function LIST() {
+	netstat -an | sed -n '1,2p ; /tcp.*LIST/p'
 }
