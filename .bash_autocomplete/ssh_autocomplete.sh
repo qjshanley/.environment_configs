@@ -16,5 +16,5 @@ _ssh_autocomplete()
   return 0
 }
 
-complete -F _ssh_autocomplete ssh
 complete -F _ssh_autocomplete scp
+complete -F _ssh_autocomplete ssh

@@ -1,5 +1,5 @@
 # User specific aliases and functions
-alias vi='vim -o'
+alias vi='vim'
 alias lh='ls -lh'
 alias lha='ls -lha'
 
@@ -21,10 +21,10 @@ function ssh() {
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
 		dot_files="~/.bash_aliases ~/.screenrc ~/.vimrc"
-		eval " rsync -Le ssh $dot_files ${1}:~/."
-    eval "$(which ssh) -t $1 screen -D -R"
+		(eval " rsync -Le ssh ${dot_files} ${1}:~/.") &
+    eval " $(which ssh) -t $1 screen -D -R"
   else
-    eval "$(which ssh) $@"
+    eval " $(which ssh) $@"
   fi
 }
 
