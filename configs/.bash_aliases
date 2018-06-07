@@ -2,7 +2,7 @@
 alias vi='vim'
 alias lh='ls -lh'
 alias lha='ls -lha'
-alias pod-api='$(which ssh) -t mgmt02.pod02.catalyzeapps.com "sudo docker exec -it -u postgres postgresql bash -c \"export PSQL_EDITOR=\$(which vim) ; psql pod-api\" "'
+alias pod-api='$(which ssh) -t pod-api "sudo docker exec -it -u postgres postgresql bash -c \"export PSQL_EDITOR=\$(which vim) ; psql pod-api\" "'
 
 function li() {
 	printf -- "%*s\n" "$(tput cols)" " " | tr ' ' '-'
@@ -26,7 +26,7 @@ function ssh() {
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
 		dot_files="~/.bash_aliases ~/.screenrc ~/.vimrc"
-		(eval " rsync -Le ssh ${dot_files} ${1}:~/.") &
+		eval " rsync -Le ssh ${dot_files} ${1}:~/."
     eval " $(which ssh) -t $1 screen -D -R"
   else
     eval " $(which ssh) $@"
