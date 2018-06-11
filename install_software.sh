@@ -15,6 +15,8 @@ declare -A SOFTWARE_LIST=(
 	[7,"VERSION"]="0.29.2"
 	[7,"EXTENSION"]="tar.gz"
 	[7,"URL"]='https://pkg-config.freedesktop.org/releases/${SOFTWARE}-${VERSION}.${EXTENSION}'
+
+  [8,"SOFTWARE"]="coreutils" [8,"CONFIG_OPTIONS"]="--prefix=/usr/local"  [8,"VERSION"]="8.9"    [8,"EXTENSION"]="tar.gz"  [8,"URL"]="$DEFAULT_URL_PATTERN"
 )
 
 if [[ -z $* ]] ; then
