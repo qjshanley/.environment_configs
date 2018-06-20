@@ -2,10 +2,8 @@
 alias vi='vim'
 alias lh='ls -lh'
 alias lt='ls -lt'
-alias lha='ls -lha'
-alias lhA='ls -lhA'
-alias lta='ls -lta'
-alias ltA='ls -ltA'
+alias lha='ls -lhA'
+alias lta='ls -ltA'
 alias recent='ls -lhtA | head -n 20'
 
 function compare {
