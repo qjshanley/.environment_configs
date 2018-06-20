@@ -1,7 +1,16 @@
 # User specific aliases and functions
 alias vi='vim'
 alias lh='ls -lh'
+alias lt='ls -lt'
 alias lha='ls -lha'
+alias lhA='ls -lhA'
+alias lta='ls -lta'
+alias ltA='ls -ltA'
+alias recent='ls -lhtA | head -n 20'
+
+function compare {
+	diff -W $(tput cols) -s -y $@
+}
 
 function pod-api {
 	sudo docker exec -it -u postgres postgresql bash -c 'export PSQL_EDITOR=$(which vim) ; psql pod-api'
@@ -28,11 +37,11 @@ function dat {
 function ssh { 
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-		dot_files="~/.bash_aliases ~/.screenrc ~/.vimrc"
-		eval " rsync -Le ssh ${dot_files} ${1}:~/."
-    eval " $(which ssh) -t $1 screen -D -R"
+		dot_files="${HOME}/.bash_aliases ${HOME}/.screenrc ${HOME}/.vimrc"
+		rsync -Le ssh ${dot_files} ${1}:~/.
+    $(which ssh) -t $1 screen -DR -S ssh -p 0 -t host
   else
-    eval " $(which ssh) $@"
+    $(which ssh) $@
   fi
 }
 
