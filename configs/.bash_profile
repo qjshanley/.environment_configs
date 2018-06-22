@@ -1,6 +1,8 @@
 # .bash_profile
 # ----------------------------
 # Read once by the login shell
+VISUAL=vim
+set -o vi
 
 # set environment variables
 bins="/usr/local/bin ${HOME}/.bin /usr/local/go/bin ${HOME}/code/go/bin ${HOME}/Library/Python/2.7/bin/"
