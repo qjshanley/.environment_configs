@@ -1,6 +1,7 @@
 # .bash_profile
 # ----------------------------
 # Read once by the login shell
+EDITOR=vim
 VISUAL=vim
 set -o vi
 
