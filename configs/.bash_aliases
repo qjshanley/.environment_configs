@@ -11,7 +11,11 @@ function compare {
 }
 
 function pod-api {
-	sudo docker exec -it -u postgres postgresql bash -c 'export PSQL_EDITOR=$(which vim) ; psql pod-api'
+	sudo docker exec -it -u postgres postgresql bash -c '
+		export PSQL_EDITOR=$(which vim)
+		export PG_CURR_DB=pod-api
+		psql $PG_CURR_DB
+	'
 }
 
 function li {
