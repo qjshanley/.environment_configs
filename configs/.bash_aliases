@@ -1,4 +1,5 @@
 # User specific aliases and functions
+alias ..='cd ..'
 alias vi='vim'
 alias lh='ls -lh'
 alias lt='ls -lt'
