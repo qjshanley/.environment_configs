@@ -1,14 +1,11 @@
 # Turn off that annoying start up message
 startup_message off
 
-# Turn on color
-term screen-256color
-attrcolor b ".I"
-termcapinfo xterm 'Co#256:AB=\E[48;5;%dm:AF=\E38;5;%dm'
-defbce "on"
-
-# Turn the even more annoying whole-screen-flash-on-tab-complete "feature"
+# Turn off the even more annoying whole-screen-flash-on-tab-complete "feature"
 vbell off
+
+# Turn on color
+term xterm-256color
 
 # more scrollbacks!
 defscrollback 10000
@@ -32,9 +29,10 @@ bind 'S' split -v
 
 # Escape character logic
 # all start with ^[ or <ESC> followed by [1;
-# ctrl/opt/cmd are binary increasing from spacebar ctrl+cmd = 5
+# ctrl/opt/cmd are binary increasing from spacebar 
+# MacBook Example: ctrl+cmd = 5, option+cmd = 3
 # Shift uppercases the letter
-# Function changes the letter up 4 in the alphabet: abcd/efgh
+# Function shifts each letter +4 in the alphabet: abcd/efgh
 
 # Focus regions using FN Arrow
 bindkey ^[[1;0e focus up
