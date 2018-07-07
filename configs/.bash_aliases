@@ -37,14 +37,14 @@ function dat {
 	bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@
 }
 
-function ssh { 
+function shh { 
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
 		dot_files="${HOME}/.bash_aliases ${HOME}/.screenrc ${HOME}/.vimrc"
 		rsync -Le ssh ${dot_files} ${1}:~/.
-    $(which ssh) -t $1 screen -DR -S ssh -p 0 -t host
+    ssh -t $1 screen -DR -S ssh -p 0 -t host
   else
-    $(which ssh) $@
+    ssh $@
   fi
 }
 
