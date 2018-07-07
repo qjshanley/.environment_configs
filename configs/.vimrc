@@ -7,8 +7,6 @@ if exists('+number')
   set number
 endif
 
-command Q qa
-
 set t_Co=256                    " turn on 256 color
 syntax on                       " enable syntax highlighting
 filetype plugin indent on       " latest smart tab setting
