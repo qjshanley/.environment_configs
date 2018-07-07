@@ -39,11 +39,22 @@ function dat {
 
 function shh { 
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
-    [ ! -r ~/.foobar/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
-		dot_files="${HOME}/.bash_aliases ${HOME}/.screenrc ${HOME}/.vimrc"
-		rsync -Le ssh ${dot_files} ${1}:~/.
-    ssh -t $1 screen -DR -S ssh -p 0 -t host
+
+		# touch the known_hosts file if it doesn't exist
+    [ ! -e ~/.ssh/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
+
+		# copy dot files to server
+		rsync -Le ssh \
+			~/.bash_profile \
+			~/.bash_aliases \
+			~/.screenrc \
+			~/.vimrc \
+			${1}:~/. >/dev/null 2>&1
+
+		# ssh to server and attach directly to a screen session
+    ssh -t $1 screen -U -DR -S ssh -p 0 -t host
   else
+		# simply pass all args to the ssh command
     ssh $@
   fi
 }
