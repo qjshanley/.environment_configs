@@ -8,5 +8,5 @@ if [ "$SHLVL" = 1 ]; then
 fi
 
 # remove temp dexec aliases
-test -e ~/.bash_temporary && rm ~/.bash_temporary
+rm -f ~/.bash_temporary
 
