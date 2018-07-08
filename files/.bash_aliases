@@ -47,13 +47,13 @@ function shh {
 			~/.bash_profile \
 			~/.screenrc \
 			~/.vimrc \
-			${1}:~/. >/dev/null 2>&1
+			"$1":~/. >/dev/null 2>&1
 
 		# ssh to server and attach directly to a screen session
-    ssh -t $1 screen -U -DR -S ssh -p 0 -t host
+    ssh -t "$1" screen -U -DR -S ssh -p 0 -t host
   else
 		# simply pass all args to the ssh command
-    ssh $@
+    ssh "$@"
   fi
 }
 

@@ -23,6 +23,8 @@ printf -v SSH_SCREEN -- '%q' "$SCRIPT"
 rsync -Le ssh \
 	~/.bash_profile \
 	~/.bash_aliases \
+	~/.bash_logout
+	~/.bashrc \
 	~/.screenrc \
 	~/.vimrc \
 	"$HOST":~/. >/dev/null 2>&1

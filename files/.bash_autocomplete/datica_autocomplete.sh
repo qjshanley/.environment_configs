@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 
 _commands() {
   datica $@ --help 2>&1 | awk '/^Commands:/ {start=1; next} start==1 && !/^$/ {print $1} $1 ~ /^$/ {start=0}'

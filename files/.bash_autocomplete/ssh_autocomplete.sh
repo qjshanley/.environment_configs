@@ -1,4 +1,4 @@
-#! /usr/bin/env bash
+#!/usr/bin/env bash
 
 _hosts() {
   [ -f ~/.ssh/known_hosts ] && grep '^[a-z|A-Z]' ~/.ssh/known_hosts | awk '{print $1}'
