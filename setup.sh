@@ -1,15 +1,19 @@
 #!/usr/bin/env bash
 
-# exit if error
-set -e
+# environment files
+ENV_FILES=~/code/qub3r/environment/files
 
-# environment repo location
-ENV_DIR=~/code/qub3r/environment
+if [ -d "$ENV_FILES" ]; then
 
-# ln files to the correct places
-if [ -d ${ENV_DIR}/configs ]; then
-	for object in $(ls -A ${ENV_DIR}/configs) ; do
-		rm -rf ~/$object
-		ln -s ${ENV_DIR}/configs/${object} ~/${object}
+	# make sure directories exist
+	for dir in $(find "$ENV_FILES" -mindepth 1 -type d | sed -E "s@${ENV_FILES}/(.*)@\1@") ; do
+		mkdir -p ~/"$dir"
+	done
+
+	# symlink files to the correct directories
+	for target in $(find "$ENV_FILES" -mindepth 1 -type f -not -name "*swp") ; do
+		link_name=$(sed -E "s@${ENV_FILES}/(.*)@\1@" <<<"$target")
+		rm ~/$link_name
+		ln -s "$target" ~/"$link_name"
 	done
 fi

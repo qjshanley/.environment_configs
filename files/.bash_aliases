@@ -7,6 +7,12 @@ alias lha='ls -lhA'
 alias lta='ls -ltA'
 alias recent='ls -lhtA | head -n 20'
 
+# enable colors
+alias ls='ls --color=auto'
+alias grep='grep --color=auto'
+alias fgrep='fgrep --color=auto'
+alias egrep='egrep --color=auto'
+
 function compare {
 	diff -W $(tput cols) -s -y $@
 }
@@ -23,16 +29,6 @@ function li {
 	printf -- "%*s\n" "$(tput cols)" " " | sed 's/ /-/g'
 }
 
-function datica {
-  case $1 in
-      qub3r)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
-       test)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
-    staging)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
-       prod)  shift 1 && $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
-          *)             $(which datica) -E 7f1569c5-8382-4cdf-833e-20326e12822c $@ ;;
-  esac
-}
-
 function dat {
 	bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@
 }
@@ -41,12 +37,14 @@ function shh {
   if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
 
 		# touch the known_hosts file if it doesn't exist
-    [ ! -e ~/.ssh/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
+    test ! -e ~/.ssh/known_hosts && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
 
 		# copy dot files to server
 		rsync -Le ssh \
-			~/.bash_profile \
+			~/.bashrc \
 			~/.bash_aliases \
+			~/.bash_logout \
+			~/.bash_profile \
 			~/.screenrc \
 			~/.vimrc \
 			${1}:~/. >/dev/null 2>&1
