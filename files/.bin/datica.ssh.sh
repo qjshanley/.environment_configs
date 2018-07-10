@@ -5,7 +5,7 @@ JOBID=${DOCKER_CMD[4]}
 
 IFS='' read -r -d '' SCRIPT <<- EOF
 	if [ -z "\$(grep "^alias dexec_${JOBID}" ~/.bash_temporary)" ] ; then
-	  printf -- '%s\n' 'alias dexec_${JOBID}="sudo docker exec -it -e TERM=xterm -e EDITOR=vim -e VISUAL=vim $JOBID bash -o vi"' >> ~/.bash_temporary
+	  printf -- $'alias dexec_${JOBID}=\'sudo docker exec -it \$@ $JOBID bash -c "TERM=xterm EDITOR=vim VISUAL=vim PSQL_EDITOR=\$(which vim) bash -o vi"\'\n' >> ~/.bash_temporary
 	fi
 
 	screen -S ssh -X screen -t $JOBID

@@ -21,6 +21,7 @@ EVARS=(
 	TERM=xterm-256color
 	GOROOT=/usr/local/go 
 	GOPATH=~/code/go 
+	PSQL_EDITOR=$(which vim)
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
 

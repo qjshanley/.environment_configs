@@ -1,6 +1,6 @@
 # User specific aliases and functions
 alias ..='cd ..'
-alias vi='vim'
+alias vi='vim -o'
 alias lh='ls -lh'
 alias lt='ls -lt'
 alias lha='ls -lhA'
@@ -19,8 +19,8 @@ function compare {
 
 function pod-api {
 	sudo docker exec -it -u postgres postgresql bash -c '
-		export PSQL_EDITOR=$(which vim)
-		export PG_CURR_DB=pod-api
+		PSQL_EDITOR=$(which vim)
+		PG_CURR_DB=pod-api
 		psql $PG_CURR_DB
 	'
 }

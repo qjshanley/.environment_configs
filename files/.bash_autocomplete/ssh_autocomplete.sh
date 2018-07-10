@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _hosts() {
-  [ -f ~/.ssh/known_hosts ] && grep '^[a-z|A-Z]' ~/.ssh/known_hosts | awk '{print $1}'
+  [ -f ~/.ssh/known_hosts ] && awk '{print $1}' ~/.ssh/known_hosts | tr ',' $'\n' | grep '^[a-z|A-Z]'
 }
 
 _ssh_autocomplete() 
@@ -18,3 +18,4 @@ _ssh_autocomplete()
 
 complete -F _ssh_autocomplete scp
 complete -F _ssh_autocomplete ssh
+complete -F _ssh_autocomplete shh
