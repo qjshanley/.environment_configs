@@ -49,7 +49,7 @@ function SelectMain()
   let windowCount = winnr('$')
   let found = 'false'
   while found == 'false' && i <=  windowCount
-    execute i . ' windo if @% != "NetrwTreeListing" | let found = "true" | endif'
+    execute i . ' windo if @% !~ "NetrwTreeListing*" | let found = "true" | endif'
     let i += 1
   endwhile
 endfunction
@@ -82,12 +82,12 @@ function CloseDrawer()
 endfunction
 
 function KeepDrawerLeft()
-  windo if @% == "NetrwTreeListing" | wincmd H | call CloseDrawer() | endif
+  windo if @% =~ "NetrwTreeListing*" | wincmd H | call CloseDrawer() | endif
 endfunction
 
 augroup ProjectDrawer
   autocmd!
   autocmd VimEnter * call SetupDrawer()
-  autocmd WinEnter NetrwTreeListing call OpenDrawer()
-  autocmd WinLeave NetrwTreeListing call CloseDrawer()
+  autocmd WinEnter NetrwTreeListing* call OpenDrawer()
+  autocmd WinLeave NetrwTreeListing* call CloseDrawer()
 augroup END
