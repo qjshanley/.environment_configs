@@ -7,6 +7,7 @@ alias lha='ls -lhA'
 alias lta='ls -ltA'
 alias recent='ls -lhtA | head -n 20'
 alias dstats='sudo docker stats $(sudo docker ps --format "{{.Names}}")'
+alias dexit='rm ~/.bash_temporary ; exit'
 
 # enable colors
 alias ls='ls --color=auto'
