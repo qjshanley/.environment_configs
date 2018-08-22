@@ -72,16 +72,22 @@ function ppass {
 
 function rpass {
 	local n=
-	[ "$1" -eq "$1" ] && n=$1 2>/dev/null || return 1
-	PASSWORD=$(openssl rand "${n:-32}" | base64 -w 0 | cut -c "1-${n:-32}")
+	if [ -z "$1" ] ; then
+		n=32
+	else
+		[ "$1" -eq "$1" ] && n="$1" 2>/dev/null || return 1
+	fi
+	PASSWORD=$(openssl rand "$n" | base64 -w 0 | cut -c "1-$n")
 	printf -- 'Generated the random password: %s\n' "$PASSWORD" > /dev/tty
 	printf -- "$PASSWORD" > /dev/stdout
 }
 
 function eztar {
-	if [ "$(rev <<< "$1" | cut -d '.' -f 1 | rev)" == "enc" ] ; then
-		openssl aes-256-cbc -d -in "$1" | tar xz > -
+	object="$(basename $1)"
+	[ -e "$object" ] || printf -- "Object (${object}) must exist in your current directory: $?"
+	if [ "$(rev <<< "$object" | cut -d '.' -f 1 | rev)" == "enc" ] ; then
+		openssl aes-256-cbc -d -in "$object" | tar -xzC "${2:-.}"
 	else
-		tar cz "$1" | openssl aes-256-cbc -e -out "${1}.tar.gz.enc" && rm -rf "$1"
+		tar cz "$object" | openssl aes-256-cbc -e -out "${object}.tar.gz.enc" && rm -rf "$object"
 	fi
 }
