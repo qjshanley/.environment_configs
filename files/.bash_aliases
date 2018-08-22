@@ -86,7 +86,7 @@ function eztar {
 	object="$(basename $1)"
 	[ -e "$object" ] || printf -- "Object (${object}) must exist in your current directory: $?"
 	if [ "$(rev <<< "$object" | cut -d '.' -f 1 | rev)" == "enc" ] ; then
-		openssl aes-256-cbc -d -in "$object" | tar -xzC "${2:-.}"
+		openssl aes-256-cbc -d -in "$object" | tar -xzC "${2:-.}" && cd "${2:-.}"
 	else
 		tar cz "$object" | openssl aes-256-cbc -e -out "${object}.tar.gz.enc" && rm -rf "$object"
 	fi
