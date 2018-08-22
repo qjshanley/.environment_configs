@@ -7,7 +7,6 @@ alias lha='ls -lhA'
 alias lta='ls -ltA'
 alias recent='ls -lhtA | head -n 20'
 alias dstats='sudo docker stats $(sudo docker ps --format "{{.Names}}")'
-alias dexit='rm ~/.bash_temporary ; exit'
 
 # enable colors
 alias ls='ls --color=auto'
@@ -50,7 +49,7 @@ function shh {
 			"$1":~/. >/dev/null 2>&1
 
 		# ssh to server and attach directly to a screen session
-    ssh -t "$1" screen -U -DR -S ssh -p 0 -t host
+		ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host ; rm -rf ~/.bash_history ~/.bash_temporary"'
   else
 		# simply pass all args to the ssh command
     ssh "$@"
