@@ -5,15 +5,11 @@ JOBID=${DOCKER_CMD[4]}
 
 IFS='' read -r -d '' SCRIPT <<- EOF
 	if [ -z "\$(grep "^alias dexec_${JOBID}" ~/.bash_temporary)" ] ; then
-	  printf -- $'alias dexec_${JOBID}=\'sudo docker exec -it \$@ $JOBID bash -c "TERM=xterm EDITOR=vim VISUAL=vim PSQL_EDITOR=\$(which vim) bash -o vi"\'\n' >> ~/.bash_temporary
+	  printf -- $'alias dexec_${JOBID}=\'screen -t ${JOBID} sudo docker exec -it \$@ $JOBID bash -c "TERM=xterm EDITOR=vim VISUAL=vim PSQL_EDITOR=\$(which vim) bash -o vi"\'\n' >> ~/.bash_temporary
 	fi
 
-	screen -S ssh -X screen -t $JOBID
-	if [ "\$?" != "0" ] ; then
-	  screen -dmS ssh -t host
-	  screen -r ssh -X screen -t $JOBID
-	fi
-	screen -U -DR -S ssh -p $JOBID
+	screen -U -DR -S ssh -t host -p 0
+	rm -rf ~/.bash_history ~/.bash_temporary
 EOF
 
 # copy dot files to server
