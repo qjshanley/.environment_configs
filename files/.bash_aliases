@@ -14,25 +14,6 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-function doc {
-	# Find compose files and source vars files
-	if [ -d "${COMPOSE_DIR:?Set this environment variable pointing to your compose files.}" ] ; then
-		COMPOSE_FILES=
-		f= ; for f in $(find "$COMPOSE_DIR" -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
-		f= ; for f in $(find "$COMPOSE_DIR" -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
-	else
-		printf -- "${COMPOSE_DIR} is not a directory or does not exist."
-		return 1
-	fi
-
-	# Execute docker-compose command
-	if [ "$(uname -s)" == "Darwin" ] ; then
-		docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-DocProject}" $@
-	else
-		sudo docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-DocProject}" $@
-	fi
-}
-
 function li { printf -- "%*s\n" "$(tput cols)" " " | sed 's/ /-/g' ; }
 
 function compare { diff -W $(tput cols) -s -y $@ ; }
@@ -40,6 +21,27 @@ function compare { diff -W $(tput cols) -s -y $@ ; }
 function LIST { netstat -an | sed -n '1,2p ; /tcp.*LIST/p' ; }
 
 function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@ ; }
+
+function doc {
+	(
+		# Find compose files and source vars files
+		if [ -d "${COMPOSE_DIR:?Set this environment variable pointing to your compose files.}" ] ; then
+			COMPOSE_FILES=
+			f= ; for f in $(find "$COMPOSE_DIR" -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
+			f= ; for f in $(find "$COMPOSE_DIR" -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
+		else
+			printf -- "${COMPOSE_DIR} is not a directory or does not exist."
+			return 1
+		fi
+
+		# Execute docker-compose command
+		if [ "$(uname -s)" == "Darwin" ] ; then
+			docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-DocProject}" $@
+		else
+			sudo docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-DocProject}" $@
+		fi
+	)
+}
 
 function pod-api {
 	sudo docker exec -it -u postgres postgresql bash -c '
