@@ -6,7 +6,7 @@ alias lt='ls -lt'
 alias lha='ls -lhA'
 alias lta='ls -ltA'
 alias recent='ls -lhtA | head -n 20'
-alias dstats='sudo docker stats $(sudo docker ps --format "{{.Names}}")'
+alias doc_stats='sudo docker stats $(sudo docker ps --format "{{.Names}}")'
 
 # enable colors
 alias ls='ls --color=auto'
@@ -14,7 +14,24 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-function del { mkdir -p /tmp/trash ; mv -t /tmp/trash/ "$@" ; }
+function doc {
+	# Find compose files and source vars files
+	if [ -d "${COMPOSE_DIR:?Set this environment variable pointing to your compose files.}" ] ; then
+		COMPOSE_FILES=
+		f= ; for f in $(find "$COMPOSE_DIR" -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
+		f= ; for f in $(find "$COMPOSE_DIR" -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
+	else
+		printf -- "${COMPOSE_DIR} is not a directory or does not exist."
+		return 1
+	fi
+
+	# Execute docker-compose command
+	if [ "$(uname -s)" == "Darwin" ] ; then
+		docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-DocProject}" $@
+	else
+		sudo docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-DocProject}" $@
+	fi
+}
 
 function li { printf -- "%*s\n" "$(tput cols)" " " | sed 's/ /-/g' ; }
 
