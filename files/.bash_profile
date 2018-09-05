@@ -3,7 +3,12 @@
 # Read once by the login shell
 
 # Set PATH Variable
-BINS=( ~/.bin /usr/local/go/bin ~/code/go/bin ~/Library/Python/2.7/bin )
+BINS=(
+	~/.bin
+	/usr/local/go/bin
+	~/code/go/bin
+	~/Library/Python/2.7/bin
+)
 for bin in "${BINS[@]}" ; do
 	test -d "$bin" -a -z "$(echo "$PATH" | grep "$bin")" && PATH+=":${bin}"
 done
@@ -15,14 +20,14 @@ export "PATH=$PATH"
 #fi
 
 # Set Environment Variables
-EVARS=( 
+EVARS=(
 	EDITOR=vim
 	VISUAL=vim
 	TERM=xterm-256color
-	GOROOT=/usr/local/go 
-	GOPATH=~/code/go 
+	GOROOT=/usr/local/go
+	GOPATH=~/code/go
 	PSQL_EDITOR=$(which vim)
-	COMPOSE_DIR=~/code/qub3r/docker/stacks/datica
+	DOC=~/code/qub3r/docker/stacks/datica
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
 
@@ -34,5 +39,5 @@ for config in "${DISABLE_CONFIGS[@]}" ; do
 	test -r "$config" && mv "$config" "${config}.disable"
 done
 
-if [ -f ~/.bashrc ]; then . ~/.bashrc; fi
+test -f ~/.bashrc && source ~/.bashrc
 
