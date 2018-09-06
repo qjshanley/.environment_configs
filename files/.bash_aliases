@@ -25,17 +25,15 @@ function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $
 function doc {
 	# run in subshell because we don't want to modify our environment variables
 	(
-		# Find compose files and source vars files
-		if [ -d "${DOC:?Set this environment variable to point to your compose files.}" ] ; then
-			COMPOSE_FILES=
-			f= ; for f in $(find "$DOC" -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
-			f= ; for f in $(find "$DOC" -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
-		else
-			printf -- "${DOC} is not a directory or does not exist."
-			return 1
-		fi
+		# directory containing docker compose files
+		export DOC_STACK=${STACKS:?This environment variable needs to be defined.}/${STACK:?This environment variable needs to be defined.}
 
-		# Execute docker-compose command
+		# find compose files and source vars files
+		COMPOSE_FILES=
+		f= ; for f in $(find "$DOC_STACK" -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
+		f= ; for f in $(find "$DOC_STACK" -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
+
+		# execute docker-compose command
 		if [ "$(uname -s)" == "Darwin" ] ; then
 			docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-DocProject}" $@
 		else
