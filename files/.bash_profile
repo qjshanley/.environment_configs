@@ -29,7 +29,7 @@ EVARS=(
 	PSQL_EDITOR=$(which vim)
 	STACKS=~/code/qub3r/docker/stacks
 	STACK=datica
-	cluster_name=`qub3rk8s`
+	cluster_name=qub3rk8s
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
 
