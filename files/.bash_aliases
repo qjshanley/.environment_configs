@@ -18,7 +18,7 @@ function li { printf -- "%*s\n" "$(tput cols)" " " | sed 's/ /-/g' ; }
 
 function compare { diff -W $(tput cols) -s -y $@ ; }
 
-function LIST { netstat -an | sed -n '1,2p ; /tcp.*LIST/p' ; }
+function LIST { netstat -an | sed -n '1,2p ; /^tcp.*LISTEN/p' ; }
 
 function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@ ; }
 
