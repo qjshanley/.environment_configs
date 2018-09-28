@@ -14,11 +14,6 @@ for bin in "${BINS[@]}" ; do
 done
 export "PATH=$PATH"
 
-# Set PATH Variable
-#if [ -z "$(printenv PATH | grep "^/usr/local/bin")" ] ; then
-#	export "PATH=/usr/local/bin:${PATH}:~/.bin:/usr/local/go/bin:~/code/go/bin:~/Library/Python/2.7/bin"
-#fi
-
 # Set Environment Variables
 EVARS=(
 	EDITOR=vim
@@ -29,7 +24,6 @@ EVARS=(
 	PSQL_EDITOR=$(which vim)
 	STACKS=~/code/qub3r/docker/stacks
 	STACK=datica
-	cluster_name=qub3rk8s
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
 
