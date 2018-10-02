@@ -2,3 +2,4 @@
 *.swp
 .bin/.datica_update
 .DS_Store
+files/.vim/.netrwhist
