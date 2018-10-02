@@ -1,17 +1,19 @@
 " general settings
 if exists('+relativenumber')
-  set relativenumber
+    set relativenumber
 endif
 
 if exists('+number')
-  set number
+    set number
 endif
 
 set t_Co=256                    " turn on 256 color
 syntax on                       " enable syntax highlighting
 filetype plugin indent on       " latest smart tab setting
-set tabstop=2                   " show existing tab
-set shiftwidth=2                " when indenting with '>', use spaces
+"set tabstop=4                   " defines the number of columns a tab character should account for (just use the default)
+set shiftwidth=4                " the number of columns text is indented with the reindent operations (<< and >>)
+set softtabstop=4               " defines the number of columns used when you hit Tab in insert mode
+set expandtab                   " causes the number of spaces, defined in softtabstop, to be used when you hit Tab in insert mode. converts the tab key to insert n spaces.
 set hlsearch                    " when searching, highlight all
 set shortmess+=I                " don't display the intro message
 set backspace=indent,eol,start  " enable regular backspacing
@@ -39,13 +41,13 @@ map <Leader>oe :Vexplore<CR>
 
 " code folding settings
 if exists('+foldmethod')
-  set foldmethod=indent
-  set foldlevel=1
-  set foldlevelstart=0
-  set foldnestmax=10
-  nnoremap f za
-  nnoremap < zm
-  nnoremap > zr
+    set foldmethod=indent
+    set foldlevel=1
+    set foldlevelstart=0
+    set foldnestmax=10
+    nnoremap f za
+    nnoremap < zm
+    nnoremap > zr
 endif
 
 " make tabs intuitive for insert mode
