@@ -16,7 +16,7 @@ declare -A SOFTWARE_LIST=(
 	[7,"EXTENSION"]="tar.gz"
 	[7,"URL"]='https://pkg-config.freedesktop.org/releases/${SOFTWARE}-${VERSION}.${EXTENSION}'
 
-  [8,"SOFTWARE"]="coreutils" [8,"CONFIG_OPTIONS"]="--prefix=/usr/local"  [8,"VERSION"]="8.9"    [8,"EXTENSION"]="tar.gz"  [8,"URL"]="$DEFAULT_URL_PATTERN"
+  [8,"SOFTWARE"]="coreutils" [8,"CONFIG_OPTIONS"]="--prefix=/usr/local"  [8,"VERSION"]="8.30"    [8,"EXTENSION"]="tar.xz"  [8,"URL"]="$DEFAULT_URL_PATTERN"
   [9,"SOFTWARE"]="inetutils" [9,"CONFIG_OPTIONS"]="--prefix=/usr/local"  [9,"VERSION"]="1.9.4"  [9,"EXTENSION"]="tar.gz"  [9,"URL"]="$DEFAULT_URL_PATTERN"
 )
 
