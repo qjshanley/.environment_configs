@@ -22,7 +22,7 @@ EVARS=(
 	GOROOT=/usr/local/go
 	GOPATH=~/code/go
 	PSQL_EDITOR=$(which vim)
-	STACKS=~/code/qub3r/docker/stacks/datica
+	STACKS=~/code/docker/doc
 	STACK=pod-browser
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
