@@ -7,6 +7,6 @@ if [ "$SHLVL" = 1 ]; then
     [ -x /usr/bin/clear_console ] && /usr/bin/clear_console -q
 fi
 
-# remove temp dexec aliases
+# remove temp aliases
 rm -f ~/.bash_temporary
 

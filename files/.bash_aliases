@@ -6,7 +6,8 @@ alias lt='ls -lt'
 alias lha='ls -lhA'
 alias lta='ls -ltA'
 alias recent='ls -lhtA | head -n 20'
-alias doc_stats='sudo docker stats $(sudo docker ps --format "{{.Names}}")'
+alias line='printf -- "%*s\n" "$(tput cols)" " " | sed "s/ /-/g"'
+alias renew='exec $SHELL --login'
 
 # enable colors
 alias ls='ls --color=auto'
@@ -14,7 +15,7 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-function li { printf -- "%*s\n" "$(tput cols)" " " | sed 's/ /-/g' ; }
+function _is_linux { uname -s | sed 's/Darwin//g' ; }
 
 function compare { diff -W $(tput cols) -s -y $@ ; }
 
@@ -26,30 +27,47 @@ function doc {
     test ${STACKS:?This environment variable needs to be defined.}
     test ${STACK:?This environment variable needs to be defined.}
     case $1 in
-        ls)
-            # list docker-compose stacks
-            printf -- "%s\n" "$STACKS" ; find $STACKS -type d -name "[a-zA-Z0-9]*" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort | sed "s/$STACK/$STACK <--/g"
-            ;;
-        *)
-            (
-                # find compose files and source vars files
-                COMPOSE_FILES=
-                f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
-                f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
-
-                # execute docker-compose command
-                if [ "$(uname -s)" == "Darwin" ] ; then
-                    docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-$STACK}" $@
-                else
-                    sudo docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-$STACK}" $@
-                fi
-            )
-            ;;
+        ls)     shift 1 ; _doc_ls $@ ;;
+        oom)    shift 1 ; _doc_oom $@ ;;
+        stats)  shift 1 ; _doc_stats $@ ;;
+        *)      _doc_doc $@ ;;
     esac
 }
 
+function _doc_ls { 
+    # list docker-compose stacks
+    local IFS=$'\n'
+    echo $STACKS
+    for stack in $(find $STACKS -type d -name "[a-zA-Z0-9]*" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort) ; do
+        echo $stack | sed "s/$STACK/$STACK <--/g"
+        egrep -r '^  [a-zA-Z]*:$' ${STACKS}/${stack} | sed -En 's@.*: *([a-zA-Z]*) *:.*@-- \1@p' | sort
+    done
+}
+
+function _doc_stats { 
+    docker stats $(docker ps --format "{{.Names}}") || \
+        sudo -E docker stats $(sudo -E docker ps --format "{{.Names}}")
+}
+
+function _doc_doc {
+    (
+        # find compose files and source vars files
+        COMPOSE_FILES=
+        f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
+        f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
+
+        docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-$STACK}" $@ || \
+            sudo -E docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-$STACK}" $@
+    )
+}
+
+function _doc_oom {
+    CID="${1:-$(read -p "ContainerID: " CID ; echo $CID)}"
+    CPU_SET="$(sudo -E docker inspect "$CID" | grep "Id" | awk -F'"' '{print $4}')" && dmesg -T | grep "$CPU_SET" | less
+}
+
 function pod-api {
-    sudo docker exec -it -u postgres postgresql bash -c '
+    sudo -E docker exec -it -u postgres postgresql bash -c '
         PSQL_EDITOR=$(which vim)
         PG_CURR_DB=pod-api
         psql $PG_CURR_DB
@@ -73,17 +91,13 @@ function shh {
             "$1":~/. >/dev/null 2>&1
 
         # ssh to server and attach directly to a screen session
-        ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host ; rm -rf ~/.bash_history ~/.bash_temporary"'
+        ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host ; logout"'
     else
         # simply pass all args to the ssh command
         ssh "$@"
     fi
 }
 
-function oom_check {
-    printf "Container ID: " && read CID
-    CPU_SET="$(sudo docker inspect $CID | grep "Id" | awk -F'"' '{print $4}')" && dmesg -T | grep "$CPU_SET"
-}
 
 function ppass { 
     while true ; do
