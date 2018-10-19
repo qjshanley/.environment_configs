@@ -11,7 +11,7 @@ if [ -d "$ENV_FILES" ]; then
 	done
 
 	# symlink files to the correct directories
-	for target in $(find "$ENV_FILES" -mindepth 1 -type f -not -name "*swp") ; do
+	for target in $(find "$ENV_FILES" -mindepth 1 -type f -or -type l -not -name "*swp") ; do
 		link_name=$(sed -E "s@${ENV_FILES}/(.*)@\1@" <<<"$target")
 		rm -f ~/$link_name
 		ln -s "$target" ~/"$link_name"

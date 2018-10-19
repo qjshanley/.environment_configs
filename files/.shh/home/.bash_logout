@@ -1,0 +1,1 @@
+/Users/quin/.bash_logout
