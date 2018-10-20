@@ -1,0 +1,23 @@
+#!/usr/bin/env bash
+
+if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
+
+    # touch the known_hosts file if it doesn't exist
+    test ! -e ~/.ssh/known_hosts && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
+
+    # copy dot files to server
+    rsync -Le ssh \
+        ~/.bashrc \
+        ~/.bash_aliases \
+        ~/.bash_logout \
+        ~/.bash_profile \
+        ~/.screenrc \
+        ~/.vimrc \
+        "$1":~/. >/dev/null 2>&1
+
+    # ssh to server and attach directly to a screen session
+    ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host ; logout"'
+else
+    # simply pass all args to the ssh command
+    ssh "$@"
+fi
