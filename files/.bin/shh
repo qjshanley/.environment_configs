@@ -6,18 +6,12 @@ if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     test ! -e ~/.ssh/known_hosts && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
 
     # copy dot files to server
-    rsync -Le ssh \
-        ~/.bashrc \
-        ~/.bash_aliases \
-        ~/.bash_logout \
-        ~/.bash_profile \
-        ~/.screenrc \
-        ~/.vimrc \
-        "$1":~/. >/dev/null 2>&1
+    [ -d ~/.shh/home ] && ( cd ~/.shh/home ; tar czh . ) | ssh "$1" "(cd ~ ; tar xz --overwrite)"
 
     # ssh to server and attach directly to a screen session
-    ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host ; logout"'
+    ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host"'
 else
     # simply pass all args to the ssh command
-    ssh "$@"
+    ssh $@
 fi
+

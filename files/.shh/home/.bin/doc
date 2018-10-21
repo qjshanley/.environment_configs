@@ -1,7 +1,6 @@
 #!/usr/bin/env bash
 
 main() {
-    sudo -v || exit 1
     case "$1" in
         exec)   shift 1 ; _doc_exec_ $@ ;;
         oom)    shift 1 ; _doc_oom_ $@ ;;

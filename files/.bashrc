@@ -50,7 +50,7 @@ fi
 export GCC_COLORS='error=01;31:warning=01;35:note=01;36:caret=01;32:locus=01:quote=01'
 
 # source files
-SOURCES=( ~/.bash_aliases ~/.bash_autocomplete ~/.bash_temporary )
+SOURCES=( ~/.bash_aliases ~/.bash_autocomplete )
 for src in "${SOURCES[@]}" ; do
 	# source single files
 	test -f "$src" && source "$src"

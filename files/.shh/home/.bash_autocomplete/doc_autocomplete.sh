@@ -3,18 +3,17 @@
 _doc_opts() {
     case "$@" in
         '') 
-            doc $@ --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }' \
+            docker --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }' \
                 | { cat ; awk '$0 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc) ; } | sort
             ;;
         exec)
-            local jobs=~/.bash_temporary/jobs
-            if [ -e "$jobs" ] ; then
-                { cat "$jobs" ; cat "$jobs" ; doc ps --format '{{.Names}}' ; } \
-                    | sort | uniq -u \
-                    | { { cat "$jobs" ; doc ps --format '{{.Names}}' ; } | sort | uniq -d | awk '{print "_"$0}' ; cat ; } \
-                    | sort
+            local jids=( $(cat ~/.bash_temporary/jobs 2>/dev/null) )
+            local dids=( $(sudo -En docker ps --format '{{.Names}}' 2>/dev/null) )
+            if [ -z "${dids[@]}" ] ; then
+                printf -- $'%s\n' "${jids[@]}" "${dids[@]}" | sort | uniq | awk '{print "_"$0}'
             else
-                doc ps --format '{{.Names}}'
+                printf -- $'%s\n' "${jids[@]}" "${jids[@]}" "${dids[@]}" | sort | uniq -u
+                printf -- $'%s\n' "${jids[@]}" "${dids[@]}" | sort | uniq -d | awk '{print "_"$0}'
             fi
             ;;
     esac
