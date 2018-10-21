@@ -4,14 +4,14 @@ main() {
     test ${STACKS:?This environment variable needs to be defined.}
     test ${STACK:?This environment variable needs to be defined.}
     case $1 in
-        ls)     shift 1 ; _doc_ls $@ ;;
-        oom)    shift 1 ; _doc_oom $@ ;;
-        stats)  shift 1 ; _doc_stats $@ ;;
-        *)      _docker-compose $@ ;;
+        ls)     shift 1 ; _doc_ls_ $@ ;;
+        oom)    shift 1 ; _doc_oom_ $@ ;;
+        stats)  shift 1 ; _doc_stats_ $@ ;;
+        *)      _docker-compose_ $@ ;;
     esac
 }
 
-_doc_ls() { 
+_doc_ls_() { 
     # list docker-compose stacks
     local IFS=$'\n'
     echo $STACKS
@@ -21,17 +21,17 @@ _doc_ls() {
     done
 }
 
-_doc_stats() {
+_doc_stats_() {
     docker stats $(docker ps --format "{{.Names}}")
 }
 
 
-_doc_oom() {
+_doc_oom_() {
     CID="${1:-$(read -p "ContainerID: " CID ; echo $CID)}"
     CPU_SET="$(sudo -E docker inspect "$CID" | grep "Id" | awk -F'"' '{print $4}')" && dmesg -T | grep "$CPU_SET" | less
 }
 
-_docker-compose() {
+_docker-compose_() {
     (
         # find compose files and source vars files
         COMPOSE_FILES=

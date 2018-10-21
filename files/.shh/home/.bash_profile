@@ -1,1 +1,1 @@
-/Users/quin/.bash_profile
+../../.bash_profile

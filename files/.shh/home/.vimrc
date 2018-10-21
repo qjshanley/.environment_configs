@@ -1,1 +1,1 @@
-/Users/quin/.vimrc
+../../.vimrc

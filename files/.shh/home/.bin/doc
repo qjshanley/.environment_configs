@@ -1,0 +1,39 @@
+#!/usr/bin/env bash
+
+main() {
+    case "$1" in
+        exec)   shift 1 ; _doc_exec_ $@ ;;
+        oom)    shift 1 ; _doc_oom_ $@ ;;
+        stats)  shift 1 ; _doc_stats_ $@ ;;
+        *)      _docker_ $@ ;;
+    esac
+}
+
+_doc_exec_() {
+    JID="$(sed 's/^_//' <<<"${1:?Job ID Required}")" ; shift 1
+    screen -t $JID sudo -E docker exec -it $JID bash -c '
+        TERM=xterm-256color
+        EDITOR=vim
+        VISUAL=vim
+        PSQL_EDITOR=$(which vim)
+        bash -l -o vi
+    '
+}
+
+_doc_stats_() {
+    sudo -E docker stats $(sudo -E docker ps --format "{{.Names}}")
+}
+
+_doc_oom_() {
+    CID="${1:-$(read -p "Container ID: " CID ; echo $CID)}"
+    CPU_SET="$(sudo -E docker inspect "$CID" | grep "Id" | awk -F'"' '{print $4}')" && dmesg -T | grep "$CPU_SET" | less
+}
+
+_docker_() {
+    (
+        # find compose files and source vars files
+        sudo -E docker $@
+    )
+}
+
+main $@

@@ -1,1 +1,1 @@
-/Users/quin/.bash_logout
+../../.bash_logout

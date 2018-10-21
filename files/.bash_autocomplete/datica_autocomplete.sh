@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-_commands() {
+_datica_opts() {
   datica $@ --help 2>&1 | awk '/^Commands:/ {start=1; next} start==1 && !/^$/ {print $1} $1 ~ /^$/ {start=0}'
 }
 
@@ -9,7 +9,7 @@ _datica_autocomplete() {
   COMPREPLY=()
   cur="${COMP_WORDS[COMP_CWORD]}"
   prev="${COMP_WORDS[*]:1:$COMP_CWORD-1}"
-  opts="$(_commands "$prev")"
+  opts="$(_datica_opts "$prev")"
   COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
   return 0
 }

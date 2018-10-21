@@ -1,1 +1,1 @@
-/Users/quin/.bash_aliases
+../../.bash_aliases

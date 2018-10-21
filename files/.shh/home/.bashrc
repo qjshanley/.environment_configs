@@ -1,1 +1,1 @@
-/Users/quin/.bashrc
+../../.bashrc
