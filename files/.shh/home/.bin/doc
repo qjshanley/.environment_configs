@@ -10,7 +10,7 @@ main() {
 }
 
 _doc_exec_() {
-    JID="$(sed 's/^_//' <<<"${1:?Job ID Required}")" ; shift 1
+    JID="$(sed 's/^-//' <<<"${1:?Job ID Required}")" ; shift 1
     screen -t $JID sudo -E docker exec -it $JID bash -c '
         TERM=xterm-256color
         EDITOR=vim

@@ -4,11 +4,23 @@ main() {
     test ${STACKS:?This environment variable needs to be defined.}
     test ${STACK:?This environment variable needs to be defined.}
     case $1 in
+        exec)   shift 1 ; _doc_exec_ $@ ;;
         ls)     shift 1 ; _doc_ls_ $@ ;;
         oom)    shift 1 ; _doc_oom_ $@ ;;
         stats)  shift 1 ; _doc_stats_ $@ ;;
         *)      _docker-compose_ $@ ;;
     esac
+}
+
+_doc_exec_() {
+    local CID="$(sed 's/^_//' <<<"${1:?Container Name Required}")" ; shift 1
+    docker exec -it $CID bash -c '
+        TERM=xterm-256color
+        EDITOR=$(which vim)
+        VISUAL=$(which vim)
+        PSQL_EDITOR=$(which vim)
+        bash -l -o vi
+    '
 }
 
 _doc_ls_() { 
@@ -27,7 +39,7 @@ _doc_stats_() {
 
 
 _doc_oom_() {
-    CID="${1:-$(read -p "ContainerID: " CID ; echo $CID)}"
+    local CID="${1:-$(read -p "ContainerID: " CID ; echo $CID)}"
     CPU_SET="$(sudo -E docker inspect "$CID" | grep "Id" | awk -F'"' '{print $4}')" && dmesg -T | grep "$CPU_SET" | less
 }
 

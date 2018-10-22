@@ -7,7 +7,7 @@ _doc_opts() {
                 | { awk '$3 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc) ; cat ; } | sort
             ;;
         exec)
-            doc ps --services
+            docker ps --format '{{.Names}}'
             ;;
     esac
 }
