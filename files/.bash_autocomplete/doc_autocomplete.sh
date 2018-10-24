@@ -3,10 +3,10 @@
 _doc_opts() {
     case "$@" in
         '') 
-            doc $@ --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }' \
-                | { awk '$3 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc) ; cat ; } | sort
+            doc $@ --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
+            awk '$3 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc)
             ;;
-        cp|exec|stats)
+        *)
             docker ps --format '{{.Names}}'
             ;;
     esac
