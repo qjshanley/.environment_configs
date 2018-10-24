@@ -11,7 +11,7 @@ IFS='' read -r -d '' SCRIPT <<- EOF
     mv jobs.tmp jobs
 ) &
 
-exec "\$SHELL" --login -c 'screen -U -DR -S ssh -t host -p 0'
+exec "\$SHELL" --login -c 'screen -U -DR -S ssh -t host -p 0 ; logout'
 EOF
 
 # copy dot files to server

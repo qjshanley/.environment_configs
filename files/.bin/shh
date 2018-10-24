@@ -9,7 +9,7 @@ if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
     [ -d ~/.shh/home ] && ( cd ~/.shh/home ; tar czh . ) | ssh "$1" "(cd ~ ; tar xz --overwrite)"
 
     # ssh to server and attach directly to a screen session
-    ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host"'
+    ssh -t "$1" 'exec "$SHELL" -l -c "screen -U -DR -S ssh -p 0 -t host ; logout"'
 else
     # simply pass all args to the ssh command
     ssh $@

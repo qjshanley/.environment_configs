@@ -6,7 +6,7 @@ _doc_opts() {
             doc $@ --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }' \
                 | { awk '$3 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc) ; cat ; } | sort
             ;;
-        exec)
+        cp|exec|stats)
             docker ps --format '{{.Names}}'
             ;;
     esac

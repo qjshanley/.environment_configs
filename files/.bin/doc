@@ -4,22 +4,22 @@ main() {
     test ${STACKS:?This environment variable needs to be defined.}
     test ${STACK:?This environment variable needs to be defined.}
     case $1 in
-        exec)   shift 1 ; _doc_exec_ $@ ;;
-        ls)     shift 1 ; _doc_ls_ $@ ;;
-        oom)    shift 1 ; _doc_oom_ $@ ;;
-        stats)  shift 1 ; _doc_stats_ $@ ;;
-        *)      _docker-compose_ $@ ;;
+        exec)   shift 1 ; _doc_exec_ "$@" ;;
+        ls)     shift 1 ; _doc_ls_ "$@" ;;
+        oom)    shift 1 ; _doc_oom_ "$@" ;;
+        stats)  shift 1 ; _doc_stats_ "$@" ;;
+        *)      _docker-compose_ "$@" ;;
     esac
 }
 
 _doc_exec_() {
-    local CID="$(sed 's/^_//' <<<"${1:?Container Name Required}")" ; shift 1
-    docker exec -it $CID bash -c '
-        TERM=xterm-256color
-        EDITOR=$(which vim)
-        VISUAL=$(which vim)
-        PSQL_EDITOR=$(which vim)
-        bash -l -o vi
+    local CID="${1:?Container Name Required}" ; shift 1
+    docker exec -it "$@" "$CID" bash -c 'env \
+        TERM=xterm-256color \
+        EDITOR=$(which vim || which vi) \
+        VISUAL=$(which vim || which vi) \
+        PSQL_EDITOR=$(which vim || which vi) \
+        bash -l -o vi \
     '
 }
 
@@ -50,8 +50,8 @@ _docker-compose_() {
         f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
         f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
 
-        docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-$STACK}" $@
+        docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-$STACK}" "$@"
     )
 }
 
-main $@
+main "$@"
