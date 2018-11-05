@@ -1,0 +1,62 @@
+#!/usr/bin/env bash
+#cmd=IMAGE ; for c in $(docker --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }') ; do docker $c --help | grep 'Usage:' ; done | grep "$cmd" | awk '{printf $3"|"}'
+
+_docker_opts() {
+    local cur prev
+    while [ -n "$1" ] ; do
+        case "$1" in
+            --cur)
+                cur="$2" ; shift 2 ;;
+            --prev)
+                read -a prev <<< "$2" ; shift 2 ;;
+            *)
+                return 0 ;;
+        esac
+    done
+
+    case "$prev" in
+        '') 
+            docker --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
+            ;;
+        attach|commit|cp|diff|exec|export|kill|logs|pause|port|rename|restart|rm|start|stats|stop|top|unpause|update|wait)
+            prev=( ${prev[@]:1} )
+            {
+                docker ps --format '{{.Names}}'
+                printf -- "%s\n" "${prev[@]}"
+            } | sort | uniq -u
+            ;;
+        create|history|images|rmi|run|save|tag)
+            prev=( ${prev[@]:1} )
+            case "$cur" in
+                '')
+                    docker images --filter=dangling="false" --format='{{.Repository}}:{{.Tag}}' | sort | uniq
+                    ;;
+                *:*)
+                    docker images --filter=dangling="false" --filter=reference="${cur}*" --format='{{.Tag}}' | sort | uniq
+                    ;;
+                *)
+                    {
+                        docker images --filter=dangling="false" --filter=reference="${cur}*" --format='{{.Repository}}:{{.Tag}}'
+                        docker images --filter=dangling="false" --filter=reference="${cur}*/*" --format='{{.Repository}}:{{.Tag}}'
+                    } | sort | uniq
+                    ;;
+            esac
+            ;;
+    esac
+}
+
+_docker_autocomplete() {
+    local cmd cur prev
+    read -a cmd <<< "$COMP_LINE"
+    if [ "${COMP_LINE:${#COMP_LINE}-1}" == " " ] ; then
+        cur=
+        prev="${cmd[@]:1}"
+    else
+        cur="${cmd[@]:${#cmd[@]}-1}"
+        prev="${cmd[@]:1:${#cmd[@]}-2}"
+    fi
+    compgen -X '-*' -W "$(_docker_opts --cur "$cur" --prev "$prev")" -- "${cur/*:}"
+    return 0
+}
+
+complete -C _docker_autocomplete "$@" dock docker

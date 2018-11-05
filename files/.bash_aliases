@@ -15,7 +15,7 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
-function _is_linux { uname -s | sed 's/Darwin//g' ; }
+function _is_mac { [ "$(uname -s)" == "Darwin" ] && return 0 || return 1 ; }
 
 function compare { diff -W $(tput cols) -s -y $@ ; }
 

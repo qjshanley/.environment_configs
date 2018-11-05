@@ -1,20 +1,20 @@
 #!/usr/bin/env bash
 
 main() {
-    test ${STACKS:?This environment variable needs to be defined.}
-    test ${STACK:?This environment variable needs to be defined.}
+    : ${STACKS:?This environment variable needs to be defined.}
+    stack="$(compgen -W "$(_list_stacks)" -- "$1")"
+    [ -z "$stack" ] && stack="${STACK:?This environment variable needs to be defined.}" || shift 1
     case $1 in
         exec)   shift 1 ; _doc_exec_ "$@" ;;
         ls)     shift 1 ; _doc_ls_ "$@" ;;
-        oom)    shift 1 ; _doc_oom_ "$@" ;;
         stats)  shift 1 ; _doc_stats_ "$@" ;;
-        *)      _docker-compose_ "$@" ;;
+        *)      _docker-compose "$@" ;;
     esac
 }
 
 _doc_exec_() {
-    local CID="${1:?Container Name Required}" ; shift 1
-    docker exec -it "$@" "$CID" bash -c 'env \
+    : ${1:?Container Name Required}
+    docker exec -it "${@:2}" "$1" bash -c 'env \
         TERM=xterm-256color \
         EDITOR=$(which vim || which vi) \
         VISUAL=$(which vim || which vi) \
@@ -23,34 +23,29 @@ _doc_exec_() {
     '
 }
 
+_list_stacks() {
+    find -E "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
+}
+
 _doc_ls_() { 
-    # list docker-compose stacks
-    local IFS=$'\n'
-    echo $STACKS
-    for stack in $(find $STACKS -type d -name "[a-zA-Z0-9]*" -mindepth 1 -maxdepth 1 -exec basename {} \; | sort) ; do
-        echo $stack | sed "s/$STACK/$STACK <--/g"
-        egrep -r '^  [a-zA-Z]*:$' ${STACKS}/${stack} | sed -En 's@.*: *([a-zA-Z]*) *:.*@-- \1@p' | sort
-    done
+    echo "$(
+        echo "$STACKS"
+        for s in $(_list_stacks) ; do
+            echo "$s" | sed "s/$stack/$stack <--/"
+            sed -E 's/^/-- /' <<< "$(doc "$s" ps --services)"
+        done
+    )"
 }
 
 _doc_stats_() {
     docker stats $(docker ps --format "{{.Names}}")
 }
 
-
-_doc_oom_() {
-    local CID="${1:-$(read -p "ContainerID: " CID ; echo $CID)}"
-    CPU_SET="$(sudo -E docker inspect "$CID" | grep "Id" | awk -F'"' '{print $4}')" && dmesg -T | grep "$CPU_SET" | less
-}
-
-_docker-compose_() {
+_docker-compose() {
     (
-        # find compose files and source vars files
-        COMPOSE_FILES=
-        f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.yml' -or -name '*.yaml' | sed -E 's/\.(yml|yaml)/ \1/' | sort -k 1 | sed 's/ /./') ; do COMPOSE_FILES+="--file $f " ; done
-        f= ; for f in $(find ${STACKS}/${STACK} -maxdepth 1 -type f -name '*.var' -or -name '*.vars' | sed -E 's/\.(var|vars)/ \1/' | sort -k 1 | sed 's/ /./') ; do source $f ; done
-
-        docker-compose $COMPOSE_FILES --project-name "${PROJECT_NAME:-$STACK}" "$@"
+        _find() { find -E "$STACKS"/"$stack" -maxdepth 1 -type f -regex ".*$1" | sed -E "s/\.($1)/ \1/" /dev/stdin | sort -k 1 | sed 's/ /./' ; }
+        for f in $(_find "[var|vars]") ; do source "$f" ; done
+        printf -- "docker-compose%s --project-name ${PROJECT_NAME:-$stack} $*\n" "$(printf -- " --file %s" $(_find "[yml|yaml]"))" | bash
     )
 }
 

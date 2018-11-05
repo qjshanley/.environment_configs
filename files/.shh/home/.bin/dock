@@ -2,14 +2,14 @@
 
 main() {
     case "$1" in
-        exec)   shift 1 ; _doc_exec_ "$@" ;;
-        oom)    shift 1 ; _doc_oom_ "$@" ;;
-        stats)  shift 1 ; _doc_stats_ "$@" ;;
+        exec)   shift 1 ; _dock_exec_ "$@" ;;
+        oom)    shift 1 ; _dock_oom_ "$@" ;;
+        stats)  shift 1 ; _dock_stats_ "$@" ;;
         *)      _docker_ "$@" ;;
     esac
 }
 
-_doc_exec_() {
+_dock_exec_() {
     local JID="${1:?Job ID Required}" ; JID="${JID#_}" ; shift 1 ;
     screen -t "$JID" sudo -E docker exec -it "$@" "$JID" bash -c 'env \
         TERM=xterm-256color \
@@ -20,7 +20,7 @@ _doc_exec_() {
     '
 }
 
-_doc_stats_() {
+_dock_stats_() {
     if [ -n "$*" ] ; then
         sudo -E docker stats "${@#_}"
     else
@@ -28,7 +28,7 @@ _doc_stats_() {
     fi
 }
 
-_doc_oom_() {
+_dock_oom_() {
     sudo -E dmesg -T | grep "$(sudo -E docker inspect --format '{{.Id}}' "${1#_}")"
 }
 
