@@ -1,0 +1,29 @@
+#!/usr/bin/env bash
+
+main() {
+    case "$1" in
+        exec)   shift 1 ; _dock_exec_ "$@" ;;
+        stats)  shift 1 ; _dock_stats_ "$@" ;;
+        *)      docker "$@" ;;
+    esac
+}
+
+_dock_exec_() {
+    docker exec -it "${@:2}" "$1" bash -c 'env \
+        TERM=xterm-256color \
+        EDITOR=$(which vim || which vi) \
+        VISUAL=$(which vim || which vi) \
+        PSQL_EDITOR=$(which vim || which vi) \
+        bash -l -o vi \
+    '
+}
+
+_dock_stats_() {
+    if [ -n "$*" ] ; then
+        docker stats "${@#_}"
+    else
+        docker stats $(sudo -E docker ps --format "{{.Names}}")
+    fi
+}
+
+main "$@"

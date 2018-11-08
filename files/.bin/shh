@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
-if [ "$#" == 1 -a "${1:0:1}" != "-" ] ; then
+if [ "$#" -eq "1" -a "${1:0:1}" != "-" ] ; then
 
     # touch the known_hosts file if it doesn't exist
-    test ! -e ~/.ssh/known_hosts && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
+    [ ! -e ~/.ssh/known_hosts ] && mkdir -p ~/.ssh && touch ~/.ssh/known_hosts
 
     # copy dot files to server
     [ -d ~/.shh/home ] && ( cd ~/.shh/home ; tar czh . ) | ssh "$1" "(cd ~ ; tar xz --overwrite)"

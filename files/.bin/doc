@@ -1,9 +1,9 @@
 #!/usr/bin/env bash
 
 main() {
-    : ${STACKS:?This environment variable needs to be defined.}
-    stack="$(compgen -W "$(_list_stacks)" -- "$1")"
-    [ -z "$stack" ] && stack="${STACK:?This environment variable needs to be defined.}" || shift 1
+    : "${STACKS:?This environment variable needs to be defined.}"
+    stack="$(compgen -W "$(_doc_ls_)" -- "$1" | head -1)"
+    [ "$stack" == "$1" ] && shift 1 || stack="${STACK:-$(_doc_ls_ | head -1)}"
     case $1 in
         exec)   shift 1 ; _doc_exec_ "$@" ;;
         ls)     shift 1 ; _doc_ls_ "$@" ;;
@@ -13,28 +13,23 @@ main() {
 }
 
 _doc_exec_() {
-    : ${1:?Container Name Required}
-    docker exec -it "${@:2}" "$1" bash -c 'env \
-        TERM=xterm-256color \
-        EDITOR=$(which vim || which vi) \
-        VISUAL=$(which vim || which vi) \
-        PSQL_EDITOR=$(which vim || which vi) \
-        bash -l -o vi \
-    '
-}
-
-_list_stacks() {
-    find -E "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
+    _docker-compose exec "$@"
 }
 
 _doc_ls_() { 
-    echo "$(
-        echo "$STACKS"
-        for s in $(_list_stacks) ; do
-            echo "$s" | sed "s/$stack/$stack <--/"
-            sed -E 's/^/-- /' <<< "$(doc "$s" ps --services)"
-        done
-    )"
+    case "$1" in
+        -a|--all)
+            echo "$(
+                for s in $(_doc_ls_) ; do
+                    echo "$s"
+                    sed -E 's/^/-- /' <<< "$(doc "$s" ps --services)"
+                done
+            )"
+            ;;
+        *)
+            find -E "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
+            ;;
+    esac
 }
 
 _doc_stats_() {
@@ -44,8 +39,9 @@ _doc_stats_() {
 _docker-compose() {
     (
         _find() { find -E "$STACKS"/"$stack" -maxdepth 1 -type f -regex ".*$1" | sed -E "s/\.($1)/ \1/" /dev/stdin | sort -k 1 | sed 's/ /./' ; }
-        for f in $(_find "[var|vars]") ; do source "$f" ; done
+        for f in $(_find "pre") ; do source "$f" ; done
         printf -- "docker-compose%s --project-name ${PROJECT_NAME:-$stack} $*\n" "$(printf -- " --file %s" $(_find "[yml|yaml]"))" | bash
+        for f in $(_find "post") ; do source "$f" ; done
     )
 }
 

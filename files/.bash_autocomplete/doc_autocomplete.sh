@@ -2,16 +2,13 @@
 
 _doc_opts() {
     local stack
-    _get_stacks() { find -E $STACKS -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; ; }
-    case "$#" in
-        0)
-            _get_stacks ;;
-        *)
-            stack=$(compgen -W "$(_get_stacks)" -- "$1")
-            [ -z "$stack" ] && stack="${STACK:?This environment variable needs to be defined.}" || shift 1
-            ;;
-    esac
-
+    if [ "$#" -eq "0" ] ; then
+        [ -z "$STACK" ] && { find -E $STACKS -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; ; return 0 ; }
+        stack=$STACK
+    else
+        stack="$(compgen -W "$(doc ls)" -- "$1" | head -1)"
+        [ "$stack" == "$1" ] && shift 1 || stack="${STACKS:-$(doc ls | head -1)}"
+    fi
     case "$1" in
         '') 
             {
@@ -20,7 +17,7 @@ _doc_opts() {
             } | sort | uniq
             ;;
         down|ls) ;;
-        exec|stats)
+        stats)
             shift 1
             {
                 docker ps --format '{{.Names}}'
@@ -47,4 +44,4 @@ _doc_autocomplete() {
   return 0
 }
 
-complete -F _doc_autocomplete doc $@
+complete -F _doc_autocomplete doc "$@"
