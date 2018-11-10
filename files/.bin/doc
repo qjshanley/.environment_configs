@@ -5,28 +5,33 @@ main() {
     stack="$(compgen -W "$(_doc_ls_)" -- "$1" | head -1)"
     [ "$stack" == "$1" ] && shift 1 || stack="${STACK:-$(_doc_ls_ | head -1)}"
     case $1 in
-        exec)   shift 1 ; _doc_exec_ "$@" ;;
         ls)     shift 1 ; _doc_ls_ "$@" ;;
         stats)  shift 1 ; _doc_stats_ "$@" ;;
         *)      _docker-compose "$@" ;;
     esac
 }
 
-_doc_exec_() {
-    _docker-compose exec "$@"
-}
-
 _doc_ls_() { 
     case "$1" in
         -a|--all)
-            echo "$(
-                for s in $(_doc_ls_) ; do
-                    echo "$s"
-                    sed -E 's/^/-- /' <<< "$(doc "$s" ps --services)"
-                done
+        echo "$(
+            for s in $(_doc_ls_) ; do
+                echo "$s"
+                sed -E 's/^/-- /' <<< "$(stack=$s ; _doc_ls_ -s)"
+            done
             )"
             ;;
-        *)
+        -c|--configs)
+            shift 1
+            find -E "$STACKS"/"$stack" -maxdepth 1 -type f -regex ".*\.$1" | sed -E "s/\.($1)/ \1/" | sort -k 1 | sed 's/ /./'
+            ;;
+        -s|--services)
+            shift 1
+            for config in $(_doc_ls_ -c "(yml|yaml)") ; do
+                sed -En 'N ; s/^services:\n *(.*):/\1/ ; t end ; D ; :end p ; q' "$config"
+            done | sort
+            ;;
+        *|-S|--stacks)
             find -E "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
             ;;
     esac
@@ -37,11 +42,45 @@ _doc_stats_() {
 }
 
 _docker-compose() {
+    cmd=$1 ; shift 1
+    while [ -n "$1" ] ; do
+        case "$1" in
+            --) 
+                shift 1
+                srvcs+=( "$@" )
+                shift "$#" 
+                ;;
+            -*) 
+                args+=( "$1" )
+                shift 1
+                ;;
+            *)
+                arg=$(compgen -W "$(_doc_ls_ -s)" -- "$1" | head -1)
+                if [ "$arg" == "$1" ] ; then
+                    srvcs+=( "$arg" )
+                    shift 1
+                else
+                    args+=( "$arg" )
+                    shift 1
+                fi
+        esac
+    done
     (
-        _find() { find -E "$STACKS"/"$stack" -maxdepth 1 -type f -regex ".*$1" | sed -E "s/\.($1)/ \1/" /dev/stdin | sort -k 1 | sed 's/ /./' ; }
-        for f in $(_find "pre") ; do source "$f" ; done
-        printf -- "docker-compose%s --project-name ${PROJECT_NAME:-$stack} $*\n" "$(printf -- " --file %s" $(_find "[yml|yaml]"))" | bash
-        for f in $(_find "post") ; do source "$f" ; done
+        # set environment variables
+        for f in $(_doc_ls_ -c "(var|vars)") ; do source "$f" ; done
+
+        # run pre execution scripts
+        for f in $(_doc_ls_ -c "$1\.pre") ; do 
+            bash "$f"
+        done
+
+        # execute
+        printf -- "docker-compose%s --project-name $stack $cmd ${args[*]} ${srvcs[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -c "(yml|yaml)"))"
+
+        # run post execution scripts
+        for f in $(_doc_ls_ -c "$1\.post") ; do 
+            bash "$f"
+        done
     )
 }
 

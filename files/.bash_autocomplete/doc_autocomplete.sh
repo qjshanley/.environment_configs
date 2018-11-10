@@ -27,7 +27,7 @@ _doc_opts() {
         *)
             shift 1
             {
-                doc "$stack" ps --services
+                doc "$stack" ls --services
                 printf -- "%s\n" "$@" "$@"
             } | sort | uniq -u
             ;;
