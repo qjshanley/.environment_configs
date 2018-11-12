@@ -1,13 +1,10 @@
 #!/usr/bin/env bash
 
 _doc_opts() {
-    local stack
-    if [ "$#" -eq "0" ] ; then
-        [ -z "$STACK" ] && { find -E $STACKS -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; ; return 0 ; }
-        stack=$STACK
-    else
-        stack="$(compgen -W "$(doc ls)" -- "$1" | head -1)"
-        [ "$stack" == "$1" ] && shift 1 || stack="${STACKS:-$(doc ls | head -1)}"
+    local stack=
+    if [ "$#" -gt "0" ] ; then
+        local stack="$(compgen -W "$(doc ls)" -- "$1" | head -1)"
+        [ "$stack" == "$1" ] && shift 1 || local stack="${STACK:-$(doc ls | head -1)}"
     fi
     case "$1" in
         '') 
@@ -35,13 +32,20 @@ _doc_opts() {
 }
 
 _doc_autocomplete() {
-  local cur prev opts
-  COMPREPLY=()
-  cur="${COMP_WORDS[COMP_CWORD]}"
-  prev=( ${COMP_WORDS[@]:1:$COMP_CWORD-1} )
-  opts="$(_doc_opts "${prev[@]}")"
-  COMPREPLY=( $(compgen -W "${opts}" -- ${cur}) )
-  return 0
+    local cur= prev= opts=
+    COMPREPLY=()
+    local cur="${COMP_WORDS[COMP_CWORD]}"
+    local prev=( ${COMP_WORDS[@]:1:$COMP_CWORD-1} )
+    if [ "${#prev[@]}" == "0" ] ; then 
+        if [ "$cur" ] ; then
+            [ "$STACK" ] && local opts="$(compgen -W "$(doc ls)" -- "$cur")" || local opts="$(doc ls)"
+        else
+            [ "$STACK" ] || local opts="$(doc ls)"
+        fi
+    fi
+    local opts="${opts:-"$(_doc_opts "${prev[@]}")"}"
+    COMPREPLY=( $(compgen -W "$opts" -- "$cur") )
+    return 0
 }
 
 complete -F _doc_autocomplete doc "$@"
