@@ -2,8 +2,8 @@
 
 main() {
     : "${STACKS:?This environment variable needs to be defined.}"
-    stack="$(compgen -W "$(_doc_ls_)" -- "$1" | head -1)"
-    [ "$stack" == "$1" ] && shift 1 || stack="${STACK:-$(_doc_ls_ | head -1)}"
+    stack="$(_doc_ls_ -C "$1")"
+    [ "$stack" == "$1" ] && shift 1
     case $1 in
         ls)     shift 1 ; _doc_ls_ "$@" ;;
         stats)  shift 1 ; _doc_stats_ "$@" ;;
@@ -14,16 +14,30 @@ main() {
 _doc_ls_() { 
     case "$1" in
         -a|--all)
-        echo "$(
-            for s in $(_doc_ls_) ; do
-                echo "$s"
-                sed -E 's/^/-- /' <<< "$(stack=$s ; _doc_ls_ -s)"
-            done
+            echo "$(
+                for s in $(_doc_ls_) ; do
+                    echo "$s"
+                    sed -E 's/^/-- /' <<< "$(stack=$s ; _doc_ls_ -s)"
+                done
             )"
             ;;
         -c|--configs)
             shift 1
             find -LE "$STACKS"/"$stack" -type f -regex ".*/docker-compose.*$1\$" | sort
+            ;;
+        -C|--check-stack)
+            shift 1
+            local check_stack="$(compgen -W "$(_doc_ls_)" -- "$1" | head -1)"
+            if [ "$check_stack" == "$1" ] ; then
+                echo "$check_stack"
+                return 0
+            fi
+            local check_stack="$(compgen -W "$(_doc_ls_)" -- "$STACK" | head -1)"
+            if [ "$check_stack" == "$STACK" ] ; then
+                echo "$check_stack"
+                return 0
+            fi
+            echo "$(_doc_ls_ | head -1)"
             ;;
         -s|--services)
             shift 1

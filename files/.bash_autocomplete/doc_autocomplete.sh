@@ -1,17 +1,18 @@
 #!/usr/bin/env bash
 
 _doc_opts() {
-    local stack=
-    if [ "$#" -gt "0" ] ; then
-        local stack="$(compgen -W "$(doc ls)" -- "$1" | head -1)"
-        [ "$stack" == "$1" ] && shift 1 || local stack="${STACK:-$(doc ls | head -1)}"
-    fi
+    local stack="$(doc ls -C "$1")"
+    [ "$stack" == "$1" ] && shift 1
     case "$1" in
         '') 
-            {
-                docker-compose  --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
-                awk '$3 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc)
-            } | sort | uniq
+            if [ ! -e /tmp/doc/commands ] ; then
+                mkdir -p /tmp/doc
+                {
+                    docker-compose  --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
+                    awk '$3 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc)
+                } | sort | uniq > /tmp/doc/commands
+            fi
+            cat /tmp/doc/commands
             ;;
         down|ls) ;;
         stats)
