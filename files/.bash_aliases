@@ -17,11 +17,25 @@ alias egrep='egrep --color=auto'
 
 function _is_mac { [ "$(uname -s)" == "Darwin" ] && return 0 || return 1 ; }
 
-function compare { diff -W $(tput cols) -s -y $@ ; }
-
 function LIST { netstat -an | sed -n '1,2p ; /^tcp.*LISTEN/p' ; }
 
 function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@ ; }
+
+function compare {
+    [ ! -f "$1" ] && { echo File required for ARG 1 ; return 1 ; }
+    [ ! -f "$2" ] && { echo File required for ARG 2 ; return 1 ; }
+    if [ "$(diff $1 $2)" ] ; then
+        local F1_WIDTH="$(( 10 + ( 2 * $(cut -d ' ' -f1 <(wc -L "$1")) ) ))"
+        local F2_WIDTH="$(( 10 + ( 2 * $(cut -d ' ' -f1 <(wc -L "$2")) ) ))"
+        [ "$F1_WIDTH" -gt "$F2_WIDTH" ] && local WIDTH=$F1_WIDTH || local WIDTH=$F2_WIDTH
+        if [ $(( $(tput cols) - $WIDTH )) -lt 0 ] ; then
+            diff -W "$(tput cols)" -y "$1" "$2"
+        else
+            diff -W "$WIDTH" -y "$1" "$2"
+        fi
+    fi
+    return 0
+}
 
 function pod-api {
     sudo -E docker exec -it -u postgres postgresql bash -c '
