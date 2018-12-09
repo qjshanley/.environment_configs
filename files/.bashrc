@@ -16,13 +16,14 @@ export "PATH=$PATH"
 
 # Set Environment Variables
 EVARS=(
+    DATICA_ENV=97d68698-c508-443a-b4cb-f66dc8e60c5c
     EDITOR=vim
     VISUAL=vim
     TERM=xterm-256color
     GOROOT=/usr/local/go
     GOPATH=~/code/go
     PSQL_EDITOR=$(which vim)
-    STACKS=~/code/docker/doc
+    STACKS=~/code/qub3r/doc
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
 

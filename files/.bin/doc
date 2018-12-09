@@ -1,7 +1,10 @@
 #!/usr/bin/env bash
 
 main() {
-    : "${STACKS:?This environment variable needs to be defined.}"
+    if [ ! -d "${STACKS:?The environment variable needs to be defined.}" ] ; then
+        echo The STACKS environment variable is not an existing directory.
+        exit 2
+    fi
     stack="$(_doc_ls_ -C "$1")"
     [ "$stack" == "$1" ] && shift 1
     case $1 in
@@ -21,10 +24,6 @@ _doc_ls_() {
                 done
             )"
             ;;
-        -c|--configs)
-            shift 1
-            find -LE "$STACKS"/"$stack" -type f -regex ".*/docker-compose.*$1\$" | sort
-            ;;
         -C|--check-stack)
             shift 1
             local check_stack="$(compgen -W "$(_doc_ls_)" -- "$1" | head -1)"
@@ -39,11 +38,16 @@ _doc_ls_() {
             fi
             echo "$(_doc_ls_ | head -1)"
             ;;
+        -f|--files)
+            shift 1
+            find -LE "$STACKS"/"$stack" -mindepth 2 -maxdepth 2 -type f -regex ".*/$1/docker-compose$2$" | sort
+            find -LE "$STACKS"/"$stack" -mindepth 1 -maxdepth 1 -type f -regex ".*/docker-compose\.$1$2$" | sort
+            ;;
         -s|--services)
             shift 1
-            for config in $(_doc_ls_ -c "\.(yml|yaml)") ; do
+            for config in $(_doc_ls_ -f '.*' '\.(yml|yaml)') ; do
                 sed -En 'N ; s/^services:\n *(.*):/\1/ ; t end ; D ; :end p ; q' "$config"
-            done | sort
+            done | sort | uniq
             ;;
         *|-S|--stacks)
             find -E "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
@@ -82,23 +86,21 @@ _docker-compose() {
                 ;;
         esac
     done
-    (
-        # convert list to regex group
-        _or_list() { sed 'y/ /|/ ; s/^/(/ ; s/$/)/' <<< "$*" ; }
 
-        # set environment variables
-        for f in $(_doc_ls_ -c "\.(var|vars)") ; do source "$f" ; done
+    # convert a list to a regex group
+    _or_list() { sed 'y/ /|/ ; s/^/(/ ; s/$/)/' <<< "$*" ; }
 
-        # run pre execution scripts
-        for f in $(_doc_ls_ -c "$(_or_list "${srvcs[*]}")\.$cmd\.pre") ; do bash "$f" ; done
+    [ "${#srvcs}" -eq 0 ] && srvcs+=( '.*' )
 
-        # execute
-        printf -v cmd_str -- "docker-compose%s --project-name $stack $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -c "\.(yml|yaml)"))"
-        eval "$cmd_str"
+    # execute pre command scripts
+    for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
 
-        # run post execution scripts
-        for f in $(_doc_ls_ -c "$(_or_list "${srvcs[*]}")\.$cmd\.post") ; do bash "$f" ; done
-    )
+    # execute
+    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${stack} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -f '.*' "\.(yml|yaml)"))"
+    eval "$command_string"
+
+    # execute post command scripts
+    for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.post") ; do bash "$f" ; done
 }
 
 main "$@"
