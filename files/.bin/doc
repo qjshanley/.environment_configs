@@ -40,17 +40,17 @@ _doc_ls_() {
             ;;
         -f|--files)
             shift 1
-            find -LE "$STACKS"/"$stack" -mindepth 2 -maxdepth 2 -type f -regex ".*/$1/docker-compose$2$" | sort
-            find -LE "$STACKS"/"$stack" -mindepth 1 -maxdepth 1 -type f -regex ".*/docker-compose\.$1$2$" | sort
+            find -L "$STACKS"/"$stack" -mindepth 2 -maxdepth 2 -type f -regex ".*/$1/docker-compose$2$" | sort
+            find -L "$STACKS"/"$stack" -mindepth 1 -maxdepth 1 -type f -regex ".*/docker-compose\.$1$2$" | sort
             ;;
         -s|--services)
             shift 1
-            for config in $(_doc_ls_ -f '.*' '\.(yml|yaml)') ; do
+            for config in $(_doc_ls_ -f '.*' '\.\(yml\|yaml\)') ; do
                 sed -En 'N ; s/^services:\n *(.*):/\1/ ; t end ; D ; :end p ; q' "$config"
             done | sort | uniq
             ;;
         *|-S|--stacks)
-            find -E "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
+            find "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
             ;;
     esac
 }
@@ -96,7 +96,7 @@ _docker-compose() {
     for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
 
     # execute
-    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${stack} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -f '.*' "\.(yml|yaml)"))"
+    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${stack} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -f '.*' "\.\(yml\|yaml\)"))"
     eval "$command_string"
 
     # execute post command scripts
