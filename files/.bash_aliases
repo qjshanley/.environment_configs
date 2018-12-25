@@ -21,6 +21,8 @@ function LIST { netstat -an | sed -n '1,2p ; /^tcp.*LISTEN/p' ; }
 
 function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@ ; }
 
+function dex { export DATICA_ENV=$1 ; }
+
 function compare {
     [ ! -f "$1" ] && { echo File required for ARG 1 ; return 1 ; }
     [ ! -f "$2" ] && { echo File required for ARG 2 ; return 1 ; }
