@@ -23,7 +23,7 @@ function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $
 
 function dex { export DATICA_ENV=$1 ; }
 
-function compare {
+function diss {
     [ ! -f "$1" ] && { echo File required for ARG 1 ; return 1 ; }
     [ ! -f "$2" ] && { echo File required for ARG 2 ; return 1 ; }
     if [ "$(diff $1 $2)" ] ; then
@@ -34,7 +34,7 @@ function compare {
             diff -W "$(tput cols)" -y "$1" "$2"
         else
             diff -W "$WIDTH" -y "$1" "$2"
-        fi
+        fi | less
     fi
     return 0
 }
