@@ -1,4 +1,4 @@
-#!/usr/bin/env bash
+#!/bin/bash
 
 find() { /usr/bin/find "$@" ; }
 sed() { /usr/bin/sed "$@" ; }
