@@ -67,8 +67,9 @@ _doc_stats_() {
 }
 
 _docker-compose() {
-    local arg args cmd srvcs
-    cmd=$1 ; shift 1
+    local args=()
+    local srvcs=()
+    local cmd=$1 ; shift 1
     while [ -n "$1" ] ; do
         case "$1" in
             --) 
@@ -82,7 +83,7 @@ _docker-compose() {
                 shift 1
                 ;;
             *)
-                arg=$(compgen -W "$(_doc_ls_ -s)" -- "$1" | head -1)
+                local arg=$(compgen -W "$(_doc_ls_ -s)" -- "$1" | head -1)
                 if [ "$arg" == "$1" ] ; then
                     srvcs+=( "$arg" )
                     args+=( "$arg" )
@@ -97,7 +98,7 @@ _docker-compose() {
     # convert a list to a regex group
     _or_list() { sed 's/ /|/g ; s/^/(/ ; s/$/)/' <<< "$*" ; }
 
-    [ "${#srvcs}" -eq 0 ] && srvcs+=( '.*' )
+    [ "${#srvcs[@]}" -eq 0 ] && srvcs+=( '.*' )
 
     # execute pre command scripts
     for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
