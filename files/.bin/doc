@@ -51,7 +51,7 @@ _doc_ls_() {
             local pads=( $'\t' '  ' '    ' )
             for config in $(_doc_ls_ -f '.*' '\.(yml|yaml)') ; do
                 for pad in "${pads[@]}" ; do
-                    local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z]/{s/[ :]//g;p;};}" "$config")"
+                    local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "$config")"
                     [ "$services" ] && echo "$services" && break
                 done
             done | sort | uniq
