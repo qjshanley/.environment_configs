@@ -2,9 +2,11 @@
 
 main() {
     case "$1" in
-        exec)   shift 1 ; _dock_exec_ "$@" ;;
-        oom)    shift 1 ; _dock_oom_ "$@" ;;
-        stats)  shift 1 ; _dock_stats_ "$@" ;;
+        exec)   shift 1 ; _dock_exec_   "$@" ;;
+        oom)    shift 1 ; _dock_oom_    "$@" ;;
+        stats)  shift 1 ; _dock_stats_  "$@" ;;
+        ps)     shift 1 ; _dock_ps_     "$@" ;;
+        psi)    shift 1 ; _dock_psi_    "$@" ;;
         *)      _docker_ "$@" ;;
     esac
 }
@@ -30,6 +32,54 @@ _dock_stats_() {
 
 _dock_oom_() {
     sudo -E dmesg -T | grep "$(sudo -E docker inspect --format '{{.Id}}' "${1#_}")"
+}
+
+_dock_ps_() {
+    PS_LIST="$(sudo -E docker ps "$@")"
+    PS_LIST_WIDTH="$(wc -L <<< "$PS_LIST")"
+
+    IFS=$'\n'
+    for line in $PS_LIST ; do
+        CONTAINER_ID="$(awk '{print $1}' <<< "$line")"
+        if [ "$CONTAINER_ID" == "CONTAINER" ] ; then
+            CONTAINER_HOSTNAME="HOSTNAME"
+        else
+            CONTAINER_HOSTNAME="$(dock inspect --format="{{.Config.Hostname}}" "$CONTAINER_ID")"
+        fi
+        printf -- $'%-*s    %-.*s\n' "$PS_LIST_WIDTH" "$line" "40" "$CONTAINER_HOSTNAME"
+    done
+}
+
+_dock_psi_() {
+    sudo -v
+    _print_line() { printf -- '%-*s%s' "$@" ; }
+    _docker_inspect() { printf -- '%.*s' "$1" "$( sudo -E docker inspect --format="$3" "$2" )" ; }
+    _oom_check() {
+        OOM= ; OOM="$( _dock_oom_ "$1" | tail -n 1 | cut -d ']' -f1 | tr -d '[' )"
+        if [ "$OOM" == "" ] ; then
+            echo false
+        else
+            echo "$OOM"
+        fi
+    }
+
+    _print_line \
+        12  'CONTAINER ID'  '  ' \
+        8   'PID'           '  ' \
+        26  'OOMKilled'     '  ' \
+        12  'STATUS'        '  ' \
+        46  'NAME'          '  ' \
+        50  'HOSTNAME'      $'\n'
+
+    for container in $( sudo -E docker ps -q "$@" ) ; do
+        _print_line \
+            12  "$( _docker_inspect 12  "$container"    "{{.Id}}" )"                '  ' \
+            8   "$( _docker_inspect 8   "$container"    "{{.State.Pid}}" )"         '  ' \
+            26  "$( _oom_check "$container" )"                                      '  ' \
+            12  "$( _docker_inspect 12  "$container"    "{{.State.Status}}" )"      '  ' \
+            46  "$( _docker_inspect 46  "$container"    "{{.Name}}" )"              '  ' \
+            50  "$( _docker_inspect 50  "$container"    "{{.Config.Hostname}}" )"   $'\n'
+    done
 }
 
 _docker_() {
