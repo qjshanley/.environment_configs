@@ -2,18 +2,17 @@
 
 main() {
     case "$1" in
-        exec)   shift 1 ; _dock_exec_   "$@" ;;
-        oom)    shift 1 ; _dock_oom_    "$@" ;;
-        stats)  shift 1 ; _dock_stats_  "$@" ;;
-        ps)     shift 1 ; _dock_ps_     "$@" ;;
-        psi)    shift 1 ; _dock_psi_    "$@" ;;
-        *)      _docker_ "$@" ;;
+        exec)   shift 1 ; _dock_exec_   "${@#_}" ;;
+        oom)    shift 1 ; _dock_oom_    "${@#_}" ;;
+        stats)  shift 1 ; _dock_stats_  "${@#_}" ;;
+        ps)     shift 1 ; _dock_ps_     "${@#_}" ;;
+        psi)    shift 1 ; _dock_psi_    "${@#_}" ;;
+        *)      _docker_ "${@#_}" ;;
     esac
 }
 
 _dock_exec_() {
-    local JID="${1:?Job ID Required}" ; JID="${JID#_}" ; shift 1 ;
-    screen -t "$JID" sudo -E docker exec -it "$@" "$JID" bash -c 'env \
+    screen -t "$JID" sudo -E docker exec -it "$@" bash -c 'env \
         TERM=xterm-256color \
         EDITOR=$(which vim || which vi) \
         VISUAL=$(which vim || which vi) \
@@ -24,14 +23,14 @@ _dock_exec_() {
 
 _dock_stats_() {
     if [ -n "$*" ] ; then
-        sudo -E docker stats "${@#_}"
+        sudo -E docker stats "$@"
     else
         sudo -E docker stats $(sudo -E docker ps --format "{{.Names}}")
     fi
 }
 
 _dock_oom_() {
-    sudo -E dmesg -T | grep "$(sudo -E docker inspect --format '{{.Id}}' "${1#_}")"
+    sudo -E dmesg -T | grep "$(sudo -E docker inspect --format '{{.Id}}' "$@")"
 }
 
 _dock_ps_() {
@@ -44,7 +43,7 @@ _dock_ps_() {
         if [ "$CONTAINER_ID" == "CONTAINER" ] ; then
             CONTAINER_HOSTNAME="HOSTNAME"
         else
-            CONTAINER_HOSTNAME="$(dock inspect --format="{{.Config.Hostname}}" "$CONTAINER_ID")"
+            CONTAINER_HOSTNAME="$(sudo -E docker inspect --format="{{.Config.Hostname}}" "$CONTAINER_ID")"
         fi
         printf -- $'%-*s    %-.*s\n' "$PS_LIST_WIDTH" "$line" "40" "$CONTAINER_HOSTNAME"
     done

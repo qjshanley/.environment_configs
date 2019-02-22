@@ -23,6 +23,24 @@ function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $
 
 function dex { export DATICA_ENV=$1 ; }
 
+function subenv {
+	eval "cat <<- EOF
+	    $(<$1)
+	EOF
+	"
+}
+
+function aws-configure {
+    read -p  "AWS Access Key ID [None]: "        aws_access_key_id
+    read -sp "AWS Secret Access Key [None]: "    aws_secret_access_key ; echo
+    read -p  "Default region name [us-east-1]: " aws_default_region
+    read -p  "Default output format [text]:"     aws_default_output
+    export AWS_ACCESS_KEY_ID=${aws_access_key_id}
+    export AWS_SECRET_ACCESS_KEY=${aws_secret_access_key}
+    export AWS_DEFAULT_REGION=${aws_default_region:-us-east-1}
+    export AWS_DEFAULT_OUTPUT=${aws_default_output:-text}
+}
+
 function diss {
     [ ! -f "$1" ] && { echo File required for ARG 1 ; return 1 ; }
     [ ! -f "$2" ] && { echo File required for ARG 2 ; return 1 ; }
