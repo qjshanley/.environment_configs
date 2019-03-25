@@ -18,6 +18,14 @@ declare -A SOFTWARE_LIST=(
 	[10,"VERSION"]="0.29.2"
 	[10,"EXTENSION"]="tar.gz"
 	[10,"URL"]='https://pkg-config.freedesktop.org/releases/${SOFTWARE}-${VERSION}.${EXTENSION}'
+
+  [11,"SOFTWARE"]="wget"            [11,"CONFIG_OPTIONS"]="--prefix=/usr/local"     [11,"VERSION"]="1.20.1"     [11,"EXTENSION"]="tar.gz"       [11,"URL"]="$DEFAULT_URL_PATTERN"
+
+  [12,"SOFTWARE"]="gnutls"
+        [12,"CONFIG_OPTIONS"]="--prefix=/usr/local"
+        [12,"VERSION"]="3.6.6"
+        [12,"EXTENSION"]="tar.xz"
+        [12,"URL"]='https://www.gnupg.org/ftp/gcrypt/gnutls/v3.6/${SOFTWARE}-${VERSION}.${EXTENSION}'
 )
 
 if [[ -z $* ]] ; then
