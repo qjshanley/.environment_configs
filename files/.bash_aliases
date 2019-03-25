@@ -23,6 +23,10 @@ function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $
 
 function dex { export DATICA_ENV=$1 ; }
 
+function pinger {
+    while true ; do date ; ping -c1 $1 ; sleep 300 ; echo ; done
+}
+
 function subenv {
 	eval "cat <<- EOF
 	    $(<$1)
@@ -94,4 +98,12 @@ function eztar {
     else
         tar cz "$object" | openssl aes-256-cbc -e -out "${object}.tar.gz.enc" && rm -rf "$object"
     fi
+}
+
+function tunnel {
+    case "$1" in
+        core)  ssh -fN -L 8090:localhost:8080 172.27.24.113 ;;
+        pod05) ssh -fN -L 8092:localhost:8080 sensu.pod05.catalyzeapps.com ;;
+        web)   ssh -fN -L 8091:localhost:8080 172.26.28.82  ;;
+    esac
 }

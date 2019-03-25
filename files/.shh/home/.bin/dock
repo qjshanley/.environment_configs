@@ -7,6 +7,7 @@ main() {
         stats)  shift 1 ; _dock_stats_  "${@#_}" ;;
         ps)     shift 1 ; _dock_ps_     "${@#_}" ;;
         psi)    shift 1 ; _dock_psi_    "${@#_}" ;;
+        sizes)  shift 1 ; _dock_sizes_  "${@#_}" ;;
         *)      _docker_ "${@#_}" ;;
     esac
 }
@@ -47,6 +48,10 @@ _dock_ps_() {
         fi
         printf -- $'%-*s    %-.*s\n' "$PS_LIST_WIDTH" "$line" "40" "$CONTAINER_HOSTNAME"
     done
+}
+
+_dock_sizes_() {
+    sudo docker ps --size --format='table{{.Names}}\t{{.Size}}' | sort -k 2hr
 }
 
 _dock_psi_() {
