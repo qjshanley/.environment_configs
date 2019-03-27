@@ -101,9 +101,11 @@ function eztar {
 }
 
 function tunnel {
-    case "$1" in
-        core)  ssh -fN -L 8090:localhost:8080 172.27.24.113 ;;
-        pod05) ssh -fN -L 8092:localhost:8080 sensu.pod05.catalyzeapps.com ;;
-        web)   ssh -fN -L 8091:localhost:8080 172.26.28.82  ;;
+    ALIAS="${1?You must provide an alias to tunnel to: web core pod05}" ; shift 1
+    case "$ALIAS" in
+        core)  ssh "$@" -N -L 8090:localhost:8080 172.27.24.113 ;;
+        pod05) ssh "$@" -N -L 8092:localhost:8080 sensu.pod05.catalyzeapps.com ;;
+        web)   ssh "$@" -N -L 8091:localhost:8080 172.26.28.82  ;;
+        *)     echo "ERROR: Alias unknown. Needs to match one of: web core pod05" ;;
     esac
 }
