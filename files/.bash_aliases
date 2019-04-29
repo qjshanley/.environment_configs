@@ -23,6 +23,12 @@ function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $
 
 function dex { export DATICA_ENV=$1 ; }
 
+function dp05 {
+    AUTH_HOST=https://auth.de.datica.com
+    PAAS_HOST=https://paas-api.de.datica.com
+    DATICA_ENV=8c38fcc0-132b-4580-bdac-673ad392b374
+}
+
 function pinger {
     while true ; do date ; ping -c1 $1 ; sleep 300 ; echo ; done
 }
