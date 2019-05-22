@@ -11,7 +11,7 @@ IFS='' read -r -d '' SCRIPT <<- EOF
     mv jobs.tmp jobs
 ) &
 
-exec "\$SHELL" --login -c 'screen -U -DR -S ssh -t host -p 0 ; logout'
+bash -l -c "screen -U -DR -S ssh -t host -p 0 ; logout"
 EOF
 
 # copy dot files to server
@@ -19,4 +19,3 @@ EOF
 
 # attach directly to a screen session
 ssh -t "$1" "$SCRIPT"
-

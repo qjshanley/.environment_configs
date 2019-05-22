@@ -23,7 +23,7 @@ function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $
 
 function dex { export DATICA_ENV=$1 ; }
 
-function dp05 {
+function datica05 {
     rm ~/.datica
     export AUTH_HOST=https://auth.de.datica.com
     export PAAS_HOST=https://paas-api.de.datica.com

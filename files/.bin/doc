@@ -57,7 +57,7 @@ _doc_ls_() {
             done | sort | uniq
             ;;
         *|-S|--stacks)
-            find "$STACKS" -mindepth 1 -maxdepth 1 -type d -regex ".*/[^/.]*" -exec basename {} \; | sort
+            find "$STACKS" -mindepth 1 -maxdepth 1 \( -type d -or -type l \) -regex ".*/[^/.]*" -exec basename {} \; | sort
             ;;
     esac
 }
