@@ -43,13 +43,14 @@ _doc_ls_() {
             ;;
         -f|--files)
             shift 1
-            find -EL "$STACKS"/"$stack" -mindepth 2 -maxdepth 2 -type f -regex ".*/$1/docker-compose$2$" | sort
-            find -EL "$STACKS"/"$stack" -mindepth 1 -maxdepth 1 -type f -regex ".*/docker-compose\.$1$2$" | sort
+            # These must be seperate lines or overriding won't work properly
+            find -EL "$STACKS"/"$stack" -mindepth 2 -maxdepth 2 -type f -regex ".*/docker-compose$1$" | sort
+            find -EL "$STACKS"/"$stack" -mindepth 1 -maxdepth 1 -type f -regex ".*/docker-compose$1$" | sort
             ;;
         -s|--services)
             shift 1
             local pads=( $'\t' '  ' '    ' )
-            for config in $(_doc_ls_ -f '.*' '\.(yml|yaml)') ; do
+            for config in $(_doc_ls_ -f '\.(yml|yaml)') ; do
                 for pad in "${pads[@]}" ; do
                     local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "$config")"
                     [ "$services" ] && echo "$services" && break
@@ -67,48 +68,18 @@ _doc_stats_() {
 }
 
 _docker-compose() {
-    local args=()
-    local srvcs=()
     local cmd=$1 ; shift 1
-    while [ -n "$1" ] ; do
-        case "$1" in
-            --) 
-                shift 1
-                srvcs+=( "$@" )
-                args+=( "$@" )
-                shift "$#" 
-                ;;
-            -*) 
-                args+=( "$1" )
-                shift 1
-                ;;
-            *)
-                local arg=$(compgen -W "$(_doc_ls_ -s)" -- "$1" | head -1)
-                if [ "$arg" == "$1" ] ; then
-                    srvcs+=( "$arg" )
-                    args+=( "$arg" )
-                else
-                    args+=( "$1" )
-                fi
-                shift 1
-                ;;
-        esac
-    done
-
-    # convert a list to a regex group
-    _or_list() { sed 's/ /|/g ; s/^/(/ ; s/$/)/' <<< "$*" ; }
-
-    [ "${#srvcs[@]}" -eq 0 ] && srvcs+=( '.*' )
+    args+=( "$@" ) ; shift "$#" 
 
     # execute pre command scripts
-    for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
+    for f in $(_doc_ls_ -f "\.$cmd\.pre") ; do bash "$f" ; done
 
     # execute
-    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${stack} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -f '.*' "\.(yml|yaml)"))"
+    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${stack} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -f "\.(yml|yaml)"))"
     eval "$command_string"
 
     # execute post command scripts
-    for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.post") ; do bash "$f" ; done
+    for f in $(_doc_ls_ -f "\.$cmd\.post") ; do bash "$f" ; done
 }
 
 main "$@"
