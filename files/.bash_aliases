@@ -64,6 +64,8 @@ function diss {
         else
             diff -W "$WIDTH" -y "$1" "$2"
         fi | less
+    else
+        diff -s $1 $2
     fi
     return 0
 }
@@ -132,4 +134,17 @@ function tunnel {
     esac
     echo "http://${LOCAL_HOST}:${LOCAL_PORT} --> ${REMOTE_HOST}:${REMOTE_PORT}"
     ssh "$@" -N -L "$LOCAL_PORT":"$LOCAL_HOST":"$REMOTE_PORT" $REMOTE_HOST
+}
+
+function salty {
+    case "$1" in
+        uptime) 
+            shift 1
+            sudo -E salt -C "${1:-*}" cmd.run "uptime -s" --output=text | grep -v "Minion did not return." | sort -k2
+            ;;
+        *)
+            echo "Unrecognized command(s): $*"
+            exit 1
+            ;;
+    esac
 }
