@@ -1,0 +1,7 @@
+#!/usr/bin/env bash
+
+main() {
+    sed -n "/^${2:-main}()/,/^}/{s/ \+\([a-z0-9]\+\)).*/\1/gp}" $1
+}
+
+main "$@"

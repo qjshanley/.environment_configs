@@ -33,7 +33,7 @@ test -x /usr/local/bin/bash && export SHELL=/usr/local/bin/bash
 [ -x /usr/bin/lesspipe ] && eval "$(SHELL=/bin/sh lesspipe)"
 
 # source files
-SOURCES=( ~/.bash_aliases ~/.bash_autocomplete )
+SOURCES=( ~/.bash_aliases ~/.bash_sources )
 for src in "${SOURCES[@]}" ; do
     # source single files
     test -f "$src" && source "$src"

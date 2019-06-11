@@ -3,33 +3,46 @@
 main() {
     case "$1" in
         '') curl -X GET 'localhost:9200?pretty' ;;
-        cat)        shift 1 ; _cat_         "$@" ;;
-        cluster)    shift 1 ; _cluster_     "$@" ;;
-        log)        shift 1 ; _log_         "$@" ;;
-        help) _cmds_ main ; exit 0 ;;
-        *) _cmds_ main ; exit 1 ;;
+        cat)        shift 1 ; cat       "$@" ;;
+        cluster)    shift 1 ; cluster   "$@" ;;
+        log)        shift 1 ; log       "$@" ;;
+        *) cmds $0 main ; exit 1 ;;
     esac
 }
 
-_cat_() {
-    curl -X GET "localhost:9200/_cat/${1?Options: indices}?v"
+cat() {
+    curl -X GET "localhost:9200/_cat/indices?v"
 }
 
-_cluster_() {
-    curl -X GET "localhost:9200/_cluster/${1?Options: health, state, stats}?human&pretty"
+cluster() {
+    case "$1" in
+        health)
+            curl -X GET "localhost:9200/_cluster/health?human&pretty"
+            ;;
+        state)
+            curl -X GET "localhost:9200/_cluster/state?human&pretty"
+            ;;
+        stats)
+            curl -X GET "localhost:9200/_cluster/stats?human&pretty"
+            ;;
+    esac
 }
 
-_log_() {
+log() {
     search_directory="${ES_LOG_DIR:-/data/log/elasticsearch}/*"
-    if [ -z "$1" ] ; then
-        sed -n 's@^\(\[[^]]*\]\)\(\[[^]]*\]\)\(\[[^]]*\]\) \(\[[^]]*\]\) \(.*\)@\3@p' $search_directory | sort | uniq -c | sort -n
-    else
-        grep "\[[^]]*$1[^]]*\] " $search_directory
-    fi
-}
-
-_cmds_() {
-    sed -n "/^${1:-main}()/,/^}/{s/ \+\([a-z]\+\)).*/\1/gp}" $0
+    case "$1" in
+        search)
+            shift 1
+            grep "\[[^]]*$1[^]]*\] " $search_directory
+            ;;
+        summary)
+            shift 1
+            sed -n 's@^\(\[[^]]*\]\)\(\[[^]]*\]\)\(\[[^]]*\]\) \(\[[^]]*\]\) \(.*\)@\3@p' $search_directory | sort | uniq -c | sort -n
+            ;;
+        *)
+            cmds $0 log
+            ;;
+    esac
 }
 
 main "$@"
