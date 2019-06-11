@@ -15,6 +15,6 @@ if [ "$#" -eq "1" -a "${1:0:1}" != "-" ] ; then
     ssh -t "$1" "$SCRIPT"
 else
     # simply pass all args to the ssh command
-    ssh $@
+    ssh "$@"
 fi
 

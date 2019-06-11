@@ -1,0 +1,18 @@
+#!/usr/bin/env bash
+
+main() {
+    case "$1" in
+        uptime) shift 1 ; _uptime_ "$@" ;;
+        *) _cmds_ ;;
+    esac
+}
+
+_uptime_() {
+    sudo -E salt -C "${1:-*}" cmd.run "uptime -s" --output=text | grep -v "Minion did not return." | sort -k2
+}
+
+_cmds_() {
+    sed -n "/^${1:-main}()/,/^}/{s/ \+\([a-z]\+\)).*/\1/gp}" $0
+}
+
+main "$@"
