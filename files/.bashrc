@@ -5,6 +5,7 @@
 # Set PATH Variable
 BINS=(
     ~/.bin
+    ~/.bash_scripts
     /usr/local/go/bin
     ~/code/go/bin
     ~/Library/Python/2.7/bin

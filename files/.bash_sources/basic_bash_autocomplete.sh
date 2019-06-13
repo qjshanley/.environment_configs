@@ -16,4 +16,6 @@ _basic_bash_autocomplete() {
     return 0
 }
 
-complete -F _basic_bash_autocomplete tunnel "$@"
+for script in $( find ~/.bash_scripts -mindepth 1 -maxdepth 1 \( -type l -or -type f \) -executable -exec basename {} \; ) ; do
+    complete -F _basic_bash_autocomplete $script "$@"
+done
