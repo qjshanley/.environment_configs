@@ -28,7 +28,6 @@ highstate_vpn() {
 
     printf -- '\nThe following configs were found:\n'
     printf -- ' - %s\n' "${CONFIGS[@]}"
-    echo
 
     logdir=~/tmp
     mkdir -p $logdir
@@ -38,10 +37,12 @@ highstate_vpn() {
     for config in "${CONFIGS[@]}" ; do
     (
         cd $DIR
+        echo
         ask "load $config pillar data? (y/n): "
         sudo -E python set_vpn_pillars.py -a $config -f $config || { echo Could not set pillar data ; exit 2 ; }
         sudo -E salt -v $config saltutil.refresh_pillar || { echo Could not refresh pillar data ; echo 2 ; }
         for run in "${runs[@]}" ; do
+            echo
             ask "$run highstate? (y/n): "
             printf -- '\n\nLogging output to: %s/%s.%s.%s.log\n' "$logdir" "$config" "$runtime" "$run" >> /dev/tty
             {
