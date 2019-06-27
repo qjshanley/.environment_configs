@@ -30,6 +30,10 @@ let mapleader = ','
 map <Leader>no :set nonumber <bar> :set norelativenumber<CR>
 map <Leader>nO :set number <bar> :set relativenumber<CR>
 
+" set tab width
+map <Leader>tw2 :set tabstop=2 <bar> :set shiftwidth=2 <bar> :set softtabstop=2 <CR>
+map <Leader>tw4 :set tabstop=4 <bar> :set shiftwidth=4 <bar> :set softtabstop=4 <CR>
+
 " git commands
 map <Leader>gs :! git status<CR>
 map <Leader>gd :! git diff %<CR>

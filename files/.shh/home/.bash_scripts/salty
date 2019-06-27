@@ -2,13 +2,70 @@
 
 main() {
     case "$1" in
-        uptime) shift 1 ; uptime "$@" ;;
-        *) cmds ; exit 1 ;;
+        uptime)     shift 1 ; uptime "$@" ;;
+        highstate)  shift 1 ; highstate "$@" ;;
+        *)          cmds ; exit 1 ;;
     esac
 }
 
 uptime() {
     sudo -E salt -C "${1:-*}" cmd.run "uptime -s" --output=text | grep -v "Minion did not return." | sort -k2
+}
+
+highstate() {
+    case "$1" in
+        vpn) shift 1 ; highstate_vpn "$@" ;;
+    esac
+}
+
+highstate_vpn() {
+    sudo -v < /dev/tty >> /dev/tty || exit $?
+    read -p 'Pod namespace: ' NAMESPACE < /dev/tty >> /dev/tty || exit $?
+    POD=$(sed 's/\(^[^0-9]*[0-9]\{2\}\).*/\1/' <<< "$NAMESPACE")
+    DIR=$(find ~ -type d -name "salt-vpn-pillar-${POD}" -print | head -n 1)
+    git -C $DIR pull
+    CONFIGS=( $(find $DIR -maxdepth 1 -name "vpnappliance0?-${NAMESPACE}.${POD}.catalyzeapps.com" -exec basename {} \; | sort) )
+
+    printf -- '\nThe following configs were found:\n'
+    printf -- ' - %s\n' "${CONFIGS[@]}"
+    echo
+
+    logdir=~/tmp
+    mkdir -p $logdir
+    runtime=$(date +%Y%m%d%H%M%S)
+    runs=( "test" "exec" )
+
+    for config in "${CONFIGS[@]}" ; do
+    (
+        cd $DIR
+        ask "load $config pillar data? (y/n): "
+        sudo -E python set_vpn_pillars.py -a $config -f $config || { echo Could not set pillar data ; exit 2 ; }
+        sudo -E salt -v $config saltutil.refresh_pillar || { echo Could not refresh pillar data ; echo 2 ; }
+        for run in "${runs[@]}" ; do
+            ask "$run highstate? (y/n): "
+            printf -- '\n\nLogging output to: %s/%s.%s.%s.log\n' "$logdir" "$config" "$runtime" "$run" >> /dev/tty
+            {
+                case "$run" in
+                    test) sudo -E salt -v $config state.highstate test=True --state-output=changes ;;
+                    exec) sudo -E salt -v $config state.highstate --state-output=changes ;;
+                esac
+            } > ${logdir}/${config}.${runtime}.${run}.log 2>&1
+            tail -n 20 ${logdir}/${config}.${runtime}.${run}.log | grep "Summary for" -A 20 | sed -E 's/^(.*)$/--> \1/' >> /dev/tty
+        done
+    )
+    done
+}
+
+ask() {
+    while true ; do
+        check=
+        read -p "$1" check < /dev/tty >> /dev/tty
+        case "$check" in
+            y|yes) break ;;
+            n|no)  exit 0 ;;
+            *)     continue ;;
+        esac
+    done
 }
 
 main "$@"
