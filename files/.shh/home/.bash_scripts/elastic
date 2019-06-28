@@ -16,16 +16,12 @@ cat() {
 
 cluster() {
     case "$1" in
-        health)
-            curl -X GET "localhost:9200/_cluster/health?human&pretty"
-            ;;
-        state)
-            curl -X GET "localhost:9200/_cluster/state?human&pretty"
-            ;;
-        stats)
-            curl -X GET "localhost:9200/_cluster/stats?human&pretty"
-            ;;
+        health) ;;
+        state)  ;;
+        stats)  ;;
+        *) echo "Unrecognized command: $@" ; exit 1 ;;
     esac
+    curl -X GET "localhost:9200/_cluster/${1}?human&pretty"
 }
 
 log() {
