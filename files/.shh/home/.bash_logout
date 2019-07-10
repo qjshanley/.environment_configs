@@ -10,3 +10,5 @@ fi
 # remove ~/.bash_temporary
 rm -rf ~/.bash_temporary
 
+# Cleanup
+rm -f ~/.bin/salty

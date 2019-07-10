@@ -15,6 +15,10 @@ alias grep='grep --color=auto'
 alias fgrep='fgrep --color=auto'
 alias egrep='egrep --color=auto'
 
+function pinger { while true ; do date ; ping -c1 $1 ; sleep 300 ; echo ; done ; }
+
+function shrink { sed -En '/[^\^$]/p' "$@" ; }
+
 function _is_mac { [ "$(uname -s)" == "Darwin" ] && return 0 || return 1 ; }
 
 function LIST { netstat -an | sed -n '1,2p ; /^tcp.*LISTEN/p' ; }
@@ -28,10 +32,6 @@ function datica05 {
     export AUTH_HOST=https://auth.de.datica.com
     export PAAS_HOST=https://paas-api.de.datica.com
     export DATICA_ENV=8c38fcc0-132b-4580-bdac-673ad392b374
-}
-
-function pinger {
-    while true ; do date ; ping -c1 $1 ; sleep 300 ; echo ; done
 }
 
 function subenv {
@@ -52,7 +52,7 @@ function aws-configure {
     export AWS_DEFAULT_OUTPUT=${aws_default_output:-text}
 }
 
-function diss {
+function compare {
     [ ! -f "$1" ] && { echo File required for ARG 1 ; return 1 ; }
     [ ! -f "$2" ] && { echo File required for ARG 2 ; return 1 ; }
     if [ "$(diff $1 $2)" ] ; then
@@ -63,7 +63,7 @@ function diss {
             diff -W "$(tput cols)" -y "$1" "$2"
         else
             diff -W "$WIDTH" -y "$1" "$2"
-        fi | less
+        fi
     else
         diff -s $1 $2
     fi

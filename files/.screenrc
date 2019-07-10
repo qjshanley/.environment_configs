@@ -9,6 +9,7 @@ term xterm-256color
 
 # more scrollbacks!
 defscrollback 10000
+hardcopy_append on
 
 # always fit after selecting a window
 bind '0' eval 'select 0' 'fit'
@@ -26,6 +27,7 @@ bind 'f' fit
 bind 'F' flow
 bind 's' split
 bind 'S' split -v
+bind 'h' hardcopy -h
 
 # Escape character logic
 # all start with ^[ or <ESC> followed by [1;
