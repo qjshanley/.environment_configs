@@ -10,9 +10,8 @@ for config in "${DISABLE_CONFIGS[@]}" ; do
     test -r "$config" && mv "$config" "${config}.disable"
 done
 
-
 # The next line updates PATH for the Google Cloud SDK.
-if [ -f '/Users/qub3r/.bin/google-cloud-sdk/path.bash.inc' ]; then . '/Users/qub3r/.bin/google-cloud-sdk/path.bash.inc'; fi
+if [ -f "${HOME}/.bin/google-cloud-sdk/path.bash.inc" ]; then . "${HOME}/.bin/google-cloud-sdk/path.bash.inc"; fi
 
 # The next line enables shell command completion for gcloud.
-if [ -f '/Users/qub3r/.bin/google-cloud-sdk/completion.bash.inc' ]; then . '/Users/qub3r/.bin/google-cloud-sdk/completion.bash.inc'; fi
+if [ -f "${HOME}/.bin/google-cloud-sdk/completion.bash.inc" ]; then . "${HOME}/.bin/google-cloud-sdk/completion.bash.inc"; fi
