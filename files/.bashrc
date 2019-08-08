@@ -44,6 +44,9 @@ for src in "${SOURCES[@]}" ; do
     fi
 done
 
+# kubectl completion
+[ $(which kubectl) ] && source <(kubectl completion bash)
+
 # vim style cmd line editing
 set -o vi
 

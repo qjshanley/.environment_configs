@@ -10,6 +10,9 @@ for config in "${DISABLE_CONFIGS[@]}" ; do
     test -r "$config" && mv "$config" "${config}.disable"
 done
 
+# Bash completions
+[[ -r "/usr/local/etc/profile.d/bash_completion.sh" ]] && . "/usr/local/etc/profile.d/bash_completion.sh"
+
 # The next line updates PATH for the Google Cloud SDK.
 if [ -f "${HOME}/.bin/google-cloud-sdk/path.bash.inc" ]; then . "${HOME}/.bin/google-cloud-sdk/path.bash.inc"; fi
 

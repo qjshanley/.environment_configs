@@ -2,10 +2,32 @@
 
 main() {
     case "$1" in
+        jobs)       shift 1 ; jobs "$@" ;;
         revoke)     shift 1 ; revoke "$@" ;;
         uptime)     shift 1 ; uptime "$@" ;;
         vpn)        shift 1 ; vpn "$@" ;;
         *)          cmds ; exit 1 ;;
+    esac
+}
+
+jobs() {
+    case "$1" in
+        list)
+            sudo -E salt-run jobs.active
+            ;;
+        term)
+            read -p 'Host: ' host
+            read -p 'Job ID: ' jid
+            sudo -E salt $host saltutil.term_job $jid
+            ;;
+        kill)
+            read -p 'Host: ' host
+            read -p 'Job ID: ' jid
+            sudo -E salt $host saltutil.kill_job $jid
+            ;;
+        *)
+            cmds "jobs" ; exit 1 
+            ;;
     esac
 }
 
