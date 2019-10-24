@@ -27,13 +27,6 @@ function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $
 
 function dex { export DATICA_ENV=$1 ; }
 
-function datica05 {
-    rm ~/.datica
-    export AUTH_HOST=https://auth.de.datica.com
-    export PAAS_HOST=https://paas-api.de.datica.com
-    export DATICA_ENV=8c38fcc0-132b-4580-bdac-673ad392b374
-}
-
 function subenv {
 	eval "cat <<- EOF
 	    $(<$1)
