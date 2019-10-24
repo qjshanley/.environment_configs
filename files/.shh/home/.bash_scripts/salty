@@ -77,7 +77,7 @@ vpn_highstate() {
     printf -- '\nThe following configs were found:\n'
     printf -- ' - %s\n' "${CONFIGS[@]}"
 
-    logdir=~/tmp
+    logdir=~/tmp/vpn
     mkdir -p $logdir
     runtime=$(date +%Y%m%d%H%M%S)
     runs=( "test" "exec" )
