@@ -8,6 +8,7 @@ main() {
         ps)     shift 1 ; _dock_ps_     "${@#_}" ;;
         psi)    shift 1 ; _dock_psi_    "${@#_}" ;;
         sizes)  shift 1 ; _dock_sizes_  "${@#_}" ;;
+        findby) shift 1 ; _dock_findby_ "${@#_}" ;;
         *)      _docker_ "${@#_}" ;;
     esac
 }
@@ -84,6 +85,17 @@ _dock_psi_() {
             46  "$( _docker_inspect 46  "$container"    "{{.Name}}" | sed 's@^/@@' )"   '  ' \
             50  "$( _docker_inspect 50  "$container"    "{{.Config.Hostname}}" )"       $'\n'
     done
+}
+
+_dock_findby_() {
+    case "$1" in
+        service)
+            shift 1
+            for job in $(sudo docker ps -q) ; do 
+                sudo docker exec $job bash -c "[ \"\$(printenv CATALYZE_SERVICE_ID)\" == \"${1}\" ] && printenv CATALYZE_JOB_ID"
+            done
+            ;;
+    esac
 }
 
 _docker_() {
