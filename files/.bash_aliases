@@ -64,10 +64,9 @@ function compare {
 }
 
 function pod-api {
-    sudo -E docker exec -it -u postgres postgresql bash -c 'env \
-        PSQL_EDITOR=$(which vim) \
-        PG_CURR_DB=pod-api \
-        psql $PG_CURR_DB
+    sudo -E docker exec -it -u postgres postgresql bash -c '
+        PG_CURR_DB=pod-api
+        env PSQL_EDITOR=$(which vim) psql $PG_CURR_DB
     '
 }
 
