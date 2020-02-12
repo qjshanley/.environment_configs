@@ -23,10 +23,6 @@ function _is_mac { [ "$(uname -s)" == "Darwin" ] && return 0 || return 1 ; }
 
 function LIST { netstat -an | sed -n '1,2p ; /^tcp.*LISTEN/p' ; }
 
-function dat { bash ~/code/datica/toolbox/misc/exec_for_each_service_in_env.sh $@ ; }
-
-function dex { export DATICA_ENV=$1 ; }
-
 function subenv {
 	eval "cat <<- EOF
 	    $(<$1)
@@ -99,4 +95,46 @@ function eztar {
     else
         tar cz "$object" | openssl aes-256-cbc -e -out "${object}.tar.gz.enc" && rm -rf "$object"
     fi
+}
+
+function dex {
+    POD="$1" ; shift 1
+    case "$POD" in
+        pod02)
+            export DATICA_EMAIL=quin@datica.com
+            export ACCOUNTS_HOST=https://product.datica.com
+            export AUTH_HOST=https://auth.datica.com
+            export PAAS_HOST=https://paas-api.catalyze.io
+            export DATICA_LOG_LEVEL=info
+            export POD_ID=pod02
+            export PODID=pod02
+            rm ~/.datica
+            datica whoami
+            ;;
+        pod05)
+            export DATICA_EMAIL=quin@datica.com
+            export ACCOUNTS_HOST=https://product.de.datica.com
+            export AUTH_HOST=https://auth.de.datica.com
+            export PAAS_HOST=https://paas-api.de.datica.com
+            export DATICA_LOG_LEVEL=info
+            export POD_ID=pod05
+            export PODID=pod05
+            rm ~/.datica
+            datica whoami
+            ;;
+        sbox05)
+            export DATICA_EMAIL=quin@datica.com
+            export ACCOUNTS_HOST=https://product-sandbox.catalyzeapps.com/stratum
+            export AUTH_HOST=https://auth-sandbox.catalyzeapps.com
+            export PAAS_HOST=https://sandbox-darwin.catalyzeapps.com
+            export DATICA_LOG_LEVEL=info
+            export POD_ID=sbox05
+            export PODID=sbox05
+            rm ~/.datica
+            datica whoami
+            ;;
+        *)
+            echo The pod \"$POD\" is not valid. Please use: pod02 pod05 sbox05
+            ;;
+    esac
 }
