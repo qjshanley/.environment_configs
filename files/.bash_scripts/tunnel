@@ -30,6 +30,7 @@ main() {
             ;;
     esac
     echo "http://localhost:${LOCAL_PORT} --> ${REMOTE_HOST}:${REMOTE_PORT} --> ${FORWARD_HOST}:${FORWARD_PORT}"
+    echo "ssh $@ -N -L \"${LOCAL_PORT}:${FORWARD_HOST}:${FORWARD_PORT}\" \"ssh://${REMOTE_HOST}:${REMOTE_PORT}\""
     ssh "$@" -N -L "${LOCAL_PORT}:${FORWARD_HOST}:${FORWARD_PORT}" "ssh://${REMOTE_HOST}:${REMOTE_PORT}"
 }
 
