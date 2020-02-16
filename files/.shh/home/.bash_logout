@@ -11,4 +11,6 @@ fi
 rm -rf ~/.bash_temporary
 
 # Cleanup
+rm -rf ~/.bash_scripts
+rm -rf ~/.bash_sources
 rm -f ~/.bin/salty

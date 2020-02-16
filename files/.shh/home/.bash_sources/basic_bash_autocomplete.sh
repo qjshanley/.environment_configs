@@ -16,5 +16,6 @@ _basic_bash_autocomplete() {
     return 0
 }
 
-complete -F _basic_bash_autocomplete salty "$@"
 complete -F _basic_bash_autocomplete elastic "$@"
+complete -F _basic_bash_autocomplete ipsec+ "$@"
+complete -F _basic_bash_autocomplete salt+ "$@"
