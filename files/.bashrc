@@ -17,7 +17,7 @@ export "PATH=$PATH"
 
 # Set Environment Variables
 EVARS=(
-    DATICA_ENV=97d68698-c508-443a-b4cb-f66dc8e60c5c
+    DATICA_ENV=d9a425c1-1a68-42ee-9261-0f675e87d70a
     EDITOR=vim
     VISUAL=vim
     TERM=xterm-256color

@@ -7,7 +7,7 @@ main() {
             LOCAL_PORT=8090
             FORWARD_HOST=localhost
             FORWARD_PORT=8080
-            REMOTE_HOST=172.27.24.113
+            REMOTE_HOST=sensu.core.catalyzeapps.com
             REMOTE_PORT=22
             ;;
         pod05)
@@ -21,7 +21,7 @@ main() {
             LOCAL_PORT=8090
             FORWARD_HOST=localhost
             FORWARD_PORT=8080
-            REMOTE_HOST=172.26.28.82
+            REMOTE_HOST=sensu.web.catalyzeapps.com
             REMOTE_PORT=22
             ;;
         *)
