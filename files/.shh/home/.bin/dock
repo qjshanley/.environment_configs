@@ -52,7 +52,7 @@ _dock_ps_() {
 }
 
 _dock_sizes_() {
-    sudo docker ps --size --format='table{{.Names}}\t{{.Size}}' | sort -k 2hr
+    sudo docker ps --size --format='table{{.Names}}\t{{.Size}}' | sort -k 2h
 }
 
 _dock_psi_() {
