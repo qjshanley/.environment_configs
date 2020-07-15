@@ -100,16 +100,14 @@ function eztar {
 function dex {
     POD="$1" ; shift 1
     case "$POD" in
-        pod02)
+        pod02|pod03)
             export DATICA_EMAIL=quin@datica.com
             export ACCOUNTS_HOST=https://product.datica.com
             export AUTH_HOST=https://auth.datica.com
             export PAAS_HOST=https://paas-api.catalyze.io
             export DATICA_LOG_LEVEL=info
-            export POD_ID=pod02
-            export PODID=pod02
-            rm ~/.datica
-            datica whoami
+            export POD_ID="$POD"
+            export PODID="$POD"
             ;;
         pod05)
             export DATICA_EMAIL=quin@datica.com
@@ -117,10 +115,8 @@ function dex {
             export AUTH_HOST=https://auth.de.datica.com
             export PAAS_HOST=https://paas-api.de.datica.com
             export DATICA_LOG_LEVEL=info
-            export POD_ID=pod05
-            export PODID=pod05
-            rm ~/.datica
-            datica whoami
+            export POD_ID="$POD"
+            export PODID="$POD"
             ;;
         sbox05)
             export DATICA_EMAIL=quin@datica.com
@@ -128,13 +124,47 @@ function dex {
             export AUTH_HOST=https://auth-sandbox.catalyzeapps.com
             export PAAS_HOST=https://sandbox-darwin.catalyzeapps.com
             export DATICA_LOG_LEVEL=info
-            export POD_ID=sbox05
-            export PODID=sbox05
-            rm ~/.datica
-            datica whoami
+            export POD_ID="$POD"
+            export PODID="$POD"
             ;;
         *)
-            echo The pod \"$POD\" is not valid. Please use: pod02 pod05 sbox05
+            echo The pod \"$POD\" is not valid. Please use: pod02 pod03 pod05 sbox05
+            return 1
             ;;
     esac
+}
+
+function corl {
+    dex "$1" && shift 1 || return 1
+
+    CONTENT_TYPE="Content-Type: application/json"
+    ACCEPT="Accept: application/json"
+    AUTHORIZATION="Authorization: Bearer $(jq -r .token ~/.datica)"
+    REQ_NONCE="X-Request-Nonce: $(openssl rand -base64 32)"
+    REQ_NONCE_TIMESTAMP="X-Request-Timestamp: $(date +%s)"
+    X_POD_ID="X-Pod-ID: ${POD_ID}"
+
+    case "$1" in
+        /orgs*)
+            ARGS=( ${AUTH_HOST}${@} )
+            ;;
+        /environments*)
+            ARGS=( ${PAAS_HOST}${@} )
+            ;;
+        '')
+            echo Please provide a route or URL
+            return 1
+            ;;
+        *)
+            ARGS=( $@ )
+            ;;
+    esac
+
+    curl ${ARGS[@]} \
+        -H "$CONTENT_TYPE" \
+        -H "$ACCEPT" \
+        -H "$AUTHORIZATION" \
+        -H "$REQ_NONCE" \
+        -H "$REQ_NONCE_TIMESTAMP" \
+        -H "$X_POD_ID"
 }
