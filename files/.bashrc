@@ -17,14 +17,15 @@ export "PATH=$PATH"
 
 # Set Environment Variables
 EVARS=(
-    DATICA_ENV=d9a425c1-1a68-42ee-9261-0f675e87d70a
-    EDITOR=vim
-    VISUAL=vim
-    TERM=xterm-256color
-    GOROOT=/usr/local/go
-    GOPATH=~/code/go
-    PSQL_EDITOR=$(which vim)
-    STACKS=~/code/qub3r/doc/stacks
+    'HISTTIMEFORMAT="%F %T "'
+    'DATICA_ENV="d9a425c1-1a68-42ee-9261-0f675e87d70a"'
+    'EDITOR="vim"'
+    'VISUAL="vim"'
+    'TERM="xterm-256color"'
+    'GOROOT="/usr/local/go"'
+    'GOPATH="~/code/go"'
+    "PSQL_EDITOR=\"$(which vim)\""
+    'STACKS="~/code/qub3r/doc/stacks"'
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
 

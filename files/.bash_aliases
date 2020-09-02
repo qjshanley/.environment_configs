@@ -23,6 +23,10 @@ function _is_mac { [ "$(uname -s)" == "Darwin" ] && return 0 || return 1 ; }
 
 function LIST { netstat -an | sed -n '1,2p ; /^tcp.*LISTEN/p' ; }
 
+function vpn_config_keys {
+    jq -r '.vpn.openvpn | ."ca-cert" , .ta' $1
+}
+
 function subenv {
 	eval "cat <<- EOF
 	    $(<$1)
@@ -60,7 +64,7 @@ function compare {
 }
 
 function pod-api {
-    sudo -E docker exec -it -u postgres postgresql bash -c '
+    sudo -E docker exec -it -u=postgres postgresql bash -c '
         PG_CURR_DB=pod-api
         env PSQL_EDITOR=$(which vim) psql $PG_CURR_DB
     '
@@ -145,6 +149,9 @@ function corl {
     X_POD_ID="X-Pod-ID: ${POD_ID}"
 
     case "$1" in
+        /agent-usage*)
+            ARGS=( ${PAAS_HOST}${@} )
+            ;;
         /orgs*)
             ARGS=( ${AUTH_HOST}${@} )
             ;;
