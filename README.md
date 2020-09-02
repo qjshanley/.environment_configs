@@ -102,7 +102,7 @@ sudo rm -rf $GOROOT_BOOTSTRAP_DIR
 
 ### iTerm2 Settings
 Create Profile: SSH URL Schemes
-Command -> Command: `/usr/local/bin/bash -c "source ~/.bash_profile ; ssh '$$HOST$$'"`
+Command -> Command: `/usr/local/bin/bash -c "source ~/.bash_profile ; ~/.shh/shh '$$HOST$$'"`
 URL Schemes -> Schemes handled: ssh
 
 ### Install karibener [Website](https://pqrs.org/osx/karabiner/) | [Manual](https://pqrs.org/osx/karabiner/document.html)
