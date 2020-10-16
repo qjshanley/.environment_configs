@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
 
 _doc_opts() {
-    local stack="$(doc ls -C "$1")"
+    local stack="$(doc utils -C "$1")"
     [ "$stack" == "$1" ] && shift 1
     case "$1" in
         '') 
@@ -14,7 +14,7 @@ _doc_opts() {
             fi
             cat /tmp/doc/commands
             ;;
-        down|ls) ;;
+        down) ;;
         stats)
             shift 1
             {
@@ -25,7 +25,7 @@ _doc_opts() {
         *)
             shift 1
             {
-                doc "$stack" ls --services
+                doc "$stack" utils --services
                 printf -- "%s\n" "$@" "$@"
             } | sort | uniq -u
             ;;
@@ -37,14 +37,20 @@ _doc_autocomplete() {
     COMPREPLY=()
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev=( ${COMP_WORDS[@]:1:$COMP_CWORD-1} )
-    if [ "${#prev[@]}" == "0" ] ; then 
-        if [ "$cur" ] ; then
-            [ "$STACK" ] && local opts="$(compgen -W "$(doc ls)" -- "$cur")" || local opts="$(doc ls)"
+
+    if [ "$STACKS" ] ; then
+        # the STACKS variable exists and we can proceed.
+        if [ "${#prev[@]}" == "0" ] ; then
+            # no previous words found. we are completing a path. return stack options.
+            local opts="$(doc utils -stacks | cut -d '/' -f1 | sort | uniq)"
         else
-            [ "$STACK" ] || local opts="$(doc ls)"
+            # previous words found. we are completing docker arguments.
+            local opts="$(_doc_opts "${prev[@]}")"
         fi
+    else
+        # the STACKS variable doesn't exist.
+        echo ; echo The STACKS environment variable needs to be defined.
     fi
-    local opts="${opts:-"$(_doc_opts "${prev[@]}")"}"
     COMPREPLY=( $(compgen -W "$opts" -- "$cur") )
     return 0
 }

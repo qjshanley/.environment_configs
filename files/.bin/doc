@@ -8,49 +8,44 @@ main() {
         echo The STACKS environment variable is not an existing directory.
         exit 2
     fi
-    stack="$(_doc_ls_ -C "$1")"
-    [ "$stack" == "$1" ] && shift 1
+    STACK="$(_doc_utils_ --check-stack "$1")"
+    shift 1
     case $1 in
-        ls)     shift 1 ; _doc_ls_ "$@" ;;
+        utils)  shift 1 ; _doc_utils_ "$@" ;;
         stats)  shift 1 ; _doc_stats_ "$@" ;;
         *)      _docker-compose "$@" ;;
     esac
 }
 
-_doc_ls_() { 
+_doc_utils_() { 
     case "$1" in
         -a|--all)
-            echo "$(
-                for s in $(_doc_ls_) ; do
-                    echo "$s"
-                    sed -E 's/^/-- /' <<< "$(stack=$s ; _doc_ls_ -s)"
-                done
-            )"
+            shift 1
+            for stack in $(_doc_utils_ --stacks) ; do
+                echo $stack
+                sed -E 's/^/-- /' <<< "$(STACK=$stack ; _doc_utils_ --services)"
+            done
             ;;
         -C|--check-stack)
             shift 1
-            local check_stack="$(compgen -W "$(_doc_ls_)" -- "$1" | head -1)"
-            if [ "$check_stack" == "$1" ] ; then
-                echo "$check_stack"
-                return 0
+            if [ -d "$STACKS"/"$1" ] ; then
+                echo "$1"
+            else
+                echo "Error: STACK_NOT_FOUND"
+                exit
             fi
-            local check_stack="$(compgen -W "$(_doc_ls_)" -- "$STACK" | head -1)"
-            if [ "$check_stack" == "$STACK" ] ; then
-                echo "$check_stack"
-                return 0
-            fi
-            echo "$(_doc_ls_ | head -1)"
             ;;
         -f|--files)
-            shift 1
-            find -EL "$STACKS"/"$stack" -mindepth 2 -maxdepth 2 -type f -regex ".*/$1/docker-compose$2$" | sort
-            find -EL "$STACKS"/"$stack" -mindepth 1 -maxdepth 1 -type f -regex ".*/docker-compose$2$" | sort
-            find -EL "$STACKS"/"$stack" -mindepth 1 -maxdepth 1 -type f -regex ".*/docker-compose\.$1$2$" | sort
+            (
+                shift 1
+                cd "$STACKS"/"$STACK"
+                echo find -L . -mindepth 1 -maxdepth ${3:-1} -type f -regex ".*/docker-compose${1:+\.$1}.${2:-[yml|yaml]}$" | sort
+            )
             ;;
         -s|--services)
             shift 1
             local pads=( $'\t' '  ' '    ' )
-            for config in $(_doc_ls_ -f '.*' '\.(yml|yaml)') ; do
+            for config in $(_doc_utils_ -f '.*' '\.(yml|yaml)') ; do
                 for pad in "${pads[@]}" ; do
                     local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "$config")"
                     [ "$services" ] && echo "$services" && break
@@ -58,7 +53,11 @@ _doc_ls_() {
             done | sort | uniq
             ;;
         *|-S|--stacks)
-            find "$STACKS" -mindepth 1 -maxdepth 1 \( -type d -or -type l \) -regex ".*/[^/.]*" -exec basename {} \; | sort
+            (
+                shift 1
+                cd "$STACKS"/"$1"
+                find -L . -mindepth 1 \( -type f -or -type l \) -and -name "*docker-compose*" -and -regex ".*[yaml|yml]"  -and -not -path "*/.*" -exec dirname {} \; | cut -d'/' -f2- | sort | uniq
+            )
             ;;
     esac
 }
@@ -84,7 +83,7 @@ _docker-compose() {
                 shift 1
                 ;;
             *)
-                local arg=$(compgen -W "$(_doc_ls_ -s)" -- "$1" | head -1)
+                local arg=$(compgen -W "$(_doc_utils_ -s)" -- "$1" | head -1)
                 if [ "$arg" == "$1" ] ; then
                     srvcs+=( "$arg" )
                     args+=( "$arg" )
@@ -102,14 +101,14 @@ _docker-compose() {
     [ "${#srvcs[@]}" -eq 0 ] && srvcs+=( '.*' )
 
     # execute pre command scripts
-    for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
+    for f in $(_doc_utils_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
 
     # execute
-    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${stack} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_ls_ -f '.*' "\.(yml|yaml)"))"
+    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${STACK} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_utils_ -f '.*' "\.(yml|yaml)"))"
     eval "$command_string"
 
     # execute post command scripts
-    for f in $(_doc_ls_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.post") ; do bash "$f" ; done
+    for f in $(_doc_utils_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.post") ; do bash "$f" ; done
 }
 
 main "$@"
