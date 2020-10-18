@@ -1,6 +1,5 @@
 #!/bin/bash
 
-find() { /usr/bin/find "$@" ; }
 sed() { /usr/bin/sed "$@" ; }
 
 main() {
@@ -8,62 +7,61 @@ main() {
         echo The STACKS environment variable is not an existing directory.
         exit 2
     fi
-    STACK="$(_doc_utils_ --check-stack "$1")"
-    shift 1
+    if [ "$1" != "utils" ] ; then
+        export STACK="$(_doc_utils_ --check-stack "$1" || exit)"
+        [ "$STACK" == "STACKERROR" ] && echo $STACK && exit
+        shift 1
+    fi
     case $1 in
         utils)  shift 1 ; _doc_utils_ "$@" ;;
-        stats)  shift 1 ; _doc_stats_ "$@" ;;
         *)      _docker-compose "$@" ;;
     esac
 }
 
 _doc_utils_() { 
     case "$1" in
-        -a|--all)
+        --all)
             shift 1
             for stack in $(_doc_utils_ --stacks) ; do
                 echo $stack
                 sed -E 's/^/-- /' <<< "$(STACK=$stack ; _doc_utils_ --services)"
             done
             ;;
-        -C|--check-stack)
+        --check-stack)
             shift 1
             if [ -d "$STACKS"/"$1" ] ; then
                 echo "$1"
             else
-                echo "Error: STACK_NOT_FOUND"
-                exit
+                echo "STACKERROR"
             fi
             ;;
-        -f|--files)
-            (
-                shift 1
-                cd "$STACKS"/"$STACK"
-                echo find -L . -mindepth 1 -maxdepth ${3:-1} -type f -regex ".*/docker-compose${1:+\.$1}.${2:-[yml|yaml]}$" | sort
-            )
+        --files-rel)
+            shift 1
+            local depth="$(echo ${STACKS}/ | sed 's@[^/]@@g' | wc -m)"
+            _doc_utils_ --files-abs "$1" "$2" "$3" | cut -d '/' -f ${depth}-
             ;;
-        -s|--services)
+        --files-abs)
+            shift 1
+            {
+                find -L "$STACKS"/"$STACK" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${2:-\(yml\|yaml\)}$"
+                find -L "$STACKS"/"$STACK" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${1:+$1\.}${2:-\(yml\|yaml\)}$"
+            } | sort | uniq
+            ;;
+        --services)
             shift 1
             local pads=( $'\t' '  ' '    ' )
-            for config in $(_doc_utils_ -f '.*' '\.(yml|yaml)') ; do
+            for config in $(_doc_utils_ --files-rel ; _doc_utils_ --files-rel '.*') ; do
                 for pad in "${pads[@]}" ; do
-                    local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "$config")"
+                    local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "${STACKS}/${config}")"
                     [ "$services" ] && echo "$services" && break
                 done
             done | sort | uniq
             ;;
-        *|-S|--stacks)
-            (
-                shift 1
-                cd "$STACKS"/"$1"
-                find -L . -mindepth 1 \( -type f -or -type l \) -and -name "*docker-compose*" -and -regex ".*[yaml|yml]"  -and -not -path "*/.*" -exec dirname {} \; | cut -d'/' -f2- | sort | uniq
-            )
+        --stacks|*)
+            shift 1
+            _doc_utils_ --files-rel '' '' 9 | xargs dirname | sort
             ;;
     esac
-}
-
-_doc_stats_() {
-    docker stats $(docker ps --format "{{.Names}}")
 }
 
 _docker-compose() {
@@ -101,14 +99,15 @@ _docker-compose() {
     [ "${#srvcs[@]}" -eq 0 ] && srvcs+=( '.*' )
 
     # execute pre command scripts
-    for f in $(_doc_utils_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
+    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
 
     # execute
-    printf -v command_string -- "docker-compose%s --project-directory ${STACKS}/${STACK} $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_utils_ -f '.*' "\.(yml|yaml)"))"
-    eval "$command_string"
+    printf -v command_string -- "docker-compose %s $cmd ${args[*]}\n"     "$(printf -- " --file %s" $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" ))"
+    printf "%q\n" "$command_string"
+    $command_string
 
     # execute post command scripts
-    for f in $(_doc_utils_ -f "$(_or_list "${srvcs[*]}")" "\.$cmd\.post") ; do bash "$f" ; done
+    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "\.$cmd\.post") ; do bash "$f" ; done
 }
 
 main "$@"
