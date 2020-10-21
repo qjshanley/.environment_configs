@@ -13,6 +13,7 @@ main() {
         shift 1
     fi
     case $1 in
+        stats)  shift 1 ; _doc_stats_ "$@" ;;
         utils)  shift 1 ; _doc_utils_ "$@" ;;
         *)      _docker-compose "$@" ;;
     esac
@@ -62,6 +63,14 @@ _doc_utils_() {
             _doc_utils_ --files-rel '' '' 9 | xargs dirname | sort
             ;;
     esac
+}
+
+_doc_stats_() {
+    if [ -n "$*" ] ; then
+        docker stats "${@#_}"
+    else
+        docker stats $(docker ps --format "{{.Names}}")
+    fi
 }
 
 _docker-compose() {
