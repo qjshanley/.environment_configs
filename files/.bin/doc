@@ -1,10 +1,10 @@
 #!/bin/bash
 
-sed() { /usr/bin/sed "$@" ; }
+#sed() { /usr/bin/sed "$@" ; }
 
 main() {
     if [ ! -d "${STACKS:?The environment variable needs to be defined.}" ] ; then
-        echo The STACKS environment variable is not an existing directory.
+        echo STACKSERROR
         exit 2
     fi
     _doc_utils_ --check-stack "$1"
@@ -31,7 +31,7 @@ _doc_utils_() {
             ;;
         --check-stack)
             shift 1
-            accept=( $(_doc_utils_ --print-doc-commands) )
+            local accept=( $(_doc_utils_ --print-doc-commands) )
             if [ -d "$STACKS"/"$1" ] ; then
                 # The stack exists
                 return 0
@@ -53,6 +53,9 @@ _doc_utils_() {
             ;;
         --print-doc-commands)
             shift 1
+            if [ ! -e "$(/usr/bin/find /tmp/doc/ -name commands -mtime 0 2>/dev/null)" ] ; then
+                _doc_utils_ --write-doc-commands
+            fi
             cat /tmp/doc/commands
             ;;
         --files-rel)
@@ -63,8 +66,8 @@ _doc_utils_() {
         --files-abs)
             shift 1
             {
-                find -L "$STACKS"/"$STACK" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${2:-\(yml\|yaml\)}$"
-                find -L "$STACKS"/"$STACK" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${1:+$1\.}${2:-\(yml\|yaml\)}$"
+                /usr/bin/find -E -L "${STACKS}${STACK:+/$STACK}" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${2:-(yml|yaml)}$"
+                /usr/bin/find -E -L "${STACKS}${STACK:+/$STACK}" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${1:+$1\.}${2:-(yml|yaml)}$"
             } | sort | uniq
             ;;
         --services)
@@ -79,7 +82,7 @@ _doc_utils_() {
             ;;
         --stacks|*)
             shift 1
-            _doc_utils_ --files-rel '' '' 9 | xargs dirname | sort
+            _doc_utils_ --files-rel '' '.*' 9 | xargs dirname | sort
             ;;
     esac
 }

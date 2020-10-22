@@ -25,7 +25,6 @@ EVARS=(
     'GOROOT="/usr/local/go"'
     'GOPATH="~/code/go"'
     "PSQL_EDITOR=\"$(which vim)\""
-    'STACKS="~/code/qub3r/doc/stacks"'
 )
 for evar in "${EVARS[@]}" ; do eval " export $evar" ; done
 
