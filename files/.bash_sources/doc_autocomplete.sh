@@ -1,18 +1,9 @@
 #!/usr/bin/env bash
 
 _doc_opts() {
-    local stack="$(doc utils --check-stack "$1")"
-    [ "$stack" == "$1" ] && shift 1
+    doc utils --check-stack "$1" && { local stack="$1" ; shift 1 ; }
     case "$1" in
         '') 
-            if [ ! -e "$(find /tmp/doc/ -name commands -mtime 0)" ] ; then
-                mkdir -p /tmp/doc
-                {
-                    docker-compose  --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
-                    awk '$3 ~ /^_doc_/ { split($0, cmd, "_") ; print cmd[3] }' $(which doc)
-                } | sort | uniq > /tmp/doc/commands
-                echo utils >> /tmp/doc/commands
-            fi
             cat /tmp/doc/commands
             ;;
         down) ;;
@@ -38,6 +29,11 @@ _doc_autocomplete() {
     COMPREPLY=()
     local cur="${COMP_WORDS[COMP_CWORD]}"
     local prev=( ${COMP_WORDS[@]:1:$COMP_CWORD-1} )
+
+    if [ ! -e "$(find /tmp/doc/ -name commands -mtime 0)" ] ; then
+        doc utils --write-doc-commands
+        _doc_parse_commands
+    fi
 
     if [ "$STACKS" ] ; then
         # the STACKS variable exists and we can proceed.

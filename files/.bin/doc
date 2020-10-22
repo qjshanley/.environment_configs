@@ -7,11 +7,12 @@ main() {
         echo The STACKS environment variable is not an existing directory.
         exit 2
     fi
-    if [ "$1" != "utils" ] ; then
-        export STACK="$(_doc_utils_ --check-stack "$1" || exit)"
-        [ "$STACK" == "STACKERROR" ] && echo $STACK && exit
-        shift 1
-    fi
+    _doc_utils_ --check-stack "$1"
+    case "$?" in
+        0) export STACK="$1" ; shift 1 ;;
+        1) echo STACKERROR ; exit 1 ;;
+        2) export STACK="" ;;
+    esac
     case $1 in
         stats)  shift 1 ; _doc_stats_ "$@" ;;
         utils)  shift 1 ; _doc_utils_ "$@" ;;
@@ -30,11 +31,29 @@ _doc_utils_() {
             ;;
         --check-stack)
             shift 1
+            accept=( $(_doc_utils_ --print-doc-commands) )
             if [ -d "$STACKS"/"$1" ] ; then
-                echo "$1"
+                # The stack exists
+                return 0
+            elif [ "$1" == "$(compgen -W "${accept[*]}" "$1" | head -1)" ] ; then
+                # The stack is a known command
+                return 2
             else
-                echo "STACKERROR"
+                # User error
+                return 1
             fi
+            ;;
+        --write-doc-commands)
+            shift 1
+            mkdir -p /tmp/doc
+            {
+                docker-compose  --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
+                awk '$0 ~ /^_doc_.*_/ { split($0, cmd, "_") ; print cmd[3] }' $0
+            } | sort | uniq > /tmp/doc/commands
+            ;;
+        --print-doc-commands)
+            shift 1
+            cat /tmp/doc/commands
             ;;
         --files-rel)
             shift 1
@@ -108,15 +127,15 @@ _docker-compose() {
     [ "${#srvcs[@]}" -eq 0 ] && srvcs+=( '.*' )
 
     # execute pre command scripts
-    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "\.$cmd\.pre") ; do bash "$f" ; done
+    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "$cmd\.pre") ; do bash "$f" ; done
 
     # execute
-    printf -v command_string -- "docker-compose %s $cmd ${args[*]}\n"     "$(printf -- " --file %s" $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" ))"
+    printf -v command_string -- "docker-compose %s $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" ))"
     printf "%q\n" "$command_string"
     $command_string
 
     # execute post command scripts
-    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "\.$cmd\.post") ; do bash "$f" ; done
+    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "$cmd\.post") ; do bash "$f" ; done
 }
 
 main "$@"
