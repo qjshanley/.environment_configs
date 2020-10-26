@@ -16,6 +16,6 @@ _basic_bash_autocomplete() {
     return 0
 }
 
-for script in $( find ~/.bash_scripts -mindepth 1 -maxdepth 1 \( -type l -or -type f \) -perm +755 -exec basename {} \; ) ; do
+for script in $( /usr/bin/find ~/.bash_scripts -mindepth 1 -maxdepth 1 \( -type l -or -type f \) -perm +755 -exec basename {} \; ) ; do
     complete -F _basic_bash_autocomplete $script "$@"
 done
