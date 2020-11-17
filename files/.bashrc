@@ -62,16 +62,50 @@ HISTSIZE=10000
 HISTFILESIZE=1000000
 
 # set a fancy prompt (non-color, unless we know we "want" color)
+function parse_git_branch {
+    git branch 2> /dev/null | sed -n '/^*/s/^* \(.*\)/[\1]/p'
+}
+function parse_git_branch_color {
+    #local git_status="$(git status 2> /dev/null | sed -n '/^On branch/p ; /^Changes not staged for commit:/p ; /^Changes to be committed:/p ; /^Untracked files:/p')"
+    local git_status="$(git status 2> /dev/null | sed -n '/^[A-Z]/p')"
+    if [ -n "$git_status" ] ; then
+        local git_branch="$(sed -n '/^On branch /s/^On branch \(.*\)/[\1]/p' <<< "$git_status")"
+        local no_color='\e[0;00m'
+        if [ -n "$(IFS=$'\n' ; compgen -W "$git_status" "Untracked files:")" ] ; then
+            # red
+            local color='\e[1;31m'
+        elif [ -n "$(IFS=$'\n' ; compgen -W "$git_status" "Changes not staged for commit:")" ] ; then
+            # red
+            local color='\e[1;31m'
+        elif [ -n "$(IFS=$'\n' ; compgen -W "$git_status" "Changes to be committed:")" ] ; then
+            # yellow
+            local color='\e[1;33m'
+        else
+            # green
+            local color='\e[1;32m'
+        fi
+        printf -- "${color}${git_branch}${no_color}"
+    fi
+}
+function escaped_working_dir {
+    printf -- '%q' "$(pwd)"
+}
+ps=()
+[ -n "$debian_chroot" ] && ps=( '${debian_chroot:+($debian_chroot)}' )
 case "$TERM" in
-    xterm-color|*-256color) color_prompt=yes;;
+    xterm-color|*-256color) 
+        ps+=( '\e[0;32m\u@\h\e[0;00m' )
+        ps+=( '\e[1;34m$(escaped_working_dir)\e[0;00m' )
+        ps+=( '$(parse_git_branch_color)' )
+        ;;
+    *)
+        ps+=( '\u@\h' )
+        ps+=( '$(escaped_working_dir)' )
+        ps+=( '$(parse_git_branch)' )
+        ;;
 esac
-
-if [ "$color_prompt" = yes ]; then
-    PS1='${debian_chroot:+($debian_chroot)}\[\033[01;32m\]\u@\h\[\033[00m\]:\[\033[01;34m\]\w\[\033[00m\]\$ '
-else
-    PS1='${debian_chroot:+($debian_chroot)}\u@\h:\w\$ '
-fi
-unset color_prompt force_color_prompt
+export PS1="${ps[@]}\n\$ "
+unset ps
 
 # enable color support of ls and also add handy aliases
 if [ -x "$(which dircolors)" ]; then

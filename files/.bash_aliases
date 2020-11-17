@@ -103,8 +103,10 @@ function eztar {
 
 function dex {
     POD="$1" ; shift 1
+    [ "$1" == "-k" ] || { rm -f ~/.datica ; shift 1 ; }
     case "$POD" in
         pod02|pod03)
+            export DATICA_ENV=d9a425c1-1a68-42ee-9261-0f675e87d70a
             export DATICA_EMAIL=quin@datica.com
             export ACCOUNTS_HOST=https://product.datica.com
             export AUTH_HOST=https://auth.datica.com
@@ -114,6 +116,7 @@ function dex {
             export PODID="$POD"
             ;;
         pod05)
+            export DATICA_ENV=8c38fcc0-132b-4580-bdac-673ad392b374
             export DATICA_EMAIL=quin@datica.com
             export ACCOUNTS_HOST=https://product.de.datica.com
             export AUTH_HOST=https://auth.de.datica.com
@@ -123,6 +126,7 @@ function dex {
             export PODID="$POD"
             ;;
         sbox05)
+            export DATICA_ENV=
             export DATICA_EMAIL=quin@datica.com
             export ACCOUNTS_HOST=https://product-sandbox.catalyzeapps.com/stratum
             export AUTH_HOST=https://auth-sandbox.catalyzeapps.com
@@ -139,11 +143,11 @@ function dex {
 }
 
 function corl {
-    dex "$1" && shift 1 || return 1
+    dex "$1" -k && shift 1 || return 1
 
     CONTENT_TYPE="Content-Type: application/json"
     ACCEPT="Accept: application/json"
-    AUTHORIZATION="Authorization: Bearer $(jq -r .token ~/.datica)"
+    AUTHORIZATION="Authorization: Bearer $(jq -r .token ~/.datica)" || return 1
     REQ_NONCE="X-Request-Nonce: $(openssl rand -base64 32)"
     REQ_NONCE_TIMESTAMP="X-Request-Timestamp: $(date +%s)"
     X_POD_ID="X-Pod-ID: ${POD_ID}"
@@ -158,6 +162,9 @@ function corl {
         /environments*)
             ARGS=( ${PAAS_HOST}${@} )
             ;;
+        /documents*)
+            ARGS=( ${PAAS_HOST}${@} )
+            ;;
         '')
             echo Please provide a route or URL
             return 1
@@ -167,11 +174,13 @@ function corl {
             ;;
     esac
 
-    curl ${ARGS[@]} \
-        -H "$CONTENT_TYPE" \
-        -H "$ACCEPT" \
-        -H "$AUTHORIZATION" \
-        -H "$REQ_NONCE" \
-        -H "$REQ_NONCE_TIMESTAMP" \
-        -H "$X_POD_ID"
+    printf -v curl_headers -- '-H "%s" ' \
+        "$CONTENT_TYPE" \
+        "$ACCEPT" \
+        "$AUTHORIZATION" \
+        "$REQ_NONCE" \
+        "$REQ_NONCE_TIMESTAMP" \
+        "$X_POD_ID"
+
+    echo curl ${ARGS[@]} $curl_headers
 }
