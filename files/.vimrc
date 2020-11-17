@@ -26,6 +26,12 @@ set winminwidth=1
 
 let mapleader = ','
 
+" Yank/Paste to clipboards
+noremap <Leader>y "*y
+noremap <Leader>p "*p
+noremap <Leader>Y "+y
+noremap <Leader>P "+p
+
 " turn number on and off
 map <Leader>no :set nonumber <bar> :set norelativenumber<CR>
 map <Leader>nO :set number <bar> :set relativenumber<CR>
