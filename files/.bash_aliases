@@ -182,5 +182,5 @@ function corl {
         "$REQ_NONCE_TIMESTAMP" \
         "$X_POD_ID"
 
-    echo curl ${ARGS[@]} $curl_headers
+    echo curl --silent ${ARGS[@]} $curl_headers
 }
