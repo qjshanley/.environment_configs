@@ -134,7 +134,7 @@ _docker-compose() {
 
     # execute
     printf -v command_string -- "docker-compose %s $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" ))"
-    printf "%q\n" "$command_string"
+    echo "$command_string"
     $command_string
 
     # execute post command scripts

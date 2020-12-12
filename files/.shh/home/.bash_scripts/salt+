@@ -45,8 +45,7 @@ revoke_openssl-cert() {
     echo Remove the following openssl certificates?
     echo ------------------------------------------
     sudo -E find $CERT_PATH -path "*${NAMESPACE}*cert.pem" -print
-    printf -- "Continue with removal?: "
-    confirm
+    confirm || exit 0
     for cert in $(sudo -E find $CERT_PATH -path "*${NAMESPACE}*cert.pem" -print) ; do
         sudo -E openssl ca -config ${CERT_PATH}/ca.conf -revoke $cert
         sudo -E rm -r $(dirname $cert)
@@ -77,26 +76,31 @@ vpn_highstate() {
     printf -- '\nThe following configs were found:\n'
     printf -- ' - %s\n' "${CONFIGS[@]}"
 
+    runs=()
+    confirm "Test highstate? (y/n/q): " && runs+=( "test" )
+    confirm "Execute highstate? (y/n/q): " && runs+=( "exec" )
+
     logdir=~/tmp/vpn
     mkdir -p $logdir
     runtime=$(date +%Y%m%d%H%M%S)
-    runs=( "test" "exec" )
 
     for config in "${CONFIGS[@]}" ; do
     (
         cd $DIR
-        echo
-        confirm "load $config pillar data? (y/n): "
         sudo -E python set_vpn_pillars.py -a $config -f $config || { echo Could not set pillar data ; exit 2 ; }
         sudo -E salt -v $config saltutil.refresh_pillar || { echo Could not refresh pillar data ; echo 2 ; }
+
         for run in "${runs[@]}" ; do
-            echo
-            confirm "$run highstate? (y/n): "
             printf -- '\n\nLogging output to: %s/%s.%s.%s.log\n' "$logdir" "$config" "$runtime" "$run" >> /dev/tty
             {
                 case "$run" in
-                    test) sudo -E salt -v $config state.highstate test=True --state-output=changes ;;
-                    exec) sudo -E salt -v $config state.highstate --state-output=changes ;;
+                    test) 
+                        sudo -E salt -v $config state.highstate test=True --state-output=changes
+                        ;;
+                    exec) 
+                        confirm "Continue with highstate of $config? (y/n/q): " || break
+                        sudo -E salt -v $config state.highstate --state-output=changes
+                        ;;
                 esac
             } > ${logdir}/${config}.${runtime}.${run}.log 2>&1
             tail -n 20 ${logdir}/${config}.${runtime}.${run}.log | grep "Summary for" -A 20 | sed -E 's/^(.*)$/--> \1/' >> /dev/tty
@@ -112,11 +116,13 @@ get_pod() {
 confirm() {
     while true ; do
         check=
-        read -p "$1" check < /dev/tty >> /dev/tty
+        echo
+        read -p "${1:-Continue? (y/n/q): }" check < /dev/tty >> /dev/tty
         case "$check" in
-            y|yes) break ;;
-            n|no)  exit 0 ;;
-            *)     continue ;;
+            y|yes)      return 0 ;;
+            n|no)       return 1 ;;
+            q|quit)     exit 0 ;;
+            *)          continue ;;
         esac
     done
 }
