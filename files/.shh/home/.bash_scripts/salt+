@@ -98,7 +98,6 @@ vpn_highstate() {
             sudo -E salt -v $config state.highstate test=True --state-output=changes
             ;;
           exec) 
-            confirm "Continue with highstate of $config? (y/n/q): " || break
             sudo -E salt -v $config state.highstate --state-output=changes
             ;;
         esac
