@@ -4,6 +4,9 @@ startup_message off
 # Turn off the even more annoying whole-screen-flash-on-tab-complete "feature"
 vbell off
 
+# Define shell
+defshell -bash
+
 # Turn on color
 term xterm-256color
 

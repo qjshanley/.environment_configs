@@ -1,10 +1,10 @@
 " general settings
 if exists('+relativenumber')
-    set relativenumber
+  set relativenumber
 endif
 
 if exists('+number')
-    set number
+  set number
 endif
 
 set t_Co=256                    " turn on 256 color
@@ -51,13 +51,13 @@ map <Leader>oe :Vexplore<CR>
 
 " code folding settings
 if exists('+foldmethod')
-    set foldmethod=indent
-    set foldlevel=1
-    set foldlevelstart=0
-    set foldnestmax=10
-    nnoremap f za
-    nnoremap < zm
-    nnoremap > zr
+  set foldmethod=indent
+  set foldlevel=1
+  set foldlevelstart=0
+  set foldnestmax=10
+  nnoremap f za
+  nnoremap < zm
+  nnoremap > zr
 endif
 
 " make tabs intuitive for insert mode

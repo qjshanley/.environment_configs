@@ -1,130 +1,130 @@
 #!/usr/bin/env bash
 
 main() {
-    case "$1" in
-        jobs)       shift 1 ; jobs "$@" ;;
-        revoke)     shift 1 ; revoke "$@" ;;
-        uptime)     shift 1 ; uptime "$@" ;;
-        vpn)        shift 1 ; vpn "$@" ;;
-        *)          cmds ; exit 1 ;;
-    esac
+  case "$1" in
+    jobs)       shift 1 ; jobs "$@" ;;
+    revoke)     shift 1 ; revoke "$@" ;;
+    uptime)     shift 1 ; uptime "$@" ;;
+    vpn)        shift 1 ; vpn "$@" ;;
+    *)          cmds ; exit 1 ;;
+  esac
 }
 
 jobs() {
-    case "$1" in
-        list)
-            sudo -E salt-run jobs.active
-            ;;
-        term)
-            read -p 'Host: ' host
-            read -p 'Job ID: ' jid
-            sudo -E salt $host saltutil.term_job $jid
-            ;;
-        kill)
-            read -p 'Host: ' host
-            read -p 'Job ID: ' jid
-            sudo -E salt $host saltutil.kill_job $jid
-            ;;
-        *)
-            cmds "jobs" ; exit 1 
-            ;;
-    esac
+  case "$1" in
+    list)
+      sudo -E salt-run jobs.active
+      ;;
+    term)
+      read -p 'Host: ' host
+      read -p 'Job ID: ' jid
+      sudo -E salt $host saltutil.term_job $jid
+      ;;
+    kill)
+      read -p 'Host: ' host
+      read -p 'Job ID: ' jid
+      sudo -E salt $host saltutil.kill_job $jid
+      ;;
+    *)
+      cmds "jobs" ; exit 1 
+      ;;
+  esac
 }
 
 revoke() {
-    case "$1" in
-        openssl-cert)   shift 1 ; revoke_openssl-cert "$@" ;;
-    esac
+  case "$1" in
+    openssl-cert)   shift 1 ; revoke_openssl-cert "$@" ;;
+  esac
 }
 
 revoke_openssl-cert() {
-    sudo -v
-    read -p 'Pod namespace: ' NAMESPACE < /dev/tty >> /dev/tty || exit $?
-    POD=$(get_pod "$NAMESPACE")
-    CERT_PATH=/srv/paas-salt/salt/vpn/files/certs/${POD}
-    echo Remove the following openssl certificates?
-    echo ------------------------------------------
-    sudo -E find $CERT_PATH -path "*${NAMESPACE}*cert.pem" -print
-    confirm || exit 0
-    for cert in $(sudo -E find $CERT_PATH -path "*${NAMESPACE}*cert.pem" -print) ; do
-        sudo -E openssl ca -config ${CERT_PATH}/ca.conf -revoke $cert
-        sudo -E rm -r $(dirname $cert)
-    done
-    echo The following files may need to be manually removed:
-    echo ----------------------------------------------------
-    sudo -E find /data -name "*${NAMESPACE}*"
+  sudo -v
+  read -p 'Pod namespace: ' NAMESPACE < /dev/tty >> /dev/tty || exit $?
+  POD=$(get_pod "$NAMESPACE")
+  CERT_PATH=/srv/paas-salt/salt/vpn/files/certs/${POD}
+  echo Remove the following openssl certificates?
+  echo ------------------------------------------
+  sudo -E find $CERT_PATH -path "*${NAMESPACE}*cert.pem" -print
+  confirm || exit 0
+  for cert in $(sudo -E find $CERT_PATH -path "*${NAMESPACE}*cert.pem" -print) ; do
+    sudo -E openssl ca -config ${CERT_PATH}/ca.conf -revoke $cert
+    sudo -E rm -r $(dirname $cert)
+  done
+  echo The following files may need to be manually removed:
+  echo ----------------------------------------------------
+  sudo -E find /data -name "*${NAMESPACE}*"
 }
 
 uptime() {
-    sudo -E salt -C "${1:-*}" cmd.run "uptime -s" --output=text | grep -v "Minion did not return." | sort -k2
+  sudo -E salt -C "${1:-*}" cmd.run "uptime -s" --output=text | grep -v "Minion did not return." | sort -k2
 }
 
 vpn() {
-    case "$1" in
-        highstate) shift 1 ; vpn_highstate "$@" ;;
-    esac
+  case "$1" in
+    highstate) shift 1 ; vpn_highstate "$@" ;;
+  esac
 }
 
 vpn_highstate() {
-    sudo -v < /dev/tty >> /dev/tty || exit $?
-    read -p 'Pod namespace: ' NAMESPACE < /dev/tty >> /dev/tty || exit $?
-    POD=$(get_pod "$NAMESPACE")
-    DIR=$(find ~ -type d -name "salt-vpn-pillar-${POD}" -print | head -n 1)
-    git -C $DIR pull
-    CONFIGS=( $(find $DIR -maxdepth 1 -name "vpnappliance0?-${NAMESPACE}.${POD}.catalyzeapps.com" -exec basename {} \; | sort) )
+  sudo -v < /dev/tty >> /dev/tty || exit $?
+  read -p 'Pod namespace: ' NAMESPACE < /dev/tty >> /dev/tty || exit $?
+  POD=$(get_pod "$NAMESPACE")
+  DIR=$(find ~ -type d -name "salt-vpn-pillar-${POD}" -print | head -n 1)
+  git -C $DIR pull
+  CONFIGS=( $(find $DIR -maxdepth 1 -name "vpnappliance0?-${NAMESPACE}.${POD}.catalyzeapps.com" -exec basename {} \; | sort) )
 
-    printf -- '\nThe following configs were found:\n'
-    printf -- ' - %s\n' "${CONFIGS[@]}"
+  printf -- '\nThe following configs were found:\n'
+  printf -- ' - %s\n' "${CONFIGS[@]}"
 
-    runs=()
-    confirm "Test highstate? (y/n/q): " && runs+=( "test" )
-    confirm "Execute highstate? (y/n/q): " && runs+=( "exec" )
+  runs=()
+  confirm "Test highstate? (y/n/q): " && runs+=( "test" )
+  confirm "Execute highstate? (y/n/q): " && runs+=( "exec" )
 
-    logdir=~/tmp/vpn
-    mkdir -p $logdir
-    runtime=$(date +%Y%m%d%H%M%S)
+  logdir=~/tmp/vpn
+  mkdir -p $logdir
+  runtime=$(date +%Y%m%d%H%M%S)
 
-    for config in "${CONFIGS[@]}" ; do
-    (
-        cd $DIR
-        sudo -E python set_vpn_pillars.py -a $config -f $config || { echo Could not set pillar data ; exit 2 ; }
-        sudo -E salt -v $config saltutil.refresh_pillar || { echo Could not refresh pillar data ; echo 2 ; }
+  for config in "${CONFIGS[@]}" ; do
+  (
+    cd $DIR
+    sudo -E python set_vpn_pillars.py -a $config -f $config || { echo Could not set pillar data ; exit 2 ; }
+    sudo -E salt -v $config saltutil.refresh_pillar || { echo Could not refresh pillar data ; echo 2 ; }
 
-        for run in "${runs[@]}" ; do
-            printf -- '\n\nLogging output to: %s/%s.%s.%s.log\n' "$logdir" "$config" "$runtime" "$run" >> /dev/tty
-            {
-                case "$run" in
-                    test) 
-                        sudo -E salt -v $config state.highstate test=True --state-output=changes
-                        ;;
-                    exec) 
-                        confirm "Continue with highstate of $config? (y/n/q): " || break
-                        sudo -E salt -v $config state.highstate --state-output=changes
-                        ;;
-                esac
-            } > ${logdir}/${config}.${runtime}.${run}.log 2>&1
-            tail -n 20 ${logdir}/${config}.${runtime}.${run}.log | grep "Summary for" -A 20 | sed -E 's/^(.*)$/--> \1/' >> /dev/tty
-        done
-    )
+    for run in "${runs[@]}" ; do
+      printf -- '\n\nLogging output to: %s/%s.%s.%s.log\n' "$logdir" "$config" "$runtime" "$run" >> /dev/tty
+      {
+        case "$run" in
+          test) 
+            sudo -E salt -v $config state.highstate test=True --state-output=changes
+            ;;
+          exec) 
+            confirm "Continue with highstate of $config? (y/n/q): " || break
+            sudo -E salt -v $config state.highstate --state-output=changes
+            ;;
+        esac
+      } > ${logdir}/${config}.${runtime}.${run}.log 2>&1
+      tail -n 20 ${logdir}/${config}.${runtime}.${run}.log | grep "Summary for" -A 20 | sed -E 's/^(.*)$/--> \1/' >> /dev/tty
     done
+  )
+  done
 }
 
 get_pod() {
-    sed 's/\(^[^0-9]*[0-9]\{2\}\).*/\1/' <<< "$1"
+  sed 's/\(^[^0-9]*[0-9]\{2\}\).*/\1/' <<< "$1"
 }
 
 confirm() {
-    while true ; do
-        check=
-        echo
-        read -p "${1:-Continue? (y/n/q): }" check < /dev/tty >> /dev/tty
-        case "$check" in
-            y|yes)      return 0 ;;
-            n|no)       return 1 ;;
-            q|quit)     exit 0 ;;
-            *)          continue ;;
-        esac
-    done
+  while true ; do
+    unset check
+    echo
+    read -p "${1:-Continue? (y/n/q): }" check < /dev/tty >> /dev/tty
+    case "$check" in
+      y|yes)      return 0 ;;
+      n|no)       return 1 ;;
+      q|quit)     exit 0 ;;
+      *)          continue ;;
+    esac
+  done
 }
 
 main "$@"

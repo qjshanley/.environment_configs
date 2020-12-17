@@ -135,27 +135,27 @@ System Preferences -> Sound -> Sound Effects -> Alert volume: off
 # Bastion Example
 ### Example Company ###
 Host bastion.example.com
-    #LogLevel DEBUG3
-    User qshanley
-    IdentityFile ~/.ssh/id_rsa
-    ServerAliveInterval 300
-    ServerAliveCountMax 288
-    AddKeysToAgent yes
-    ForwardAgent yes
-    UseKeychain yes
-    HostName 169.48.224.131
-    Port 2202
+  #LogLevel DEBUG3
+  User qshanley
+  IdentityFile ~/.ssh/id_rsa
+  ServerAliveInterval 300
+  ServerAliveCountMax 288
+  AddKeysToAgent yes
+  ForwardAgent yes
+  UseKeychain yes
+  HostName 169.48.224.131
+  Port 2202
 
 Host 10.184.*
-    #LogLevel DEBUG3
-    User qshanley
-    IdentityFile ~/.ssh/id_rsa
-    ServerAliveInterval 300
-    ServerAliveCountMax 288
-    AddKeysToAgent yes
-    ForwardAgent yes
-    UseKeychain yes
-    ProxyCommand ssh -A -W %h:%p bastion.example.com
+  #LogLevel DEBUG3
+  User qshanley
+  IdentityFile ~/.ssh/id_rsa
+  ServerAliveInterval 300
+  ServerAliveCountMax 288
+  AddKeysToAgent yes
+  ForwardAgent yes
+  UseKeychain yes
+  ProxyCommand ssh -A -W %h:%p bastion.example.com
 ```
 
 # Useful Links

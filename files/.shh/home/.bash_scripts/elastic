@@ -1,44 +1,44 @@
 #!/usr/bin/env bash
 
 main() {
-    case "$1" in
-        '') curl -X GET 'localhost:9200?pretty' ;;
-        cat)        shift 1 ; cat       "$@" ;;
-        cluster)    shift 1 ; cluster   "$@" ;;
-        log)        shift 1 ; log       "$@" ;;
-        *) cmds $0 main ; exit 1 ;;
-    esac
+  case "$1" in
+    '') curl -X GET 'localhost:9200?pretty' ;;
+    cat)        shift 1 ; cat       "$@" ;;
+    cluster)    shift 1 ; cluster   "$@" ;;
+    log)        shift 1 ; log       "$@" ;;
+    *) cmds $0 main ; exit 1 ;;
+  esac
 }
 
 cat() {
-    curl -X GET "localhost:9200/_cat/indices?v"
+  curl -X GET "localhost:9200/_cat/indices?v"
 }
 
 cluster() {
-    case "$1" in
-        health) ;;
-        state)  ;;
-        stats)  ;;
-        *) echo "Unrecognized command: $@" ; exit 1 ;;
-    esac
-    curl -X GET "localhost:9200/_cluster/${1}?human&pretty"
+  case "$1" in
+    health) ;;
+    state)  ;;
+    stats)  ;;
+    *) echo "Unrecognized command: $@" ; exit 1 ;;
+  esac
+  curl -X GET "localhost:9200/_cluster/${1}?human&pretty"
 }
 
 log() {
-    search_directory="${ES_LOG_DIR:-/data/log/elasticsearch}/*"
-    case "$1" in
-        search)
-            shift 1
-            grep "\[[^]]*$1[^]]*\] " $search_directory
-            ;;
-        summary)
-            shift 1
-            sed -n 's@^\(\[[^]]*\]\)\(\[[^]]*\]\)\(\[[^]]*\]\) \(\[[^]]*\]\) \(.*\)@\3@p' $search_directory | sort | uniq -c | sort -n
-            ;;
-        *)
-            cmds $0 log
-            ;;
-    esac
+  search_directory="${ES_LOG_DIR:-/data/log/elasticsearch}/*"
+  case "$1" in
+    search)
+      shift 1
+      grep "\[[^]]*$1[^]]*\] " $search_directory
+      ;;
+    summary)
+      shift 1
+      sed -n 's@^\(\[[^]]*\]\)\(\[[^]]*\]\)\(\[[^]]*\]\) \(\[[^]]*\]\) \(.*\)@\3@p' $search_directory | sort | uniq -c | sort -n
+      ;;
+    *)
+      cmds $0 log
+      ;;
+  esac
 }
 
 main "$@"

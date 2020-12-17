@@ -1,72 +1,72 @@
 #!/usr/bin/env bash
 
 main() {
-    case "$1" in
-        exec)   shift 1 ; _dock_exec_   "${@#_}" ;;
-        oom)    shift 1 ; _dock_oom_    "${@#_}" ;;
-        stats)  shift 1 ; _dock_stats_  "${@#_}" ;;
-        ps)     shift 1 ; _dock_ps_     "${@#_}" ;;
-        psi)    shift 1 ; _dock_psi_    "${@#_}" ;;
-        sizes)  shift 1 ; _dock_sizes_  "${@#_}" ;;
-        findby) shift 1 ; _dock_findby_ "${@#_}" ;;
-        *)      _docker_ "${@#_}" ;;
-    esac
+  case "$1" in
+    exec)   shift 1 ; _dock_exec_   "${@#_}" ;;
+    oom)    shift 1 ; _dock_oom_    "${@#_}" ;;
+    stats)  shift 1 ; _dock_stats_  "${@#_}" ;;
+    ps)     shift 1 ; _dock_ps_     "${@#_}" ;;
+    psi)    shift 1 ; _dock_psi_    "${@#_}" ;;
+    sizes)  shift 1 ; _dock_sizes_  "${@#_}" ;;
+    findby) shift 1 ; _dock_findby_ "${@#_}" ;;
+    *)      _docker_ "${@#_}" ;;
+  esac
 }
 
 _dock_exec_() {
-    screen -t "${@:$#}" sudo -E docker exec -it "$@" bash -c 'env \
-        TERM=xterm-256color \
-        EDITOR=$(which vim || which vi) \
-        VISUAL=$(which vim || which vi) \
-        PSQL_EDITOR=$(which vim || which vi) \
-        bash -l -o vi \
-    '
+  screen -t "${@:$#}" sudo -E docker exec -it "$@" bash -c 'env \
+    TERM=xterm-256color \
+    EDITOR=$(which vim || which vi) \
+    VISUAL=$(which vim || which vi) \
+    PSQL_EDITOR=$(which vim || which vi) \
+    bash -l -o vi \
+  '
 }
 
 _dock_stats_() {
-    if [ -n "$*" ] ; then
-        sudo -E docker stats "$@"
-    else
-        sudo -E docker stats $(sudo -E docker ps --format "{{.Names}}")
-    fi
+  if [ -n "$*" ] ; then
+    sudo -E docker stats "$@"
+  else
+    sudo -E docker stats $(sudo -E docker ps --format "{{.Names}}")
+  fi
 }
 
 _dock_oom_() {
-    sudo -E dmesg -T | grep "$(sudo -E docker inspect --format '{{.Id}}' "$@")"
+  sudo -E dmesg -T | grep "$(sudo -E docker inspect --format '{{.Id}}' "$@")"
 }
 
 _dock_ps_() {
-    PS_LIST="$(sudo -E docker ps "$@")"
-    PS_LIST_WIDTH="$(wc -L <<< "$PS_LIST")"
+  PS_LIST="$(sudo -E docker ps "$@")"
+  PS_LIST_WIDTH="$(wc -L <<< "$PS_LIST")"
 
-    IFS=$'\n'
-    for line in $PS_LIST ; do
-        CONTAINER_ID="$(awk '{print $1}' <<< "$line")"
-        if [ "$CONTAINER_ID" == "CONTAINER" ] ; then
-            CONTAINER_HOSTNAME="HOSTNAME"
-        else
-            CONTAINER_HOSTNAME="$(sudo -E docker inspect --format="{{.Config.Hostname}}" "$CONTAINER_ID")"
-        fi
-        printf -- $'%-*s    %-.*s\n' "$PS_LIST_WIDTH" "$line" "40" "$CONTAINER_HOSTNAME"
-    done
+  IFS=$'\n'
+  for line in $PS_LIST ; do
+    CONTAINER_ID="$(awk '{print $1}' <<< "$line")"
+    if [ "$CONTAINER_ID" == "CONTAINER" ] ; then
+      CONTAINER_HOSTNAME="HOSTNAME"
+    else
+      CONTAINER_HOSTNAME="$(sudo -E docker inspect --format="{{.Config.Hostname}}" "$CONTAINER_ID")"
+    fi
+    printf -- $'%-*s    %-.*s\n' "$PS_LIST_WIDTH" "$line" "40" "$CONTAINER_HOSTNAME"
+  done
 }
 
 _dock_sizes_() {
-    sudo docker ps --size --format='table{{.Names}}\t{{.Size}}' | sort -k 2h
+  sudo docker ps --size --format='table{{.Names}}\t{{.Size}}' | sort -k 2h
 }
 
 _dock_psi_() {
-    sudo -v
-    _print_line() { printf -- '%-*s%s' "$@" ; }
-    _docker_inspect() { printf -- '%.*s' "$1" "$( sudo -E docker inspect --format="$3" "$2" )" ; }
-    _oom_check() {
-        OOM= ; OOM="$( _dock_oom_ "$1" | tail -n 1 | cut -d ']' -f1 | tr -d '[' )"
-        if [ "$OOM" == "" ] ; then
-            echo false
-        else
-            echo "$OOM"
-        fi
-    }
+  sudo -v
+  _print_line() { printf -- '%-*s%s' "$@" ; }
+  _docker_inspect() { printf -- '%.*s' "$1" "$( sudo -E docker inspect --format="$3" "$2" )" ; }
+  _oom_check() {
+    OOM= ; OOM="$( _dock_oom_ "$1" | tail -n 1 | cut -d ']' -f1 | tr -d '[' )"
+    if [ "$OOM" == "" ] ; then
+      echo false
+    else
+      echo "$OOM"
+    fi
+  }
 
     _print_line \
         12  'CONTAINER ID'  '  ' \
@@ -88,18 +88,18 @@ _dock_psi_() {
 }
 
 _dock_findby_() {
-    case "$1" in
-        service)
-            shift 1
-            for job in $(sudo docker ps -q) ; do 
-                sudo docker exec $job bash -c "[ \"\$(printenv CATALYZE_SERVICE_ID)\" == \"${1}\" ] && printenv CATALYZE_JOB_ID"
-            done
-            ;;
-    esac
+  case "$1" in
+    service)
+      shift 1
+      for job in $(sudo docker ps -q) ; do 
+        sudo docker exec $job bash -c "[ \"\$(printenv CATALYZE_SERVICE_ID)\" == \"${1}\" ] && printenv CATALYZE_JOB_ID"
+      done
+      ;;
+  esac
 }
 
 _docker_() {
-    sudo -E docker "$@"
+  sudo -E docker "$@"
 }
 
 main "$@"

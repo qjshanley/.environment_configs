@@ -3,142 +3,142 @@
 #sed() { /usr/bin/sed "$@" ; }
 
 main() {
-    if [ ! -d "${STACKS:?The environment variable needs to be defined.}" ] ; then
-        echo STACKSERROR
-        exit 2
-    fi
-    _doc_utils_ --check-stack "$1"
-    case "$?" in
-        0) export STACK="$1" ; shift 1 ;;
-        1) echo STACKERROR ; exit 1 ;;
-        2) export STACK="" ;;
-    esac
-    case $1 in
-        stats)  shift 1 ; _doc_stats_ "$@" ;;
-        utils)  shift 1 ; _doc_utils_ "$@" ;;
-        *)      _docker-compose "$@" ;;
-    esac
+  if [ ! -d "${STACKS:?The environment variable needs to be defined.}" ] ; then
+    echo STACKSERROR
+    exit 2
+  fi
+  _doc_utils_ --check-stack "$1"
+  case "$?" in
+    0) export STACK="$1" ; shift 1 ;;
+    1) echo STACKERROR ; exit 1 ;;
+    2) export STACK="" ;;
+  esac
+  case $1 in
+    stats)  shift 1 ; _doc_stats_ "$@" ;;
+    utils)  shift 1 ; _doc_utils_ "$@" ;;
+    *)      _docker-compose "$@" ;;
+  esac
 }
 
 _doc_utils_() { 
-    case "$1" in
-        --all)
-            shift 1
-            for stack in $(_doc_utils_ --stacks) ; do
-                echo $stack
-                sed -E 's/^/-- /' <<< "$(STACK=$stack ; _doc_utils_ --services)"
-            done
-            ;;
-        --check-stack)
-            shift 1
-            local accept=( $(_doc_utils_ --print-doc-commands) )
-            if [ -d "$STACKS"/"$1" ] ; then
-                # The stack exists
-                return 0
-            elif [ "$1" == "$(compgen -W "${accept[*]}" "$1" | head -1)" ] ; then
-                # The stack is a known command
-                return 2
-            else
-                # User error
-                return 1
-            fi
-            ;;
-        --write-doc-commands)
-            shift 1
-            mkdir -p /tmp/doc
-            {
-                docker-compose  --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
-                awk '$0 ~ /^_doc_.*_/ { split($0, cmd, "_") ; print cmd[3] }' $0
-            } | sort | uniq > /tmp/doc/commands
-            ;;
-        --print-doc-commands)
-            shift 1
-            if [ ! -e "$(/usr/bin/find /tmp/doc/ -name commands -mtime 0 2>/dev/null)" ] ; then
-                _doc_utils_ --write-doc-commands
-            fi
-            cat /tmp/doc/commands
-            ;;
-        --files-rel)
-            shift 1
-            local depth="$(echo ${STACKS}/ | sed 's@[^/]@@g' | wc -m)"
-            _doc_utils_ --files-abs "$1" "$2" "$3" | cut -d '/' -f ${depth}-
-            ;;
-        --files-abs)
-            shift 1
-            {
-                /usr/bin/find -E -L "${STACKS}${STACK:+/$STACK}" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${2:-(yml|yaml)}$"
-                /usr/bin/find -E -L "${STACKS}${STACK:+/$STACK}" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${1:+$1\.}${2:-(yml|yaml)}$"
-            } | sort | uniq
-            ;;
-        --services)
-            shift 1
-            local pads=( $'\t' '  ' '    ' )
-            for config in $(_doc_utils_ --files-rel ; _doc_utils_ --files-rel '.*') ; do
-                for pad in "${pads[@]}" ; do
-                    local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "${STACKS}/${config}")"
-                    [ "$services" ] && echo "$services" && break
-                done
-            done | sort | uniq
-            ;;
-        --stacks|*)
-            shift 1
-            _doc_utils_ --files-rel '' '.*' 9 | xargs dirname | sort
-            ;;
-    esac
+  case "$1" in
+    --all)
+      shift 1
+      for stack in $(_doc_utils_ --stacks) ; do
+        echo $stack
+        sed -E 's/^/-- /' <<< "$(STACK=$stack ; _doc_utils_ --services)"
+      done
+      ;;
+    --check-stack)
+      shift 1
+      local accept=( $(_doc_utils_ --print-doc-commands) )
+      if [ -d "$STACKS"/"$1" ] ; then
+        # The stack exists
+        return 0
+      elif [ "$1" == "$(compgen -W "${accept[*]}" "$1" | head -1)" ] ; then
+        # The stack is a known command
+        return 2
+      else
+        # User error
+        return 1
+      fi
+      ;;
+    --write-doc-commands)
+      shift 1
+      mkdir -p /tmp/doc
+      {
+        docker-compose  --help | awk '/^Commands:/,/$1/ { if ($1 ~ /^[a-z]*$/) print $1 }'
+        awk '$0 ~ /^_doc_.*_/ { split($0, cmd, "_") ; print cmd[3] }' $0
+      } | sort | uniq > /tmp/doc/commands
+      ;;
+    --print-doc-commands)
+      shift 1
+      if [ ! -e "$(/usr/bin/find /tmp/doc/ -name commands -mtime 0 2>/dev/null)" ] ; then
+        _doc_utils_ --write-doc-commands
+      fi
+      cat /tmp/doc/commands
+      ;;
+    --files-rel)
+      shift 1
+      local depth="$(echo ${STACKS}/ | sed 's@[^/]@@g' | wc -m)"
+      _doc_utils_ --files-abs "$1" "$2" "$3" | cut -d '/' -f ${depth}-
+      ;;
+    --files-abs)
+      shift 1
+      {
+        /usr/bin/find -E -L "${STACKS}${STACK:+/$STACK}" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${2:-(yml|yaml)}$"
+        /usr/bin/find -E -L "${STACKS}${STACK:+/$STACK}" -mindepth 1 -maxdepth ${3:-1} -regex "^.*/docker-compose\.${1:+$1\.}${2:-(yml|yaml)}$"
+      } | sort | uniq
+      ;;
+    --services)
+      shift 1
+      local pads=( $'\t' '  ' '    ' )
+      for config in $(_doc_utils_ --files-rel ; _doc_utils_ --files-rel '.*') ; do
+        for pad in "${pads[@]}" ; do
+          local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "${STACKS}/${config}")"
+          [ "$services" ] && echo "$services" && break
+        done
+      done | sort | uniq
+      ;;
+    --stacks|*)
+      shift 1
+      _doc_utils_ --files-rel '' '.*' 9 | xargs dirname | sort
+      ;;
+  esac
 }
 
 _doc_stats_() {
-    if [ -n "$*" ] ; then
-        docker stats "${@#_}"
-    else
-        docker stats $(docker ps --format "{{.Names}}")
-    fi
+  if [ -n "$*" ] ; then
+    docker stats "${@#_}"
+  else
+    docker stats $(docker ps --format "{{.Names}}")
+  fi
 }
 
 _docker-compose() {
-    local args=()
-    local srvcs=()
-    local cmd=$1 ; shift 1
-    while [ -n "$1" ] ; do
-        case "$1" in
-            --) 
-                shift 1
-                srvcs+=( "$@" )
-                args+=( "$@" )
-                shift "$#" 
-                ;;
-            -*) 
-                args+=( "$1" )
-                shift 1
-                ;;
-            *)
-                local arg=$(compgen -W "$(_doc_utils_ -s)" -- "$1" | head -1)
-                if [ "$arg" == "$1" ] ; then
-                    srvcs+=( "$arg" )
-                    args+=( "$arg" )
-                else
-                    args+=( "$1" )
-                fi
-                shift 1
-                ;;
-        esac
-    done
+  local args=()
+  local srvcs=()
+  local cmd=$1 ; shift 1
+  while [ -n "$1" ] ; do
+    case "$1" in
+      --) 
+        shift 1
+        srvcs+=( "$@" )
+        args+=( "$@" )
+        shift "$#" 
+        ;;
+      -*) 
+        args+=( "$1" )
+        shift 1
+        ;;
+      *)
+        local arg=$(compgen -W "$(_doc_utils_ -s)" -- "$1" | head -1)
+        if [ "$arg" == "$1" ] ; then
+          srvcs+=( "$arg" )
+          args+=( "$arg" )
+        else
+          args+=( "$1" )
+        fi
+        shift 1
+        ;;
+    esac
+  done
 
-    # convert a list to a regex group
-    _or_list() { sed 's/ /|/g ; s/^/(/ ; s/$/)/' <<< "$*" ; }
+  # convert a list to a regex group
+  _or_list() { sed 's/ /|/g ; s/^/(/ ; s/$/)/' <<< "$*" ; }
 
-    [ "${#srvcs[@]}" -eq 0 ] && srvcs+=( '.*' )
+  [ "${#srvcs[@]}" -eq 0 ] && srvcs+=( '.*' )
 
-    # execute pre command scripts
-    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "$cmd\.pre") ; do bash "$f" ; done
+  # execute pre command scripts
+  for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "$cmd\.pre") ; do bash "$f" ; done
 
-    # execute
-    printf -v command_string -- "docker-compose %s $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" ))"
-    echo "$command_string"
-    $command_string
+  # execute
+  printf -v command_string -- "docker-compose %s $cmd ${args[*]}\n" "$(printf -- " --file %s" $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" ))"
+  echo "$command_string"
+  $command_string
 
-    # execute post command scripts
-    for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "$cmd\.post") ; do bash "$f" ; done
+  # execute post command scripts
+  for f in $(_doc_utils_ --files-abs "$(_or_list "${srvcs[*]}")" "$cmd\.post") ; do bash "$f" ; done
 }
 
 main "$@"

@@ -1,16 +1,16 @@
 #!/usr/bin/env bash
 
 main() {
-    case "$1" in
-        '') ipsec --help ;;
-        filter) shift 1 ; filter "$@" ;;
-        *) sudo -E ipsec "$@" ;;
-    esac
+  case "$1" in
+    '') ipsec --help ;;
+    filter) shift 1 ; filter "$@" ;;
+    *) sudo -E ipsec "$@" ;;
+  esac
 }
 
 filter() {
-    printf -v filters -- " ; /%s/p" "$@"
-    sudo -E ipsec statusall | sed -n "1,/Connections/p ; /Security Associations/p ; /Routed Connections:/p ${filters}"
+  printf -v filters -- " ; /%s/p" "$@"
+  sudo -E ipsec statusall | sed -n "1,/Connections/p ; /Security Associations/p ; /Routed Connections:/p ${filters}"
 }
 
 main "$@"

@@ -3,19 +3,11 @@
 DOCKER_CMD=( $(pbpaste) )
 JOBID=${DOCKER_CMD[4]}
 
-IFS='' read -r -d '' SCRIPT <<- EOF
-( 
-    cd ~/.bash_temporary
-    echo "$JOBID" >> jobs
-    cat jobs | sort | uniq > jobs.tmp
-    mv jobs.tmp jobs
-) &
+# touch the known_hosts file if it doesn't exist
+[ ! -e ~/.ssh/known_hosts ] && touch ~/.ssh/known_hosts
 
-bash -l -c "screen -U -DR -S ssh -t host -p 0 ; logout"
-EOF
-
-# copy dot files to server
-[ -d ~/.shh/home ] && ( cd ~/.shh/home ; tar czh . ) | ssh "$1" "(cd ~ ; tar xz --overwrite)"
+# copy environment to remote
+[ -d ~/.shh/home ] && ( cd ~/.shh/home ; tar czh . ) | ssh "$1" "(cd ~ ; tar xz --overwrite ; echo '$JOBID' >> ~/.bash_temporary/jobs)"
 
 # attach directly to a screen session
-ssh -t "$1" "$SCRIPT"
+ssh "$@"
