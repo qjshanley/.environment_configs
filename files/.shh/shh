@@ -2,12 +2,22 @@
 
 DOCKER_CMD=( $(pbpaste) )
 JOBID=${DOCKER_CMD[4]}
+SCRIPT="$(cat << EOF
+cd ~
+tar xz --overwrite
+if [ -e "\$(find ~/.bash_temporary -name jobs -mtime -1)" ] ; then
+    echo '$JOBID' >> ~/.bash_temporary/jobs
+else
+    echo '$JOBID' > ~/.bash_temporary/jobs
+fi
+EOF
+)"
 
 # touch the known_hosts file if it doesn't exist
 [ ! -e ~/.ssh/known_hosts ] && touch ~/.ssh/known_hosts
 
 # copy environment to remote
-[ -d ~/.shh/home ] && ( cd ~/.shh/home ; tar czh . ) | ssh "$1" "(cd ~ ; tar xz --overwrite ; echo '$JOBID' >> ~/.bash_temporary/jobs)"
+[ -d ~/.shh/home ] && ( cd ~/.shh/home ; tar czh . ) | ssh "$1" "$SCRIPT"
 
 # attach directly to a screen session
 ssh "$@"
