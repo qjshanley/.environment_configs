@@ -5,6 +5,12 @@
 # run .bashrc
 test -f ~/.bashrc && source ~/.bashrc
 
+# Get list of gnubin directories
+GNUBINS="$(find /usr/local/opt -type d -follow -name gnubin -print)";
+for bindir in ${GNUBINS[@]}; do
+  export PATH=$bindir:$PATH;
+done;
+
 # Set PATH Variable
 BINS=(
   "${HOME}/.bin"
