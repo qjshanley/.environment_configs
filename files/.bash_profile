@@ -2,9 +2,6 @@
 # ----------------------------
 # Read once by the login shell
 
-# run .bashrc
-test -f ~/.bashrc && source ~/.bashrc
-
 # Get list of gnubin directories
 GNUBINS="$(find /usr/local/opt -type d -follow -name gnubin -print)";
 for bindir in ${GNUBINS[@]}; do
@@ -70,5 +67,9 @@ esac
 export PS1="${ps[@]}\n\$ "
 unset ps
 
+# run .bashrc
+test -f ~/.bashrc && source ~/.bashrc
+
 # Start screen session if connecting to a remote
 test -n "$SSH_TTY" -a -z "$STY" && exec screen -U -DR -S ssh -t host -p 0
+
