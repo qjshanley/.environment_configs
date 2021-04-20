@@ -82,7 +82,7 @@ _doc_utils_() {
       ;;
     --stacks|*)
       shift 1
-      _doc_utils_ --files-rel '' '.*' 9 | xargs dirname | sort
+      _doc_utils_ --files-rel '' '.*' 3 | xargs dirname | sort
       ;;
   esac
 }
