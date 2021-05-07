@@ -38,6 +38,7 @@ bind 'h' hardcopy -h
 # MacBook Example: ctrl+cmd = 5, option+cmd = 3
 # Shift uppercases the letter
 # Function shifts each letter +4 in the alphabet: abcd/efgh
+# Use xxd on the commandline to check hex code changes
 
 # Focus regions using FN Arrow
 bindkey ^[[1;0e focus up

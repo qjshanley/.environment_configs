@@ -23,6 +23,9 @@ set winheight=1
 set winwidth=1
 set winminheight=0
 set winminwidth=1
+set path+=**
+set wildmenu
+set wildignore=*/node_modules/*,*/target/*,*/tmp/*,*/vendor/*
 
 let mapleader = ','
 
