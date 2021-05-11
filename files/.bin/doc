@@ -75,7 +75,7 @@ _doc_utils_() {
       local pads=( $'\t' '  ' '    ' )
       for config in $(_doc_utils_ --files-rel ; _doc_utils_ --files-rel '.*') ; do
         for pad in "${pads[@]}" ; do
-          local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/[ :\'\"]//g;p;};}" "${STACKS}/${config}")"
+          local services="$(sed -En "/^services:/,/^[a-zA-Z]/{/^${pad}[a-zA-Z\'\"]/{s/^[^a-zA-Z]*([^ :\'\"]*).*/\1/g;p;};}" "${STACKS}/${config}")"
           [ "$services" ] && echo "$services" && break
         done
       done | sort | uniq
