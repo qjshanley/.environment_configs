@@ -13,7 +13,7 @@ Some applications require Xcode to compile correctly. Might as well get it out o
 ```
 System Preferences -> General -> Default Web Browser: Google Chrome
 ```
-![Chrome Shortcuts](./assets/chrome_shortcuts.png)
+![Chrome Shortcuts](https://github.com/qub3r/environment/blob/master/assets/chrome_shortcuts_mac.png?raw=true)
 
 ### Install GitKraken [Website](https://www.gitkraken.com/)
 
