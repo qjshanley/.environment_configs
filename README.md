@@ -13,6 +13,8 @@ Some applications require Xcode to compile correctly. Might as well get it out o
 ```
 System Preferences -> General -> Default Web Browser: Google Chrome
 ```
+![Chrome Shortcuts](./assets/chrome_shortcuts.png)
+
 ### Install GitKraken [Website](https://www.gitkraken.com/)
 
 ### Install iTerm2 [Website](www.iterm2.com) | [Download](https://www.iterm2.com/downloads.html) | [Manual](https://www.iterm2.com/documentation.html)
